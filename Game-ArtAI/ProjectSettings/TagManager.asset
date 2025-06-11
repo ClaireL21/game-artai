@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - Obstacle
+  - RedGoal
+  - Agent
+  - ProtestGoal
   layers:
   - Default
   - TransparentFX
