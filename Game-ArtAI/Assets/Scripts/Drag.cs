@@ -46,8 +46,7 @@ public class Drag : MonoBehaviour
                 {
                     Debug.Log("Dropped into UI!");
 
-                    // Optional: Snap to UI position
-                    // or hide/remove from world
+                    // hiding when dropped
                     dragObj.gameObject.SetActive(false);
                 }
 
