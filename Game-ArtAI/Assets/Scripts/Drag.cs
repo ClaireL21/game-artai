@@ -31,7 +31,7 @@ public class Drag : MonoBehaviour
             {
                 dragObj = hit.transform;
                 offset = dragObj.position - hit.point;
-                //zVal = dragObj.position.z;
+                zVal = dragObj.position.y;
 
                 //Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, zVal));
                 //offset = dragObj.position - mouseWorld;
@@ -63,19 +63,34 @@ public class Drag : MonoBehaviour
 
         if (dragObj != null)
         {
-            Plane dragPlane = new Plane(Vector3.forward, new Vector3(0, 0, 0)); // flat XY plane
+            //Plane dragPlane = new Plane(Vector3.forward, new Vector3(0, 0, 0)); // flat XY plane
+            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            //if (dragPlane.Raycast(ray, out float enter))
+            //{
+            //    Vector3 worldPos = ray.GetPoint(enter);
+            //    dragObj.position = worldPos + offset;
+
+            //    // Keep Z = 0 (2D sprites usually live on Z = 0)
+            //    dragObj.position = new Vector3(dragObj.position.x, dragObj.position.y, 0);
+
+            //    // Optional: Keep sprite upright
+            //    dragObj.rotation = Quaternion.identity;
+            //}
+
+            Plane dragPlane = new Plane(Vector3.up, new Vector3(0, zVal, 0));
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (dragPlane.Raycast(ray, out float enter))
+            if (dragPlane.Raycast(ray, out float distance))
             {
-                Vector3 worldPos = ray.GetPoint(enter);
-                dragObj.position = worldPos + offset;
+                Vector3 worldPoint = ray.GetPoint(distance);
+                dragObj.position = worldPoint + offset;
 
-                // Keep Z = 0 (2D sprites usually live on Z = 0)
-                dragObj.position = new Vector3(dragObj.position.x, dragObj.position.y, 0);
+                // Keep the Y value fixed
+                dragObj.position = new Vector3(dragObj.position.x, zVal, dragObj.position.z);
 
-                // Optional: Keep sprite upright
-                dragObj.rotation = Quaternion.identity;
+                // Rotate to face the camera
+                dragObj.forward = Camera.main.transform.forward;
             }
         }
 
