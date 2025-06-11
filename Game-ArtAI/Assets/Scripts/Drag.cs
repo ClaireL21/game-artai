@@ -39,17 +39,17 @@ public class Drag : MonoBehaviour
             //dragObj = null; 
             if (dragObj != null)
             {
-                //Vector2 screenPos = Input.mousePosition;
+                Vector2 mousePos = Input.mousePosition;
 
-                //// Check if it's over the UI drop area
-                //if (UIManager.Instance.IsOverDropZone(screenPos)) // Make a UI manager for this
-                //{
-                //    Debug.Log("Dropped into UI!");
+                // Check if it's over the UI drop area
+                if (UIManager.UIManage.IsinBottomUI(mousePos)) 
+                {
+                    Debug.Log("Dropped into UI!");
 
-                //    // Optional: Snap to UI position
-                //    // or hide/remove from world
-                //    dragObj.gameObject.SetActive(false);
-                //}
+                    // Optional: Snap to UI position
+                    // or hide/remove from world
+                    dragObj.gameObject.SetActive(false);
+                }
 
                 dragObj = null;
             }
