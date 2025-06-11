@@ -4,7 +4,7 @@ public class Drag : MonoBehaviour
 {
     private Transform dragObj = null;
     private Vector3 offset;
-    private float zVal; 
+    private float yVal; // keeping fixed y val so no issues w/ scaling
     [SerializeField] private LayerMask movableLayers; 
 
 
@@ -19,22 +19,16 @@ public class Drag : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            //RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition),
-            //                                     Vector2.zero,
-            //                                     float.PositiveInfinity,
-            //                                     movableLayers);
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
+            // getting obj that is hit
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, movableLayers))
             {
                 dragObj = hit.transform;
                 offset = dragObj.position - hit.point;
-                zVal = dragObj.position.y;
-
-                //Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, zVal));
-                //offset = dragObj.position - mouseWorld;
+                yVal = dragObj.position.y;
 
                 dragObj.rotation = Quaternion.identity;
             }
@@ -63,22 +57,9 @@ public class Drag : MonoBehaviour
 
         if (dragObj != null)
         {
-            //Plane dragPlane = new Plane(Vector3.forward, new Vector3(0, 0, 0)); // flat XY plane
-            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            // need to use raycast to get pos of mouse 
 
-            //if (dragPlane.Raycast(ray, out float enter))
-            //{
-            //    Vector3 worldPos = ray.GetPoint(enter);
-            //    dragObj.position = worldPos + offset;
-
-            //    // Keep Z = 0 (2D sprites usually live on Z = 0)
-            //    dragObj.position = new Vector3(dragObj.position.x, dragObj.position.y, 0);
-
-            //    // Optional: Keep sprite upright
-            //    dragObj.rotation = Quaternion.identity;
-            //}
-
-            Plane dragPlane = new Plane(Vector3.up, new Vector3(0, zVal, 0));
+            Plane dragPlane = new Plane(Vector3.up, new Vector3(0, yVal, 0));
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if (dragPlane.Raycast(ray, out float distance))
@@ -86,27 +67,12 @@ public class Drag : MonoBehaviour
                 Vector3 worldPoint = ray.GetPoint(distance);
                 dragObj.position = worldPoint + offset;
 
-                // Keep the Y value fixed
-                dragObj.position = new Vector3(dragObj.position.x, zVal, dragObj.position.z);
+                dragObj.position = new Vector3(dragObj.position.x, yVal, dragObj.position.z);
 
-                // Rotate to face the camera
                 dragObj.forward = Camera.main.transform.forward;
             }
         }
 
-        //if (dragObj != null)
-        //{
-        //    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        //    Plane plane = new Plane(Vector3.forward, dragObj.position); // assumes Z-forward drag plane
-
-        //    if (plane.Raycast(ray, out float distance))
-        //    {
-        //        Vector3 worldPoint = ray.GetPoint(distance);
-        //        dragObj.position = new Vector3(worldPoint.x, worldPoint.y, 0) + new Vector3(offset.x, offset.y, offset.z);
-        //    }
-
-        //    //dragObj.position = Camera.main.ScreenToWorldPoint(Input.mousePosition) + offset;
-        //}
     }
 
 }
