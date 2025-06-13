@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/DialogueStyle.uss?fileID=7433441132597879392&amp;guid=26961fee644bf934b8ceb9fb7d82167a&amp;type=3#DialogueStyle" />
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:Label text="Hello!! &lt;sprite=&quot;emojiAsset&quot; index=4&gt;" name="TestLabel" class="header" />
+    </ui:VisualElement>
+</ui:UXML>
