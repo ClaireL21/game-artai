@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Obstacle
+  - RedGoal
+  - Agent
+  - ProtestGoal
   layers:
   - Default
   - TransparentFX
@@ -12,6 +16,7 @@ TagManager:
   - Water
   - UI
   - Movable
+  - ObstacleNav
   - 
   - 
   - 
