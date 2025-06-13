@@ -41,11 +41,16 @@ public class DialogueSpawner : MonoBehaviour
 
         WorldSpaceUI instance = uiDocumentPool.Get();
         instance.transform.SetPositionAndRotation(spawnPos, Quaternion.identity);
+        instance.transform.localScale = new Vector3(0.2f, 0.2f, 0.0f);
+
+        this.gameObject.transform.SetPositionAndRotation(spawnPos, Quaternion.identity);
 
         // turn items into respective emojis
         // gotta rename the emojis based on our names
 
-        instance.SetLabelText(k_labelName, "test");
+        // <sprite="emojiAsset" index=4>
+
+        instance.SetLabelText(k_labelName, "    <sprite=\"emojiAsset\" index=4>");
     }
 
 }

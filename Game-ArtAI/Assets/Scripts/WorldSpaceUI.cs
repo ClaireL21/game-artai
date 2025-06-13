@@ -10,7 +10,7 @@ public class WorldSpaceUI : MonoBehaviour
     const string k_mainTex = "_MainTex";
     static readonly int MainTex = Shader.PropertyToID(k_mainTex);
 
-    [SerializeField] int panelW = 1280;
+    [SerializeField] int panelW = 720;
     [SerializeField] int panelH = 720;
     [SerializeField] float panelScale = 1.0f;
     [SerializeField] float pixelsPerUnit = 500.0f;
@@ -43,76 +43,15 @@ public class WorldSpaceUI : MonoBehaviour
         
     }
 
-    //public void SetLabelText(string label, string text)
-    //{
-    //    if (uiDocument.rootVisualElement == null)
-    //    {
-    //        uiDocument.visualTreeAsset = visualTreeAsset;
-    //    }
-
-    //    var root = uiDocument.rootVisualElement;
-    //    var labelElement = root.Q<Label>(label);
-    //    if (labelElement == null)
-    //    {
-    //        Debug.LogWarning($"Label '{label}' not found.");
-    //        return;
-    //    }
-
-    //    labelElement.text = text;
-    //    labelElement.style.color = Color.white;
-    //    labelElement.style.fontSize = 48;
-    //    labelElement.style.unityFontStyleAndWeight = FontStyle.Bold;
-    //    labelElement.style.flexGrow = 1;
-    //    labelElement.MarkDirtyRepaint();
-    //    root.MarkDirtyRepaint();
-    //    Debug.Log($"Set label text to: {text}");
-
-    //    //uiDocument.rootVisualElement.Q<Label>(label).text = text;
-    //}
-
     public void SetLabelText(string label, string text)
     {
-        uiDocument.visualTreeAsset = visualTreeAsset;
-
-        var root = uiDocument.rootVisualElement;
-        var labelElement = root.Q<Label>(label);
-
-        if (labelElement == null)
+        if (uiDocument.rootVisualElement == null)
         {
-            Debug.LogWarning($"Label '{label}' not found.");
-            return;
+            uiDocument.visualTreeAsset = visualTreeAsset;
         }
 
-
-        // Force visibility styles
-        labelElement.style.width = Length.Percent(100);
-        labelElement.style.height = 100;
-        labelElement.style.color = Color.white;
-        labelElement.style.fontSize = 48;
-        labelElement.style.unityFontStyleAndWeight = FontStyle.Bold;
-        labelElement.style.backgroundColor = new Color(0, 0, 0, 0.8f); // semi-transparent bg to test
-        labelElement.style.flexGrow = 1;
-        labelElement.style.alignSelf = Align.Center;
-        labelElement.style.unityTextAlign = TextAnchor.MiddleCenter;
-
-        // Force parent container styles
-        root.style.flexDirection = FlexDirection.Column;
-        root.style.alignItems = Align.Center;
-        root.style.justifyContent = Justify.Center;
-        root.style.backgroundColor = Color.black;
-
-
-        // Set text
-        labelElement.text = text;
-
-        // Force panel repaint
-        labelElement.MarkDirtyRepaint();
-        root.MarkDirtyRepaint();
-
-
-        Debug.Log($"Set label text to: {text}");
+        uiDocument.rootVisualElement.Q<Label>(label).text = text;
     }
-
 
     void BuildPanel()
     {
