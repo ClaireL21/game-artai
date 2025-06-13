@@ -35,6 +35,26 @@ public class AIControlTarget : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+       /* if (CrowdManager.CM.grabbedAgents.Count > 0)
+        {
+            Debug.Log("in crowd manage");
+            foreach (GameObject gameObj in CrowdManager.CM.grabbedAgents)
+            {
+                Debug.Log("game obj: " +  gameObj.name + "; this game obj: " + this.gameObject.name);
+                if (gameObj == this.gameObject && protestorCounted)
+                {
+                    Debug.Log("in protestor uncounted");
+                    gameObj.transform.position = new Vector3(23, 1.67f, -10);
+                    // drag to mouse position
+                    SetDestinationNormal();
+                    protestorCounted = false;
+                    isProtesting = false;
+                    CrowdManager.CM.protestorsCnt--;
+                    
+                }
+            }
+            CrowdManager.CM.ResetGrabbedAgents();
+        }*/
         // if someone is protesting, other people within a range should also protest
         if (isProtesting)  
         {
@@ -49,7 +69,7 @@ public class AIControlTarget : MonoBehaviour
         }
 
         // if destination is reached
-        if (isProtesting && agent.remainingDistance < 2)    // might need to make this radius count proportional to the number of protestors huddled?
+        if (isProtesting && (agent.remainingDistance < 2 || agent.velocity.magnitude < 0.1f))    // check velocity or might need to make this radius count proportional to the number of protestors huddled?
         {
             // count protestor if not counted yet
             if (!protestorCounted)
@@ -71,7 +91,7 @@ public class AIControlTarget : MonoBehaviour
         GameObject protestGoal = CrowdManager.CM.protestGoal;
         agent.SetDestination(protestGoal.transform.position);
     }
-    void SetDestinationNormal()
+    public void SetDestinationNormal()
     {
         int i = Random.Range(0, goals.Length);
         agent.SetDestination(goals[i].transform.position);
@@ -79,7 +99,7 @@ public class AIControlTarget : MonoBehaviour
 
     void BecomeProtestorIfNearby()
     {
-        if (CrowdManager.CM.protestorsCnt > 0)
+        if (CrowdManager.CM.protestorsCnt > 0)  // could add a < condition if we want a max # of protestors
         {
             GameObject protestGoal = CrowdManager.CM.protestGoal;
             float distance = Vector3.Distance(protestGoal.transform.position, this.transform.position);
@@ -94,25 +114,30 @@ public class AIControlTarget : MonoBehaviour
         
     }
 
-    private void OnMouseDown()
+    private void OnMouseOver()
     {
        /* if (isProtesting)
         {
             SetDestinationNormal();
         }*/
-        isProtesting = !isProtesting;
-        if (isProtesting)
+        if (Input.GetMouseButtonDown(1))
         {
-            agent.speed *= 2;
-            //CrowdManager.CM.protestorsCnt++;
-            SetDestinationProtest();
-            
-        } else
-        {
-            agent.speed = agentSpeed;
-            CrowdManager.CM.protestorsCnt--;
-            SetDestinationNormal();
+            isProtesting = !isProtesting;
+            if (isProtesting)
+            {
+                agent.speed *= 2;
+                //CrowdManager.CM.protestorsCnt++;
+                SetDestinationProtest();
+
+            }
+            else
+            {
+                agent.speed = agentSpeed;
+                //CrowdManager.CM.protestorsCnt--;
+                SetDestinationNormal();
+            }
         }
+        
     }
 
     /*// Movement rules for an agent
