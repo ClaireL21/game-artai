@@ -202,11 +202,11 @@ public class CrowdManager : MonoBehaviour
                 agent.isProtesting = false;
                 agent.GetComponent<NavMeshAgent>().speed = agent.agentSpeed;
                 CM.protestorsCnt--;
-
             }
 
         }
         grabbedAgents.Clear();
+        offsetAgents.Clear();
     }
 
 }
