@@ -3,7 +3,8 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     public static UIManager UIManage;
-    [SerializeField] private RectTransform bottomUI; 
+    [SerializeField] private RectTransform bottomUI;
+    [SerializeField] private BoxCollider machineUI;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,10 +22,31 @@ public class UIManager : MonoBehaviour
     {
         Vector3[] corners = new Vector3[4];
         bottomUI.GetWorldCorners(corners);
+        foreach (var cor in corners) {
+            Debug.Log("corner: " + cor);
+
+        }
 
         return (currPos.x > corners[0].x && currPos.x < corners[2].x && 
                 currPos.y > corners[0].y && currPos.y < corners[2].y);
 
+    }
+    public bool IsInMachineUI(GameObject dragged)
+    {
+        //Debug.Log("machine ui position: " + machineUI.transform.position + "; machine size: " + machineUI.transform.localScale / 2);
+
+        
+        Collider[] colliders = Physics.OverlapBox(machineUI.transform.position, machineUI.transform.localScale / 2, Quaternion.identity);
+        //Gizmos.DrawWireCube(transform.position, transform.localScale);
+
+        foreach (Collider c in colliders)
+        {
+            if (c.gameObject == dragged)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     // debug for GUI 
