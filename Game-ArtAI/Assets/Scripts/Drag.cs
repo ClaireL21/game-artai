@@ -42,13 +42,20 @@ public class Drag : MonoBehaviour
                 Vector2 mousePos = Input.mousePosition;
 
                 // Check if it's over the UI drop area
-                if (UIManager.UIManage.IsinBottomUI(mousePos)) 
+                if (UIManager.UIManage.IsInMachineUI(dragObj.gameObject))
+                 {
+                     Debug.Log("Dropped into UI!");
+
+                     // hiding when dropped
+                     dragObj.gameObject.SetActive(false);
+                 }
+                /*if (UIManager.UIManage.IsinBottomUI(mousePos))
                 {
                     Debug.Log("Dropped into UI!");
 
                     // hiding when dropped
                     dragObj.gameObject.SetActive(false);
-                }
+                }*/
 
                 dragObj = null;
             }
