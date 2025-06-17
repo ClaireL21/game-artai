@@ -4,7 +4,7 @@ using UnityEngine.Rendering;
 
 public class Point_Viz : MonoBehaviour
 {
-    private Vector3 mOffset; 
+    private Vector3 mOffset = Vector3.zero; 
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
