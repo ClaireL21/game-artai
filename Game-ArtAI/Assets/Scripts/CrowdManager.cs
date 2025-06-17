@@ -144,7 +144,22 @@ public class CrowdManager : MonoBehaviour
             if (agent.protestorCounted)
             {
                 // Debug.Log("in protestor uncounted");
-                gameObj.transform.position = newWorldPoint + offsetAgents[i];
+               // gameObj.transform.position = newWorldPoint + offsetAgents[i];
+
+                Vector3 targetPosition = newWorldPoint + offsetAgents[i];
+                NavMeshHit hit;
+                if (NavMesh.SamplePosition(targetPosition, out hit, 5.0f, NavMesh.AllAreas))
+                {
+                    // Debug.Log("On nav mesh");
+                    NavMeshAgent nav = gameObj.GetComponent<NavMeshAgent>();
+                    Vector3 finalPos = hit.position;
+                    finalPos.y = targetPosition.y;
+                    nav.Warp(finalPos);  // Instantly moves the agent to valid NavMesh position
+                } 
+                /*else
+                {
+                    gameObj.transform.position = newWorldPoint + offsetAgents[i];
+                }*/
             }
             i++;
         }
