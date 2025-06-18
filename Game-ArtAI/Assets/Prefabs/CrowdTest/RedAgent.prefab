@@ -146,8 +146,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 136008332938a664ebcf0d5ec75075f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goalChosen: 0
-  min: 0
-  max: 0
   goals: []
+  minSpeed: 0
+  maxSpeed: 0
   agentSpeed: 0
+  isProtesting: 0
+  protestorCounted: 0

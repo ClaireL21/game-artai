@@ -14,13 +14,13 @@ public class DialoguePicker : MonoBehaviour
         // replace this later w/ actual stuff!! - ising arr for now 
         // rnd picking for now? or keep? 
 
-        var rndIndx = UnityEngine.Random.Range(0, choices.Length);
+        //var rndIndx = UnityEngine.Random.Range(0, choices.Length);
 
-        List<int> inputToSpawn = new List<int>();
-        inputToSpawn.Add(rndIndx);
+        //List<int> inputToSpawn = new List<int>();
+        //inputToSpawn.Add(rndIndx);
 
-        // child has txt box? -- if use tmp approach 
-        dialogueSpawner.SpawnDialogue(inputToSpawn, this.transform.position);
+        //// child has txt box? -- if use tmp approach 
+        //dialogueSpawner.SpawnDialogue(inputToSpawn, this.transform.position);
     }
 
     // Update is called once per frame
@@ -28,4 +28,10 @@ public class DialoguePicker : MonoBehaviour
     {
         
     }
+
+    public void SetDialogue(Tuple<int, int> inputs)
+    {
+        dialogueSpawner.SpawnDialogue(inputs, this.transform.position);
+    }
+
 }

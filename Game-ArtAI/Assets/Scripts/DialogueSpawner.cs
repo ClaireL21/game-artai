@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -52,6 +53,19 @@ public class DialogueSpawner : MonoBehaviour
         // <sprite="emojiAsset" index=4>
 
         instance.SetLabelText(k_labelName, "Hello! <sprite=\"emojiAsset\" index=4>");
+    }
+
+    public void SpawnDialogue(Tuple<int, int> items, Vector3 worldPos)
+    {
+        Vector3 spawnPos = worldPos;
+
+        WorldSpaceUI instance = uiDocumentPool.Get();
+        instance.transform.position = spawnPos;
+        instance.transform.localScale = new Vector3(2.0f, 2.0f, 0.0f);
+
+        this.gameObject.transform.SetPositionAndRotation(spawnPos, Camera.main.transform.rotation);
+
+        instance.SetLabelText(k_labelName, $" <sprite=\"emojiAsset\" index={items.Item1}> <sprite=\"emojiAsset\" index={items.Item2}>");
     }
 
 }
