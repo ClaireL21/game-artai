@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -35,23 +36,17 @@ public class DialogueSpawner : MonoBehaviour
     void OnReturn(WorldSpaceUI uiDoc) => uiDoc.gameObject.SetActive(false);
     void OnDestroyObj(WorldSpaceUI uiDoc) => Destroy(uiDoc.gameObject);
 
-    public void SpawnDialogue(List<int> items, Vector3 worldPos)
+    public void SpawnDialogue(Tuple<int, int> items, Vector3 worldPos)
     {
         Vector3 spawnPos = worldPos;
 
         WorldSpaceUI instance = uiDocumentPool.Get();
-       // instance.transform.SetPositionAndRotation(spawnPos, Camera.main.transform.rotation);
         instance.transform.position = spawnPos;
         instance.transform.localScale = new Vector3(2.0f, 2.0f, 0.0f);
 
         this.gameObject.transform.SetPositionAndRotation(spawnPos, Camera.main.transform.rotation);
 
-        // turn items into respective emojis
-        // gotta rename the emojis based on our names
-
-        // <sprite="emojiAsset" index=4>
-
-        instance.SetLabelText(k_labelName, "Hello! <sprite=\"emojiAsset\" index=4>");
+        instance.SetLabelText(k_labelName, $" <sprite=\"emojiAsset\" index={items.Item1}> <sprite=\"emojiAsset\" index={items.Item2}>");
     }
 
 }
