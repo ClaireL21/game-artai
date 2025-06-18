@@ -1,0 +1,6 @@
+c red
+c blue
+c yellow
+p 0
+p 1
+p 2
