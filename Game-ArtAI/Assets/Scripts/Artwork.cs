@@ -50,8 +50,6 @@ public class Artwork : MonoBehaviour
     public void Setup(int spriteInfo)
     {
 
-        // Assets/Resources/emoji.png
-
         Sprite[] all = Resources.LoadAll<Sprite>("emoji");
 
         foreach (var s in all)
@@ -64,8 +62,6 @@ public class Artwork : MonoBehaviour
         }
 
 
-        //spriteImg = Resources.Load<Sprite>($"emoji_{spriteInfo}");
-        //spriteImg = Resources.Load<Sprite>($"testimg");
         this.GetComponent<SpriteRenderer>().sprite = process;
 
         // picking a random time for how long it takes the artist to create art 

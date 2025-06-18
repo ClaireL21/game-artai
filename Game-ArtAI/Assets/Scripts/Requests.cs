@@ -19,15 +19,6 @@ public class Requests : MonoBehaviour
     float timer;
     public bool notActive = true; // should alter this 
 
-    // pick a request every x seconds 
-    // pick random color, pattern combo 
-
-    // make sure color & pattern either exists in scene
-    // or make character w/o art take it 
-    // if not possible reroll
-    // or more efficient -- can only pick available ones?
-
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -84,9 +75,6 @@ public class Requests : MonoBehaviour
         target.GetComponent<DialoguePicker>().SetDialogue(request);
 
         requestInfos = requestInfos.OrderBy(x => UnityEngine.Random.value).ToList();
-
-        // set rest of artworks 
-        // IEnumerate? 
 
         for (int i = 0; i < artTotal; i++)
         {
