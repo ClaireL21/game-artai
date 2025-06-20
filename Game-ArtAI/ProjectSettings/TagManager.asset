@@ -8,6 +8,10 @@ TagManager:
   - RedGoal
   - Agent
   - ProtestGoal
+  - Color
+  - Size
+  - Options
+  - Sketchbook
   layers:
   - Default
   - TransparentFX
@@ -17,7 +21,7 @@ TagManager:
   - UI
   - Movable
   - Navigation
-  - 
+  - Sketchbook
   - 
   - 
   - 
