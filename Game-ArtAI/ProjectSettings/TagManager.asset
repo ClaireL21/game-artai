@@ -8,6 +8,8 @@ TagManager:
   - RedGoal
   - Agent
   - ProtestGoal
+  - CustomerGoal
+  - CustomerAgent
   layers:
   - Default
   - TransparentFX

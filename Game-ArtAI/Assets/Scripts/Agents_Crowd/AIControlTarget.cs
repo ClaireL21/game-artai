@@ -12,8 +12,13 @@ public class AIControlTarget : MonoBehaviour
     public float minSpeed;
     public float maxSpeed;
     public float agentSpeed;
+    public bool isCustomer;
     public bool isProtesting;
     public bool protestorCounted;
+
+    // Wait time in between activities
+    private float timeSinceStart;
+    public float waitTimeThreshold;
     //public Vector3 destination;
     void Start()
     {
@@ -21,15 +26,26 @@ public class AIControlTarget : MonoBehaviour
         goals = GameObject.FindGameObjectsWithTag("RedGoal");
         int i = Random.Range(0, goals.Length);
        // goalChosen = i;
-        agent.SetDestination(goals[i].transform.position);
         minSpeed = CrowdManager.CM.minSpeed;
         maxSpeed = CrowdManager.CM.maxSpeed;
         agentSpeed = Random.Range(CrowdManager.CM.minSpeed, CrowdManager.CM.maxSpeed);
         agent.speed = agentSpeed;
         isProtesting = false;
         protestorCounted = false;
+
+        isCustomer = this.GetComponent<AgentType>().AgentId == AgentId.Customer;
+        timeSinceStart = 0f;
+        waitTimeThreshold = 10f;
         //destination = agent.destination;
 
+        if (isCustomer)
+        {
+            agent.SetDestination(CrowdManager.CM.customerGoal.transform.position);
+        }
+        else
+        {
+            agent.SetDestination(goals[i].transform.position);
+        }
     }
 
     // Update is called once per frame
@@ -61,10 +77,22 @@ public class AIControlTarget : MonoBehaviour
         }
         else if (agent.remainingDistance < 2)   // set new random destination
         {
-            int i = Random.Range(0, goals.Length);
-            agent.SetDestination(goals[i].transform.position);
+            if (isCustomer)
+            {
+                SetDestinationCustomer();
+                timeSinceStart = 0f;
+            } else
+            {
+                SetDestinationNormal();
+            }
+            
+            /*int i = Random.Range(0, goals.Length);
+            agent.SetDestination(goals[i].transform.position);*/
             //goalChosen = i;
         }
+
+        // update time for customer
+        timeSinceStart += Time.deltaTime;
     }
     void SetDestinationProtest()
     {
@@ -75,6 +103,12 @@ public class AIControlTarget : MonoBehaviour
     {
         int i = Random.Range(0, goals.Length);
         agent.SetDestination(goals[i].transform.position);
+    }
+
+    public void SetDestinationCustomer()
+    {
+        GameObject customerGoal = CrowdManager.CM.customerGoal;
+        agent.SetDestination(customerGoal.transform.position);
     }
 
     void BecomeProtestorIfNearby()

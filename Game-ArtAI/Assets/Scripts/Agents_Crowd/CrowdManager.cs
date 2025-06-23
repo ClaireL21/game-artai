@@ -28,6 +28,8 @@ public class CrowdManager : MonoBehaviour
     public int protestorsCnt;
     public GameObject protestGoal;
 
+    public GameObject customerGoal;
+
     // Dragging logic
     private Vector3 initialMousePosition;
     private bool isDragging;
@@ -37,6 +39,7 @@ public class CrowdManager : MonoBehaviour
     {
         CM = this;
         isDragging = false;
+        customerGoal = GameObject.FindGameObjectWithTag("CustomerGoal");
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
