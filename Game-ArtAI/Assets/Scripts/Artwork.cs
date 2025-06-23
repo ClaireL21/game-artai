@@ -12,11 +12,12 @@ public class Artwork : MonoBehaviour
     Sprite spriteImg;
     bool runLogic = false; 
 
+    public bool isMoved;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        isMoved = false;
     }
 
     // Update is called once per frame
@@ -68,5 +69,9 @@ public class Artwork : MonoBehaviour
         timer = Random.Range(0.0f, 7.0f);
         runLogic = true; 
     }
-    
+
+    public void OnMouseDrag()
+    {
+        isMoved = true;
+    }
 }

@@ -21,19 +21,23 @@ public class CrowdManager : MonoBehaviour
     [Range(0.1f, 10.0f)]
     public float grabRadius = 3.0f;
 
-    public GameObject[] allAgents;
+    /* Artist variables */
+    public GameObject[] allArtAgents;
     public List<GameObject> grabbedAgents;
     public List<Vector3> offsetAgents;
 
     public int protestorsCnt;
     public GameObject protestGoal;
 
-    public GameObject customerGoal;
-
     // Dragging logic
     private Vector3 initialMousePosition;
     private bool isDragging;
-    private Vector3 prevWorldPoint;
+
+    // Drawing
+    public int drawingsCnt;
+
+    /* Customer variables */
+    public GameObject customerGoal;
 
     private void Awake()
     {
@@ -45,11 +49,12 @@ public class CrowdManager : MonoBehaviour
     void Start()
     {
         //CM = this;
-        allAgents = GameObject.FindGameObjectsWithTag("Agent");
+        allArtAgents = GameObject.FindGameObjectsWithTag("ArtistAgent");
         protestGoal = GameObject.FindGameObjectWithTag("ProtestGoal");
         grabbedAgents = new List<GameObject>();
         offsetAgents = new List<Vector3>();
         protestorsCnt = 0;
+        drawingsCnt = 0;
     }
 
     // Update is called once per frame
@@ -107,7 +112,7 @@ public class CrowdManager : MonoBehaviour
         Ray ray = new Ray(origin, direction);
 
         // Find the desired distance along ray (t) using desired y coordinate (py)
-        GameObject firstAgent = allAgents[0];
+        GameObject firstAgent = allArtAgents[0];
         float py = firstAgent.transform.position.y;
         float t = (py - origin.y) / direction.y;
 
@@ -121,7 +126,7 @@ public class CrowdManager : MonoBehaviour
     {
         Vector3 worldPoint = ScreenToWorld(initialMousePosition);
         // Loop through game objects
-        foreach (GameObject gameObj in allAgents)
+        foreach (GameObject gameObj in allArtAgents)
         {
             if (Vector3.Distance(worldPoint, gameObj.transform.position) <= grabRadius &&         // can only grab within certain radius
                 Vector3.Distance(worldPoint, protestGoal.transform.position) <= protestRadius)  // can only grab protestors
@@ -132,7 +137,7 @@ public class CrowdManager : MonoBehaviour
                 offsetAgents.Add(offset);
             }
         }
-        prevWorldPoint = worldPoint;
+        //prevWorldPoint = worldPoint;
     }
     void FindAgentsInRadius(Vector3 inputMousePos)
     {
@@ -166,7 +171,7 @@ public class CrowdManager : MonoBehaviour
             }
             i++;
         }
-        prevWorldPoint = newWorldPoint;
+        //prevWorldPoint = newWorldPoint;
     }
 
     public void ResetGrabbedAgents()

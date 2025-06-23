@@ -8,7 +8,7 @@ public class AIControlTarget : MonoBehaviour
         // but give protestors highest priority
     // todo: may need to set agents as moving obstacles to prevent from blockages as well
     public GameObject[] goals;
-    NavMeshAgent agent;
+    public NavMeshAgent agent;
     public float minSpeed;
     public float maxSpeed;
     public float agentSpeed;
@@ -17,14 +17,14 @@ public class AIControlTarget : MonoBehaviour
     public bool protestorCounted;
 
     // Wait time in between activities
-    private float timeSinceStart;
-    public float waitTimeThreshold;
+    /*private float timeSinceStart;
+    public float waitTimeThreshold;*/
     //public Vector3 destination;
     void Start()
     {
-        agent = this.GetComponent<NavMeshAgent>();
+        /*agent = this.GetComponent<NavMeshAgent>();
         goals = GameObject.FindGameObjectsWithTag("RedGoal");
-        int i = Random.Range(0, goals.Length);
+        //int i = Random.Range(0, goals.Length);
        // goalChosen = i;
         minSpeed = CrowdManager.CM.minSpeed;
         maxSpeed = CrowdManager.CM.maxSpeed;
@@ -33,35 +33,38 @@ public class AIControlTarget : MonoBehaviour
         isProtesting = false;
         protestorCounted = false;
 
-        isCustomer = this.GetComponent<AgentType>().AgentId == AgentId.Customer;
-        timeSinceStart = 0f;
-        waitTimeThreshold = 10f;
+        isCustomer = this.GetComponent<AgentType>().AgentId == AgentId.Customer;*/
+
+
+
+        /*timeSinceStart = 0f;
+        waitTimeThreshold = 10f;*/
         //destination = agent.destination;
 
-        if (isCustomer)
+        /*if (isCustomer)
         {
             agent.SetDestination(CrowdManager.CM.customerGoal.transform.position);
         }
         else
         {
             agent.SetDestination(goals[i].transform.position);
-        }
+        }*/
     }
 
     // Update is called once per frame
     void Update()
     {
-        // if someone is protesting, other people within a range should also protest
+        /*// if someone is protesting, other people within a range should also protest
         if (isProtesting)  
         {
             SetDestinationProtest();    // keep setting destination
         } 
         else 
         {
-            /*if (Random.Range(0, 100) < 10)  // become a protestor if you are nearby a protest 10% of the time
-            {*/
+            *//*if (Random.Range(0, 100) < 10)  // become a protestor if you are nearby a protest 10% of the time
+            {*//*
             BecomeProtestorIfNearby();
-            /*}*/
+            *//*}*//*
         }
 
         // if destination is reached
@@ -80,21 +83,36 @@ public class AIControlTarget : MonoBehaviour
             if (isCustomer)
             {
                 SetDestinationCustomer();
-                timeSinceStart = 0f;
+                //timeSinceStart = 0f;
             } else
             {
                 SetDestinationNormal();
             }
             
-            /*int i = Random.Range(0, goals.Length);
-            agent.SetDestination(goals[i].transform.position);*/
+            *//*int i = Random.Range(0, goals.Length);
+            agent.SetDestination(goals[i].transform.position);*//*
             //goalChosen = i;
-        }
+        }*/
 
         // update time for customer
-        timeSinceStart += Time.deltaTime;
+        //timeSinceStart += Time.deltaTime;
     }
-    void SetDestinationProtest()
+    public void InitializeAgent()
+    {
+        agent = this.GetComponent<NavMeshAgent>();
+        goals = GameObject.FindGameObjectsWithTag("EnvGoal");
+        //int i = Random.Range(0, goals.Length);
+        // goalChosen = i;
+        minSpeed = CrowdManager.CM.minSpeed;
+        maxSpeed = CrowdManager.CM.maxSpeed;
+        agentSpeed = Random.Range(CrowdManager.CM.minSpeed, CrowdManager.CM.maxSpeed);
+        agent.speed = agentSpeed;
+        isProtesting = false;
+        protestorCounted = false;
+
+        isCustomer = this.GetComponent<AgentType>().AgentId == AgentId.Customer;
+    }
+    public void SetDestinationProtest()
     {
         GameObject protestGoal = CrowdManager.CM.protestGoal;
         agent.SetDestination(protestGoal.transform.position);
@@ -111,7 +129,7 @@ public class AIControlTarget : MonoBehaviour
         agent.SetDestination(customerGoal.transform.position);
     }
 
-    void BecomeProtestorIfNearby()
+    public void BecomeProtestorIfNearby()
     {
         if (CrowdManager.CM.protestorsCnt > 0)  // could add a < condition if we want a max # of protestors
         {

@@ -6,10 +6,12 @@ TagManager:
   tags:
   - Obstacle
   - RedGoal
-  - Agent
   - ProtestGoal
   - CustomerGoal
   - CustomerAgent
+  - ArtistAgent
+  - EnvGoal
+  - Art
   layers:
   - Default
   - TransparentFX
