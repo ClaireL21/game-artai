@@ -12,6 +12,7 @@ TagManager:
   - ArtistAgent
   - EnvGoal
   - Art
+  - Request
   layers:
   - Default
   - TransparentFX

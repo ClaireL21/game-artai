@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcd774b4a40136c47ac0973c6d9d0e6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AgentId: 0
+  AgentId: 1
 --- !u!114 &6566123356111350846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168,3 +168,4 @@ MonoBehaviour:
   isCustomer: 0
   isProtesting: 0
   protestorCounted: 0
+  requestPrefab: {fileID: 7778941013295098761, guid: f513adf831cfe76449466d8633455de9, type: 3}

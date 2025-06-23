@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 456032859942471637}
   - component: {fileID: 5514396561739684848}
   m_Layer: 0
-  m_Name: Dialogue
-  m_TagString: Untagged
+  m_Name: RequestDia
+  m_TagString: Request
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28,9 +28,9 @@ Transform:
   m_GameObject: {fileID: 7778941013295098761}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.11, y: 17.77, z: 11}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 8, y: 8, z: 1.1428572}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9118020849074097437}
   m_Father: {fileID: 0}

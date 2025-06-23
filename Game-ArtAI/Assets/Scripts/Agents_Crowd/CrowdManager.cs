@@ -38,6 +38,7 @@ public class CrowdManager : MonoBehaviour
 
     /* Customer variables */
     public GameObject customerGoal;
+    public int requestsCnt;
 
     private void Awake()
     {
@@ -55,6 +56,7 @@ public class CrowdManager : MonoBehaviour
         offsetAgents = new List<Vector3>();
         protestorsCnt = 0;
         drawingsCnt = 0;
+        requestsCnt = 0;
     }
 
     // Update is called once per frame
