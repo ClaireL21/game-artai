@@ -98,13 +98,15 @@ public class Sketchbook : MonoBehaviour
                     var colnum = Mathf.Floor(currentPos.x / (tex.width / 7f));
                     var rownum = Mathf.Floor(currentPos.y / (tex.height / 5f));
 
-                    Color[] pixels = new Color[tex.width * tex.height];
-                    for (int i = 0; i < pixels.Length; i++)
-                    {
+                    //Color[] pixels = new Color[tex.width * tex.height];
+                    Color[] pixels = tex.GetPixels();
+
+                    //for (int i = 0; i < pixels.Length; i++)
+                    //{
                     
-                        pixels[i] = Color.white;
+                    //    pixels[i] = Color.white;
                         
-                    }
+                    //}
 
                     int squareWidth = Mathf.FloorToInt(tex.width / 7f);
                     int squareHeight = Mathf.FloorToInt(tex.height / 5f);
