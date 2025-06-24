@@ -10,8 +10,7 @@ public class Sketchbook : MonoBehaviour
     private Color lineColor; 
     private float lineWidth;
     private Vector2? previousDrawPosition;
-    private Texture2D clonedTexture; // Store the cloned texture reference
-    private SpriteRenderer sketchbookRenderer; // Reference to the Sketchbook's SpriteRenderer
+    private Texture2D clonedTexture; 
 
     Transform clickedObj;
 
@@ -22,7 +21,6 @@ public class Sketchbook : MonoBehaviour
         lineColor = Color.black;
         lineWidth = 2.0f;
         previousDrawPosition = null;
-        sketchbookRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -41,6 +39,7 @@ public class Sketchbook : MonoBehaviour
 
                 if (clickedObj.tag == "Color")
                 {
+                    eraserMode = true;
                     lineColor = clickedObj.gameObject.GetComponent<SpriteRenderer>().color;
                 }
 
@@ -76,12 +75,6 @@ public class Sketchbook : MonoBehaviour
                     {
                         clonedTexture = GetOrCreateTextureClone(sr);
                     }
-
-                    // Get or create a clone of the texture
-                    //Texture2D tex = GetOrCreateTextureClone(sr);
-
-                    // Convert mouse position to texture coordinates
-                    //Vector2 pixelUV = hit.textureCoord;
 
                     Vector2 localPos = sr.transform.InverseTransformPoint(hit.point);
                     Rect spriteRect = sr.sprite.rect;
@@ -129,7 +122,8 @@ public class Sketchbook : MonoBehaviour
                             int pos = j * clonedTexture.width + i;
                             if (pos >= 0 && pos < pixels.Length)
                             {
-                                pixels[pos] = Color.red;
+                                pixels[pos] = eraserMode ? Color.white : lineColor;
+
                             }
                         }
                     }
@@ -147,13 +141,7 @@ public class Sketchbook : MonoBehaviour
         }
     }
     private Texture2D GetOrCreateTextureClone(SpriteRenderer sr)
-    {
-        // If we already have a cloned texture, use it
-        //if (sr.sprite != null && sr.sprite.texture != null && sr.sprite.texture.name.EndsWith("(Clone)"))
-        //{
-        //    return sr.sprite.texture;
-        //}
-
+    {        
         // Check if we already have a usable texture
         if (clonedTexture != null && sr.sprite.texture == clonedTexture)
         {
