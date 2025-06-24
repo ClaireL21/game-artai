@@ -3,6 +3,13 @@ using System.Linq;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI.Table;
 using UnityEngine.UIElements;
+using System.Collections;
+
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+using System.IO;
 
 public class Sketchbook : MonoBehaviour
 {
@@ -12,7 +19,12 @@ public class Sketchbook : MonoBehaviour
     private Color lineColor; 
     private float lineWidth;
     private Vector2? previousDrawPosition;
-    private Texture2D clonedTexture; 
+    private Texture2D clonedTexture;
+
+    private int sketchNum;
+
+    private bool isLoad;
+    private Texture2D loadText;
 
     Transform clickedObj;
 
@@ -23,11 +35,37 @@ public class Sketchbook : MonoBehaviour
         lineColor = Color.black;
         lineWidth = 1.0f;
         previousDrawPosition = null;
+        sketchNum = 0;
+        isLoad = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+        #if UNITY_EDITOR
+            SaveTextureToAssets(clonedTexture, $"Sketchbook_{sketchNum}");
+        #else
+            SaveTextureRuntime(clonedTexture, $"Sketchbook_{sketchNum}");
+        #endif
+            sketchNum++;
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+#if UNITY_EDITOR
+            // Assets/Textures/Sketchbook_0.png
+            loadText = AssetDatabase.LoadAssetAtPath<Texture2D>($"Assets/Textures/Sketchbook_{0}.png");
+            
+            clonedTexture = loadText;
+            isLoad = false;
+            
+#else
+            SaveTextureRuntime(clonedTexture, $"Sketchbook_{sketchNum}");
+#endif
+        }
+
         if (Input.GetMouseButton(0))
         {
 
@@ -302,6 +340,54 @@ public class Sketchbook : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void SaveTextureToAssets(Texture2D texture, string fileName = "SavedTexture")
+    {
+#if UNITY_EDITOR
+            // Convert texture to PNG byte array
+            byte[] bytes = texture.EncodeToPNG();
+
+            // Create the path (Assets folder by default)
+            string folderPath = "Assets/Textures/";
+            string filePath = Path.Combine(folderPath, fileName + ".png");
+
+            // Create directory if it doesn't exist
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            // Write the file
+            File.WriteAllBytes(filePath, bytes);
+
+            // Refresh the asset database
+            AssetDatabase.Refresh();
+
+            Debug.Log($"Texture saved to: {filePath}");
+#else
+        Debug.LogWarning("Texture saving is only available in the Unity Editor");
+#endif
+    }
+
+    // need to test these
+    public void SaveTextureRuntime(Texture2D texture, string fileName = "SavedTexture")
+    {
+        byte[] bytes = texture.EncodeToPNG();
+        string filePath = Path.Combine(Application.persistentDataPath, fileName + ".png");
+        File.WriteAllBytes(filePath, bytes);
+        Debug.Log($"Texture saved to: {filePath}");
+    }
+    public IEnumerator LoadTextureRuntime(string filePath)
+    {
+        if (File.Exists(filePath))
+        {
+            byte[] bytes = File.ReadAllBytes(filePath);
+            Texture2D texture = new Texture2D(2, 2);
+            texture.LoadImage(bytes);
+            // Use your texture here
+        }
+        yield return null;
     }
 
 }
