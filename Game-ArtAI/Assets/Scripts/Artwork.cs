@@ -67,7 +67,7 @@ public class Artwork : MonoBehaviour
                 spriteSheet = "animals";
                 break;
             default:
-                spriteSheet = "animals";
+                spriteSheet = "shapes";
                 break;
         }
 

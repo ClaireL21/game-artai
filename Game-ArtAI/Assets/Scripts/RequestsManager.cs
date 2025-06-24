@@ -50,9 +50,9 @@ public class RequestsManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        numPatterns = 10;
-        numColors = 10;
-        numThird = 10;
+        numPatterns = 12;
+        numColors = 12;
+        numThird = 12;
         requests = new Queue<RequestObject>();
         artInfo = new Queue<int>();
 
@@ -171,7 +171,7 @@ public class RequestsManager : MonoBehaviour
             return artInfo.Dequeue();
         } else
         {
-            return UnityEngine.Random.Range(0, 24); // numColors + numPatterns + numThird
+            return UnityEngine.Random.Range(0, 36); // numColors + numPatterns + numThird
         }
     }
     /*private void AddRandomArt()
