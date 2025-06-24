@@ -114,62 +114,25 @@ public class Sketchbook : MonoBehaviour
 
                     Debug.Log($"Drawing at: {currentPos} (Texture: {tex.width}x{tex.height})");
 
-                    //pixelUV.x *= tex.width;
-                    //pixelUV.y *= tex.height;
-
-                    //int pixelX = (int)pixelUV.x;
-                    //int pixelY = (int)pixelUV.y;
-
-                    //Debug.Log($"Drawing at: ({pixelX}, {pixelY}) on texture size {tex.width}x{tex.height}");
-
-                    //currentPos.x = 700.0f - currentPos.x;
-
-                    var colnum = currentPos.x % 7.0f;
-                    var rownum = currentPos.y % 5.0f; 
-
-                    int temp = (int)((currentPos.x * tex.height) + currentPos.y);
-
-
-                    Debug.Log($"index is at: (temp)");
-
+                    var colnum = Mathf.Floor(currentPos.x / (tex.width / 7f));
+                    var rownum = Mathf.Floor(currentPos.y / (tex.height / 5f));
 
                     Color[] pixels = new Color[tex.width * tex.height];
                     for (int i = 0; i < pixels.Length; i++)
                     {
                     
-
-                        // 5x7 to keep aspect ratio
-
-                        
-
-                        pixels[i] = Color.black;
-
-                        //if (i > temp-10 && i < temp+10)
-                        //{
-                        //    pixels[i] = Color.red;
-                        //}
-
+                        pixels[i] = Color.white;
                         
                     }
 
-                    for (int i = (int)(tex.width / 7 * colnum); i < (int)(tex.width / 7 * (colnum + 1)); i++)
-                    {
-                        for (int j = (int)(tex.height / 5 * rownum); j < (int)(tex.height / 5 * (rownum + 1)); j++)
-                        {
+                    int squareWidth = Mathf.FloorToInt(tex.width / 7f);
+                    int squareHeight = Mathf.FloorToInt(tex.height / 5f);
+                    int startX = (int)(colnum * squareWidth);
+                    int startY = (int)(rownum * squareHeight);
 
-                            int pos = (int)((j * tex.width) + i);
-
-                            if (pos >= 0 && pos < pixels.Length - 1)
-                            {
-
-                                pixels[pos] = Color.red;
-                            }
-                        }
-                    }
-
-                    //for (int i = 0; i < 50; i++)
+                    //for (int i = (int)(tex.width / 7 * colnum); i < (int)(tex.width / 7 * (colnum + 1)); i++)
                     //{
-                    //    for (int j = 450; j < 500; j++)
+                    //    for (int j = (int)(tex.height / 5 * rownum); j < (int)(tex.height / 5 * (rownum + 1)); j++)
                     //    {
 
                     //        int pos = (int)((j * tex.width) + i);
@@ -181,6 +144,18 @@ public class Sketchbook : MonoBehaviour
                     //        }
                     //    }
                     //}
+
+                    for (int i = startX; i < startX + squareWidth; i++)
+                    {
+                        for (int j = startY; j < startY + squareHeight; j++)
+                        {
+                            int pos = j * tex.width + i;
+                            if (pos >= 0 && pos < pixels.Length)
+                            {
+                                pixels[pos] = Color.red;
+                            }
+                        }
+                    }
 
                     tex.SetPixels(pixels);
                     tex.Apply();
