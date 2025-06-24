@@ -14,7 +14,8 @@ public class Sketchbook : MonoBehaviour
     
     private bool eraserMode;
     private Color lineColor; 
-    private float lineWidth; 
+    private float lineWidth;
+    private Vector2? previousDrawPosition;
 
     Transform clickedObj;
 
@@ -24,6 +25,7 @@ public class Sketchbook : MonoBehaviour
         eraserMode = false;
         lineColor = Color.black;
         lineWidth = 2.0f;
+        previousDrawPosition = null;
     }
 
     // Update is called once per frame
@@ -78,77 +80,118 @@ public class Sketchbook : MonoBehaviour
 
                     // Convert mouse position to texture coordinates
                     Vector2 pixelUV = hit.textureCoord;
-                    pixelUV.x *= tex.width;
-                    pixelUV.y *= tex.height;
 
-                    int pixelX = (int)pixelUV.x;
-                    int pixelY = (int)pixelUV.y;
+                    //Vector2 currentPos = new Vector2(
+                    //pixelUV.x * tex.width,
+                    //pixelUV.y * tex.height
+                    //);
 
-                    Debug.Log($"Drawing at: ({pixelX}, {pixelY}) on texture size {tex.width}x{tex.height}");
+                    //if (previousDrawPosition.HasValue)
+                    //{
+                    //    // Draw line from previous position to current position
+                    //    DrawLine(tex, previousDrawPosition.Value, currentPos);
+                    //    tex.Apply();
+                    //}
 
-                    // Draw with brush size
-                    int brushSize = Mathf.Max(1, (int)lineWidth);
-                    Color drawColor = eraserMode ? Color.white : lineColor;
+                    //// Also draw at current position (for single clicks/dots)
+                    //DrawCircle(tex, currentPos);
+                    //tex.Apply();
+
+                    //previousDrawPosition = currentPos;
+
+                    // ALTERNATIVE COORDINATE CALCULATION
+                    Vector2 localPos = sr.transform.InverseTransformPoint(hit.point);
+                    Rect spriteRect = sr.sprite.rect;
+                    Vector2 pixelPos = new Vector2(
+                        (localPos.x + sr.sprite.bounds.extents.x) / sr.sprite.bounds.size.x * spriteRect.width,
+                        (localPos.y + sr.sprite.bounds.extents.y) / sr.sprite.bounds.size.y * spriteRect.height
+                    );
+
+                    Vector2 currentPos = new Vector2(
+                        Mathf.Clamp(pixelPos.x + spriteRect.x, 0, tex.width - 1),
+                        Mathf.Clamp(pixelPos.y + spriteRect.y, 0, tex.height - 1)
+                    );
+
+                    Debug.Log($"Drawing at: {currentPos} (Texture: {tex.width}x{tex.height})");
+
+                    //pixelUV.x *= tex.width;
+                    //pixelUV.y *= tex.height;
+
+                    //int pixelX = (int)pixelUV.x;
+                    //int pixelY = (int)pixelUV.y;
+
+                    //Debug.Log($"Drawing at: ({pixelX}, {pixelY}) on texture size {tex.width}x{tex.height}");
+
+                    //currentPos.x = 700.0f - currentPos.x;
+
+                    var colnum = currentPos.x % 7.0f;
+                    var rownum = currentPos.y % 5.0f; 
+
+                    int temp = (int)((currentPos.x * tex.height) + currentPos.y);
+
+
+                    Debug.Log($"index is at: (temp)");
+
 
                     Color[] pixels = new Color[tex.width * tex.height];
-                    for (int i = 0; i < pixels.Length; i++) pixels[i] = Color.red;
+                    for (int i = 0; i < pixels.Length; i++)
+                    {
+                    
+
+                        // 5x7 to keep aspect ratio
+
+                        
+
+                        pixels[i] = Color.black;
+
+                        //if (i > temp-10 && i < temp+10)
+                        //{
+                        //    pixels[i] = Color.red;
+                        //}
+
+                        
+                    }
+
+                    for (int i = (int)(tex.width / 7 * colnum); i < (int)(tex.width / 7 * (colnum + 1)); i++)
+                    {
+                        for (int j = (int)(tex.height / 5 * rownum); j < (int)(tex.height / 5 * (rownum + 1)); j++)
+                        {
+
+                            int pos = (int)((j * tex.width) + i);
+
+                            if (pos >= 0 && pos < pixels.Length - 1)
+                            {
+
+                                pixels[pos] = Color.red;
+                            }
+                        }
+                    }
+
+                    //for (int i = 0; i < 50; i++)
+                    //{
+                    //    for (int j = 450; j < 500; j++)
+                    //    {
+
+                    //        int pos = (int)((j * tex.width) + i);
+
+                    //        if (pos >= 0 && pos < pixels.Length - 1)
+                    //        {
+
+                    //            pixels[pos] = Color.red;
+                    //        }
+                    //    }
+                    //}
+
                     tex.SetPixels(pixels);
                     tex.Apply();
 
-                    //for (int x = pixelX - brushSize; x <= pixelX + brushSize; x++)
-                    //{
-                    //    for (int y = pixelY - brushSize; y <= pixelY + brushSize; y++)
-                    //    {
-                    //        if (x >= 0 && x < tex.width && y >= 0 && y < tex.height)
-                    //        {
-                    //            // Simple circular brush check
-                    //            if (Vector2.Distance(new Vector2(x, y), new Vector2(pixelX, pixelY)) <= brushSize)
-                    //            {
-                    //                tex.SetPixel(x, y, drawColor);
-                    //            }
-                    //        }
-                    //    }
-                    //}
-
-                    //if (pixelX >= 0 && pixelX < tex.width && pixelY >= 0 && pixelY < tex.height)
-                    //{
-                    //    // Draw a solid circle
-                    //    for (int y = pixelY - brushSize; y <= pixelY + brushSize; y++)
-                    //    {
-                    //        for (int x = pixelX - brushSize; x <= pixelX + brushSize; x++)
-                    //        {
-                    //            if (x >= 0 && x < tex.width && y >= 0 && y < tex.height)
-                    //            {
-                    //                float dist = Mathf.Sqrt(
-                    //                    Mathf.Pow(x - pixelX, 2) +
-                    //                    Mathf.Pow(y - pixelY, 2)
-                    //                );
-
-                    //                if (dist <= brushSize)
-                    //                {
-                    //                    // For eraser, use clear color with alpha blending
-                    //                    if (eraserMode)
-                    //                    {
-                    //                        Color current = tex.GetPixel(x, y);
-                    //                        current.a = Mathf.Lerp(current.a, 0, 0.5f);
-                    //                        tex.SetPixel(x, y, current);
-                    //                    }
-                    //                    else
-                    //                    {
-                    //                        tex.SetPixel(x, y, drawColor);
-                    //                    }
-                    //                }
-                    //            }
-                    //        }
-                    //    }
-
-                    //    tex.Apply();
-
-                    //    UpdateSpriteFromTexture(sr, tex);
-                    //}
                 }
 
             }
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            previousDrawPosition = null; 
         }
     }
     private Texture2D GetOrCreateTextureClone(SpriteRenderer sr)
@@ -235,6 +278,65 @@ public class Sketchbook : MonoBehaviour
             Destroy(oldSprite);
         }
 
+    }
+
+    void DrawLine(Texture2D tex, Vector2 start, Vector2 end)
+    {
+        int brushSize = Mathf.Max(1, (int)lineWidth);
+        Color drawColor = eraserMode ? Color.white : lineColor;
+
+        // Bresenham's line algorithm
+        int x0 = (int)start.x;
+        int y0 = (int)start.y;
+        int x1 = (int)end.x;
+        int y1 = (int)end.y;
+
+        int dx = Mathf.Abs(x1 - x0);
+        int dy = Mathf.Abs(y1 - y0);
+        int sx = x0 < x1 ? 1 : -1;
+        int sy = y0 < y1 ? 1 : -1;
+        int err = dx - dy;
+
+        while (true)
+        {
+            // Draw circle at each point along the line
+            DrawCircle(tex, new Vector2(x0, y0));
+
+            if (x0 == x1 && y0 == y1) break;
+
+            int e2 = 2 * err;
+            if (e2 > -dy)
+            {
+                err -= dy;
+                x0 += sx;
+            }
+            if (e2 < dx)
+            {
+                err += dx;
+                y0 += sy;
+            }
+        }
+    }
+
+    void DrawCircle(Texture2D tex, Vector2 center)
+    {
+        int brushSize = Mathf.Max(1, (int)lineWidth);
+        Color drawColor = eraserMode ? Color.white : lineColor;
+
+        for (int x = (int)center.x - brushSize; x <= (int)center.x + brushSize; x++)
+        {
+            for (int y = (int)center.y - brushSize; y <= (int)center.y + brushSize; y++)
+            {
+                if (x >= 0 && x < tex.width && y >= 0 && y < tex.height)
+                {
+                    float dist = Vector2.Distance(center, new Vector2(x, y));
+                    if (dist <= brushSize)
+                    {
+                        tex.SetPixel(x, y, drawColor);
+                    }
+                }
+            }
+        }
     }
 
 }
