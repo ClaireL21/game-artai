@@ -13,6 +13,7 @@ public class Artwork : MonoBehaviour
     bool runLogic = false; 
 
     public bool isMoved;
+    public int debugLogArtIndex = -1;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -50,12 +51,31 @@ public class Artwork : MonoBehaviour
 
     public void Setup(int spriteInfo)
     {
+        int artIndex = RequestsManager.RM.GetArt();
+        debugLogArtIndex = artIndex;
 
-        Sprite[] all = Resources.LoadAll<Sprite>("emoji");
+        int category = artIndex / 10;
+        int index = artIndex % 10;
+        string spriteSheet;
+
+        switch (category)
+        {
+            case 0:
+                spriteSheet = "emoji";
+                break;
+            case 1:
+                spriteSheet = "animals";
+                break;
+            default:
+                spriteSheet = "animals";
+                break;
+        }
+
+        Sprite[] all = Resources.LoadAll<Sprite>(spriteSheet);
 
         foreach (var s in all)
         {
-            if (s.name == $"emoji_{spriteInfo}")
+            if (s.name == $"{spriteSheet}_{index}")
             {
                 spriteImg = s;
                 break;

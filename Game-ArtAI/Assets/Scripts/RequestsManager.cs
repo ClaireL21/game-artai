@@ -8,7 +8,7 @@ public class RequestsManager : MonoBehaviour
     [Header("Request Settings")]
 
     [Range(0.0f, 1.0f)]
-    public float freqReqSizeOne = 0.2f;
+    public float freqReqSizeOne = 0.3f;
 
     [Range(0.0f, 1.0f)]
     public float freqReqSizeTwo = 0.4f;
@@ -28,19 +28,24 @@ public class RequestsManager : MonoBehaviour
     //      so... ((int) artInfoItem / 10 ) + artInfoItem % 10
     //      Note: all spritesheets must be same size for this to work
     public Queue<int> artInfo;
-    public int currNumArt;
+    //public int currNumArt;
     //public int currNumRequests;     // number of requests visible in the scene
     public static RequestsManager RM;
-   
 
 
-    
+
+
     // gameobjects
     //public List<GameObject> requests;
 
     // private vars
     //float timer;
     //public bool notActive = true; // should alter this 
+
+    private void Awake()
+    {
+        RM = this;
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -57,6 +62,8 @@ public class RequestsManager : MonoBehaviour
             freqReqSizeTwo = 0.4f;
             freqReqSizeThree = 0.3f;
         }
+
+        //AddToRequestArtQueues(5);
 
         //timer = 5.0f;
     }
@@ -150,6 +157,10 @@ public class RequestsManager : MonoBehaviour
 
     public RequestObject GetRequest()
     {
+        if (requests.Count == 0)
+        {
+            AddToRequestArtQueues(5);
+        }
         return requests.Dequeue();
     }
     
@@ -160,7 +171,7 @@ public class RequestsManager : MonoBehaviour
             return artInfo.Dequeue();
         } else
         {
-            return UnityEngine.Random.Range(0, numColors + numPatterns + numThird);
+            return UnityEngine.Random.Range(0, 24); // numColors + numPatterns + numThird
         }
     }
     /*private void AddRandomArt()
