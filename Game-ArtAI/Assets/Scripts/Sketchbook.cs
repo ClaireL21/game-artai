@@ -81,25 +81,6 @@ public class Sketchbook : MonoBehaviour
                     // Convert mouse position to texture coordinates
                     Vector2 pixelUV = hit.textureCoord;
 
-                    //Vector2 currentPos = new Vector2(
-                    //pixelUV.x * tex.width,
-                    //pixelUV.y * tex.height
-                    //);
-
-                    //if (previousDrawPosition.HasValue)
-                    //{
-                    //    // Draw line from previous position to current position
-                    //    DrawLine(tex, previousDrawPosition.Value, currentPos);
-                    //    tex.Apply();
-                    //}
-
-                    //// Also draw at current position (for single clicks/dots)
-                    //DrawCircle(tex, currentPos);
-                    //tex.Apply();
-
-                    //previousDrawPosition = currentPos;
-
-                    // ALTERNATIVE COORDINATE CALCULATION
                     Vector2 localPos = sr.transform.InverseTransformPoint(hit.point);
                     Rect spriteRect = sr.sprite.rect;
                     Vector2 pixelPos = new Vector2(
