@@ -52,7 +52,7 @@ public class DialogueSpawner : MonoBehaviour
         this.gameObject.transform.SetPositionAndRotation(spawnPos, Camera.main.transform.rotation);
         Vector3 currScale = dialogueBG.transform.localScale;
 
-        int testNumEmojis = 3;
+        int testNumEmojis = 2;
 
         if (testNumEmojis == 1)
         {

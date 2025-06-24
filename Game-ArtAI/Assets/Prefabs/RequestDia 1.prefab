@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7439014089739101995}
   - component: {fileID: 456032859942471637}
   - component: {fileID: 5514396561739684848}
+  - component: {fileID: -6578348572154689602}
   m_Layer: 0
   m_Name: RequestDia 1
   m_TagString: Request
@@ -29,8 +30,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 1.1428572}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 8, y: 8, z: 2.2857144}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 9118020849074097437}
   m_Father: {fileID: 0}
@@ -102,7 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69ea3dd7f6d318543b143664728a9556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiDocumentPrefab: {fileID: 0}
+  uiDocumentPrefab: {fileID: 839311441007110060, guid: f83ddb1426cb863418968e2bb3590402, type: 3}
   positionRandomness: 0.2
   uiScale: 1.2
   dialogueBG: {fileID: 8244272100180295740}
@@ -121,6 +122,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueSpawner: {fileID: 456032859942471637}
   choices: 0000000001000000
+--- !u!114 &-6578348572154689602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7778941013295098761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 710b2f52c2d557a4999b3844cedba8a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  offset: {x: 0, y: 0, z: 0}
 --- !u!1 &8244272100180295740
 GameObject:
   m_ObjectHideFlags: 0

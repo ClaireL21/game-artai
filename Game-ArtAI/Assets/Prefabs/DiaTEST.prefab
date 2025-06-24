@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 456032859942471637}
   - component: {fileID: 5514396561739684848}
   m_Layer: 0
-  m_Name: RequestDia
-  m_TagString: Request
+  m_Name: DiaTEST
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

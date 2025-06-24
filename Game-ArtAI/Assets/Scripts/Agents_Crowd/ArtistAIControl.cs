@@ -61,6 +61,7 @@ public class ArtistAIControl : AIControlTarget
         art = Instantiate(artPrefab, this.transform);
         art.transform.localPosition = new Vector3(0, this.transform.localScale.y + 1, 0);
         isDrawing = true;
+        art.GetComponent<Artwork>().Setup(0);
     }
     private void CheckArtworkStatus()
     {

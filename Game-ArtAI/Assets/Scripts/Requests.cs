@@ -14,6 +14,7 @@ public class Requests : MonoBehaviour
     // gameobjects
     [SerializeField] GameObject artworks;
     [SerializeField] GameObject target;
+    //public List<GameObject> requests;
 
     // private vars
     float timer;
