@@ -4,18 +4,14 @@ using UnityEngine;
 
 public class Sketchbook : MonoBehaviour
 {
-    //public GameObject Eraser;
-    //public GameObject Pencil;
-    //public Transform Sizes;
-    //public GameObject Palette;
-    //public GameObject Canvas;
-
     // can change this to be hex or smthing
     
     private bool eraserMode;
     private Color lineColor; 
     private float lineWidth;
     private Vector2? previousDrawPosition;
+    private Texture2D clonedTexture; // Store the cloned texture reference
+    private SpriteRenderer sketchbookRenderer; // Reference to the Sketchbook's SpriteRenderer
 
     Transform clickedObj;
 
@@ -26,6 +22,7 @@ public class Sketchbook : MonoBehaviour
         lineColor = Color.black;
         lineWidth = 2.0f;
         previousDrawPosition = null;
+        sketchbookRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -75,11 +72,16 @@ public class Sketchbook : MonoBehaviour
                         return;
                     }
 
+                    if (clonedTexture == null || sr.sprite.texture != clonedTexture)
+                    {
+                        clonedTexture = GetOrCreateTextureClone(sr);
+                    }
+
                     // Get or create a clone of the texture
-                    Texture2D tex = GetOrCreateTextureClone(sr);
+                    //Texture2D tex = GetOrCreateTextureClone(sr);
 
                     // Convert mouse position to texture coordinates
-                    Vector2 pixelUV = hit.textureCoord;
+                    //Vector2 pixelUV = hit.textureCoord;
 
                     Vector2 localPos = sr.transform.InverseTransformPoint(hit.point);
                     Rect spriteRect = sr.sprite.rect;
@@ -89,27 +91,19 @@ public class Sketchbook : MonoBehaviour
                     );
 
                     Vector2 currentPos = new Vector2(
-                        Mathf.Clamp(pixelPos.x + spriteRect.x, 0, tex.width - 1),
-                        Mathf.Clamp(pixelPos.y + spriteRect.y, 0, tex.height - 1)
+                        Mathf.Clamp(pixelPos.x + spriteRect.x, 0, clonedTexture.width - 1),
+                        Mathf.Clamp(pixelPos.y + spriteRect.y, 0, clonedTexture.height - 1)
                     );
 
-                    Debug.Log($"Drawing at: {currentPos} (Texture: {tex.width}x{tex.height})");
+                    Debug.Log($"Drawing at: {currentPos} (Texture: {clonedTexture.width}x{clonedTexture.height})");
 
-                    var colnum = Mathf.Floor(currentPos.x / (tex.width / 7f));
-                    var rownum = Mathf.Floor(currentPos.y / (tex.height / 5f));
+                    var colnum = Mathf.Floor(currentPos.x / (clonedTexture.width / 7f));
+                    var rownum = Mathf.Floor(currentPos.y / (clonedTexture.height / 5f));
 
-                    //Color[] pixels = new Color[tex.width * tex.height];
-                    Color[] pixels = tex.GetPixels();
+                    Color[] pixels = clonedTexture.GetPixels();
 
-                    //for (int i = 0; i < pixels.Length; i++)
-                    //{
-                    
-                    //    pixels[i] = Color.white;
-                        
-                    //}
-
-                    int squareWidth = Mathf.FloorToInt(tex.width / 7f);
-                    int squareHeight = Mathf.FloorToInt(tex.height / 5f);
+                    int squareWidth = Mathf.FloorToInt(clonedTexture.width / 7f);
+                    int squareHeight = Mathf.FloorToInt(clonedTexture.height / 5f);
                     int startX = (int)(colnum * squareWidth);
                     int startY = (int)(rownum * squareHeight);
 
@@ -132,7 +126,7 @@ public class Sketchbook : MonoBehaviour
                     {
                         for (int j = startY; j < startY + squareHeight; j++)
                         {
-                            int pos = j * tex.width + i;
+                            int pos = j * clonedTexture.width + i;
                             if (pos >= 0 && pos < pixels.Length)
                             {
                                 pixels[pos] = Color.red;
@@ -140,8 +134,8 @@ public class Sketchbook : MonoBehaviour
                         }
                     }
 
-                    tex.SetPixels(pixels);
-                    tex.Apply();
+                    clonedTexture.SetPixels(pixels);
+                    clonedTexture.Apply();
 
                 }
 
@@ -155,9 +149,15 @@ public class Sketchbook : MonoBehaviour
     private Texture2D GetOrCreateTextureClone(SpriteRenderer sr)
     {
         // If we already have a cloned texture, use it
-        if (sr.sprite != null && sr.sprite.texture != null && sr.sprite.texture.name.EndsWith("(Clone)"))
+        //if (sr.sprite != null && sr.sprite.texture != null && sr.sprite.texture.name.EndsWith("(Clone)"))
+        //{
+        //    return sr.sprite.texture;
+        //}
+
+        // Check if we already have a usable texture
+        if (clonedTexture != null && sr.sprite.texture == clonedTexture)
         {
-            return sr.sprite.texture;
+            return clonedTexture;
         }
 
         if (sr.sprite == null)
