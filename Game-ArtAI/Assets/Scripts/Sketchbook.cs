@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI.Table;
+using UnityEngine.UIElements;
 
 public class Sketchbook : MonoBehaviour
 {
@@ -19,14 +21,14 @@ public class Sketchbook : MonoBehaviour
     {
         eraserMode = false;
         lineColor = Color.black;
-        lineWidth = 2.0f;
+        lineWidth = 1.0f;
         previousDrawPosition = null;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -39,13 +41,14 @@ public class Sketchbook : MonoBehaviour
 
                 if (clickedObj.tag == "Color")
                 {
-                    eraserMode = true;
+                    eraserMode = false;
                     lineColor = clickedObj.gameObject.GetComponent<SpriteRenderer>().color;
                 }
 
                 else if (clickedObj.tag == "Size")
                 {
                     lineWidth = float.Parse(clickedObj.name);
+                    Debug.Log($"Width: {lineWidth}");
                 }
 
                 else if (clickedObj.tag == "Options")
@@ -90,15 +93,31 @@ public class Sketchbook : MonoBehaviour
 
                     Debug.Log($"Drawing at: {currentPos} (Texture: {clonedTexture.width}x{clonedTexture.height})");
 
-                    var colnum = Mathf.Floor(currentPos.x / (clonedTexture.width / 7f));
-                    var rownum = Mathf.Floor(currentPos.y / (clonedTexture.height / 5f));
+                    int baseCellWidth = Mathf.FloorToInt(clonedTexture.width / 7.0f);
+                    int baseCellHeight = Mathf.FloorToInt(clonedTexture.height / 5.0f);
+
+                    //var colnum = Mathf.Floor(currentPos.x / (clonedTexture.width / 7f));
+                    //var rownum = Mathf.Floor(currentPos.y / (clonedTexture.height / 5f));
+
+                    var colnum = Mathf.Floor(currentPos.x / baseCellWidth);
+                    var rownum = Mathf.Floor(currentPos.y / baseCellHeight);
 
                     Color[] pixels = clonedTexture.GetPixels();
 
-                    int squareWidth = Mathf.FloorToInt(clonedTexture.width / 7f);
-                    int squareHeight = Mathf.FloorToInt(clonedTexture.height / 5f);
-                    int startX = (int)(colnum * squareWidth);
-                    int startY = (int)(rownum * squareHeight);
+                    float sizeMultiplier = Mathf.Min(1.0f, lineWidth);
+                    //int squareWidth = Mathf.FloorToInt(Mathf.FloorToInt(clonedTexture.width / 7f) * sizeMultiplier);
+                    //int squareHeight = Mathf.FloorToInt(Mathf.FloorToInt(clonedTexture.height / 5f) * sizeMultiplier);
+
+                    int squareWidth = Mathf.FloorToInt(baseCellWidth * sizeMultiplier);
+                    int squareHeight = Mathf.FloorToInt(baseCellHeight * sizeMultiplier);
+
+                    int centerX = Mathf.FloorToInt(colnum * baseCellWidth + baseCellWidth / 2);
+                    int centerY = Mathf.FloorToInt(rownum * baseCellHeight + baseCellHeight / 2);
+
+                    //int startX = (int)(colnum * squareWidth);
+                    //int startY = (int)(rownum * squareHeight);
+                    int startX = centerX - squareWidth / 2;
+                    int startY = centerY - squareHeight / 2;
 
                     //for (int i = (int)(tex.width / 7 * colnum); i < (int)(tex.width / 7 * (colnum + 1)); i++)
                     //{
