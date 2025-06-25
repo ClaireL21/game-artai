@@ -19,7 +19,7 @@ public class RequestObject : MonoBehaviour
         
     }
 
-    public RequestObject(int patternIndex, int colorIndex, int thirdIndex, int requestSize)
+    public RequestObject(int colorIndex, int patternIndex, int thirdIndex, int requestSize)
     {
         this.colorIndex = colorIndex;
         this.patternIndex = patternIndex;
