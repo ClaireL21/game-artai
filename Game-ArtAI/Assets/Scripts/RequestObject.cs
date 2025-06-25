@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class RequestObject : MonoBehaviour
 {
-    private int patternIndex;
-    private int colorIndex;
-    private int thirdIndex;
+    private int colorIndex;     // emoji
+    private int patternIndex;   // animal
+    private int thirdIndex;     // shape
     private int requestSize;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -21,22 +21,33 @@ public class RequestObject : MonoBehaviour
 
     public RequestObject(int patternIndex, int colorIndex, int thirdIndex, int requestSize)
     {
-        this.patternIndex = patternIndex;
         this.colorIndex = colorIndex;
+        this.patternIndex = patternIndex;
         this.thirdIndex = thirdIndex;
         this.requestSize = requestSize;
     }
 
-    public int getPatternIndex()
-    {
-        return this.patternIndex;
-    }
     public int getColorIndex()
     {
         return this.colorIndex;
     }
+    public int getPatternIndex()
+    {
+        return this.patternIndex;
+    }
     public int getThirdIndex()
     {
         return this.thirdIndex;
+    }
+    public int getSize()
+    {
+        return this.requestSize;
+    }
+    public string toString()
+    {
+        return "Color: " + this.colorIndex +
+            "; Pattern: " + this.patternIndex +
+            "; Third: " + this.thirdIndex +
+            "; Size: " + this.requestSize;
     }
 }

@@ -16,6 +16,10 @@ public class DialogueSpawner : MonoBehaviour
     IObjectPool<WorldSpaceUI> uiDocumentPool;
     const string k_labelName = "TestLabel";
 
+    public int debugSize = -1;
+    public float debugScale = -1;
+    public string debugText = "";
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -40,7 +44,7 @@ public class DialogueSpawner : MonoBehaviour
     void OnReturn(WorldSpaceUI uiDoc) => uiDoc.gameObject.SetActive(false);
     void OnDestroyObj(WorldSpaceUI uiDoc) => Destroy(uiDoc.gameObject);
 
-    public void SpawnDialogue(Tuple<int, int> items, Vector3 worldPos)
+    public void SpawnDialogue(RequestObject request, Vector3 worldPos)
     {
         Vector3 spawnPos = worldPos;
 
@@ -52,25 +56,59 @@ public class DialogueSpawner : MonoBehaviour
         this.gameObject.transform.SetPositionAndRotation(spawnPos, Camera.main.transform.rotation);
         Vector3 currScale = dialogueBG.transform.localScale;
 
-        int testNumEmojis = 2;
+        currScale.x = 0.25f * (request.getSize() - 1) + 0.5f;
+        debugScale = currScale.x;
+        debugSize = request.getSize();
+        string requestText = "";
+        debugText = "";
 
-        if (testNumEmojis == 1)
+        if (request.getColorIndex() >= 0)
         {
-            currScale.x = 0.5f;
-            instance.SetLabelText(k_labelName, $" <sprite=\"emojiAsset\" index={items.Item1}>");
+            requestText += $" <sprite=\"emojiAsset\" index={request.getColorIndex()}>";
+            debugText += " <sprite=\"emojiAsset\" index=" + request.getColorIndex();
         }
-        else if (testNumEmojis == 2)
+        if (request.getPatternIndex() >= 0)
         {
-            currScale.x = 0.75f;
-            instance.SetLabelText(k_labelName, $" <sprite=\"emojiAsset\" index={items.Item1}> <sprite=\"emojiAsset\" index={items.Item2}>");
+            requestText += $" <sprite=\"animalsAsset\" index={request.getPatternIndex()}>";
+            debugText += " <sprite=\"animalsAsset\" index=" + request.getPatternIndex();
 
         }
-        else
+        if (request.getThirdIndex() >= 0)
         {
-            currScale.x = 1.0f;
-            instance.SetLabelText(k_labelName, $" <sprite=\"emojiAsset\" index={items.Item1}> <sprite=\"emojiAsset\" index={items.Item2}> <sprite=\"emojiAsset\" index={items.Item2}>");
+            requestText += $" <sprite=\"shapesAsset\" index={request.getThirdIndex()}>";
+            debugText += " <sprite=\"shapesAsset\" index=" + request.getThirdIndex();
+
         }
+
+       /* requestText = "";
+        
+        requestText += $" <sprite=\"emojiAsset\" index={3}>";
+        requestText += $" <sprite=\"animalsAsset\" index={11}>";*/
+        //requestText += $" <sprite=\"shapesAsset\" index={15}>";
+
+        //currScale.x = 0.75f;
+        //Debug.Log("Request text: " +  requestText);
+        //Debug.Log("Request toString: " + request.toString());
+        instance.SetLabelText(k_labelName, requestText);
         dialogueBG.transform.localScale = currScale;
+
+        /* if (request.getSize() == 1)
+         {
+             currScale.x = 0.5f;
+             instance.SetLabelText(k_labelName, $" <sprite=\"emojiAsset\" index={items.Item1}>");
+         }
+         else if (request.getSize() == 2)
+         {
+             currScale.x = 0.75f;
+             instance.SetLabelText(k_labelName, $" <sprite=\"emojiAsset\" index={items.Item1}> <sprite=\"emojiAsset\" index={items.Item2}>");
+
+         }
+         else
+         {
+             currScale.x = 1.0f;
+             instance.SetLabelText(k_labelName, $" <sprite=\"emojiAsset\" index={items.Item1}> <sprite=\"emojiAsset\" index={items.Item2}> <sprite=\"emojiAsset\" index={items.Item2}>");
+         }*/
+
     }
 
 }

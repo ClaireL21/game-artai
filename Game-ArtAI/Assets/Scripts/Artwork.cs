@@ -14,6 +14,7 @@ public class Artwork : MonoBehaviour
 
     public bool isMoved;
     public int debugLogArtIndex = -1;
+    public int debugLogCategory = -1;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -51,11 +52,13 @@ public class Artwork : MonoBehaviour
 
     public void Setup(int spriteInfo)
     {
-        int artIndex = RequestsManager.RM.GetArt();
-        debugLogArtIndex = artIndex;
+       /* int artIndex = RequestsManager.RM.GetArt();
+        debugLogArtIndex = artIndex;*/
 
-        int category = artIndex / 10;
-        int index = artIndex % 10;
+        int category = spriteInfo / 16;
+        int index = spriteInfo % 16;
+        debugLogArtIndex = index;
+        debugLogCategory = category;
         string spriteSheet;
 
         switch (category)

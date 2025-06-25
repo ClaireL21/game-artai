@@ -69,7 +69,8 @@ public class ArtistAIControl : AIControlTarget
 
 
         isDrawing = true;
-        art.GetComponent<Artwork>().Setup(0);
+        int artIndex = RequestsManager.RM.GetArt();
+        art.GetComponent<Artwork>().Setup(artIndex);
     }
     private void CheckArtworkStatus()
     {

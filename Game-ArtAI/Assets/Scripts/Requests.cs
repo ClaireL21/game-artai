@@ -47,14 +47,14 @@ public class Requests : MonoBehaviour
         //    SelectRequest();
         //}
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        /*if (Input.GetKeyDown(KeyCode.Q))
         {
             SelectRequest();
-        }
+        }*/
 
     }
 
-    void SelectRequest()
+    /*void SelectRequest()
     {
         List<int> requestInfos = new List<int>();
 
@@ -85,7 +85,7 @@ public class Requests : MonoBehaviour
 
         timer = 5.0f;
         notActive = false;
-    }
+    }*/
 
 
 }

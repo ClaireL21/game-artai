@@ -22,7 +22,7 @@ public class CustomerAIControl : AIControlTarget
         if (agent.remainingDistance < 2)   // set new random destination
         {
             // Create request
-            if (!isRequesting && CrowdManager.CM.requestsCnt < 1)   // max requests at a time
+            if (!isRequesting && CrowdManager.CM.requestsCnt < 5)   // max requests at a time
             {
                 MakeRequest();
             }
@@ -40,7 +40,8 @@ public class CustomerAIControl : AIControlTarget
         /*request = Instantiate(requestPrefab, this.transform);
         request.transform.localPosition = new Vector3(0, this.transform.localScale.y + 1, 0);*/
 
-        Tuple<int, int> requestDetails = Tuple.Create(0, 0);
+       // Tuple<int, int> requestDetails = Tuple.Create(0, 0);
+        RequestObject requestDetails = RequestsManager.RM.GetRequest();
         request.GetComponent<DialoguePicker>().SetDialogue(requestDetails);
         isRequesting = true;
         CrowdManager.CM.requestsCnt++;

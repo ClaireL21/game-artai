@@ -18,14 +18,15 @@ public class RequestsManager : MonoBehaviour
 
 
     // requests in sprite sheets
-    public static int numPatterns; 
     public static int numColors;
+    public static int numPatterns;
     public static int numThird;
 
     public Queue<RequestObject> requests;
     // To decode an artInfo item:
     //      artInfoItem = rand(0, numColors + numPatterns + numThird)
-    //      so... ((int) artInfoItem / 10 ) + artInfoItem % 10
+    //      so...  artInfoItem / 10 -> sprite sheet
+    //             artInfoItem % 10 -> index of corresponding sprite sheet
     //      Note: all spritesheets must be same size for this to work
     public Queue<int> artInfo;
     //public int currNumArt;
@@ -50,9 +51,9 @@ public class RequestsManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        numPatterns = 12;
-        numColors = 12;
-        numThird = 12;
+        numColors = 16;
+        numPatterns = 16;
+        numThird = 16;
         requests = new Queue<RequestObject>();
         artInfo = new Queue<int>();
 
@@ -63,7 +64,7 @@ public class RequestsManager : MonoBehaviour
             freqReqSizeThree = 0.3f;
         }
 
-        //AddToRequestArtQueues(5);
+        AddToRequestArtQueues(5);
 
         //timer = 5.0f;
     }
@@ -120,6 +121,7 @@ public class RequestsManager : MonoBehaviour
                                                   patternIndex,
                                                   thirdIndex,
                                                   size);
+        Debug.Log("RM request: " + request.toString());
         /*        UpdateRequestArtLists(request);
         */
         requests.Enqueue(request);
@@ -129,11 +131,11 @@ public class RequestsManager : MonoBehaviour
         }
         if (patternIndex >= 0)
         {
-            artInfo.Enqueue(patternIndex);
+            artInfo.Enqueue(patternIndex + numColors);
         }
         if (thirdIndex >= 0)
         {
-            artInfo.Enqueue(thirdIndex);
+            artInfo.Enqueue(thirdIndex + numColors + numPatterns);
 
         }
     }
@@ -171,7 +173,7 @@ public class RequestsManager : MonoBehaviour
             return artInfo.Dequeue();
         } else
         {
-            return UnityEngine.Random.Range(0, 36); // numColors + numPatterns + numThird
+            return UnityEngine.Random.Range(0, numColors + numPatterns + numThird); // numColors + numPatterns + numThird
         }
     }
     /*private void AddRandomArt()
