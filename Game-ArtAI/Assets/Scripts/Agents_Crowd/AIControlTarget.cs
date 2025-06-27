@@ -15,6 +15,7 @@ public class AIControlTarget : MonoBehaviour
     public bool isCustomer;
     public bool isProtesting;
     public bool protestorCounted;
+    public string goal;
 
     // Wait time in between activities
     /*private float timeSinceStart;
@@ -109,24 +110,27 @@ public class AIControlTarget : MonoBehaviour
         agent.speed = agentSpeed;
         isProtesting = false;
         protestorCounted = false;
-
+        goal = "";
         isCustomer = this.GetComponent<AgentType>().AgentId == AgentId.Customer;
     }
     public void SetDestinationProtest()
     {
         GameObject protestGoal = CrowdManager.CM.protestGoal;
         agent.SetDestination(protestGoal.transform.position);
+        goal = "protest";
     }
     public void SetDestinationNormal()
     {
         int i = Random.Range(0, goals.Length);
         agent.SetDestination(goals[i].transform.position);
+        goal = "normal";
     }
 
     public void SetDestinationCustomer()
     {
         GameObject customerGoal = CrowdManager.CM.customerGoal;
         agent.SetDestination(customerGoal.transform.position);
+        goal = "machine";
     }
 
     public void BecomeProtestorIfNearby()

@@ -8,6 +8,7 @@ public class CustomerAIControl : AIControlTarget
     public bool hasRequest;
     public bool madeRequest;
     private float chanceWillRequest = 0.5f;
+    public float remainingDistance;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -18,11 +19,13 @@ public class CustomerAIControl : AIControlTarget
         hasRequest = false;
         madeRequest = false;
         request = null;
+        remainingDistance = agent.remainingDistance;
     }
 
     // Update is called once per frame
     void Update()
     {
+        remainingDistance = agent.remainingDistance;
         // Request was received
         if (Input.GetKeyDown(KeyCode.R) && madeRequest)
         {
@@ -35,7 +38,7 @@ public class CustomerAIControl : AIControlTarget
         // Check if agent is at its destination
         else if (agent.remainingDistance < 2)
         {
-            if (hasRequest) // current agent is a customer
+            if (hasRequest && this.goal.Equals("machine")) // current agent is a customer
             {
                 // Make request if request hasn't been made it yet
                 if (!madeRequest && CrowdManager.CM.requestsCnt < CrowdManager.CM.maxCustomers)   // max requests at a time
