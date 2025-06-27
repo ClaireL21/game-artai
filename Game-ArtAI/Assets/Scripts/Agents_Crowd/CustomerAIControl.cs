@@ -5,8 +5,8 @@ public class CustomerAIControl : AIControlTarget
 {
     public GameObject requestPrefab;
     private GameObject request;
-    private bool hasRequest;
-    private bool madeRequest;
+    public bool hasRequest;
+    public bool madeRequest;
     private float chanceWillRequest = 0.5f;
 
 
@@ -40,6 +40,7 @@ public class CustomerAIControl : AIControlTarget
                 // Make request if request hasn't been made it yet
                 if (!madeRequest && CrowdManager.CM.requestsCnt < CrowdManager.CM.maxCustomers)   // max requests at a time
                 {
+                    Debug.Log("Made Request!");
                     MakeRequest();
                 }
             }

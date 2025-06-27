@@ -3,8 +3,10 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     public static UIManager UIManage;
-    [SerializeField] private RectTransform bottomUI;
+    //[SerializeField] private RectTransform bottomUI;
     [SerializeField] private BoxCollider machineUI;
+    [SerializeField] private BoxCollider generateButtonUI;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -15,10 +17,26 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        // check if it hit generate art button
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            // getting obj that is hit
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            {
+
+                if (hit.collider != null && hit.collider == generateButtonUI)
+                {
+                    Debug.Log("Sprite clicked: " + gameObject.name);
+                    RemoveArtInMachineUI();
+                }
+            }
+        }
     }
 
-    public bool IsinBottomUI (Vector2 currPos)
+    /*public bool IsinBottomUI (Vector2 currPos)
     {
         Vector3[] corners = new Vector3[4];
         bottomUI.GetWorldCorners(corners);
@@ -30,7 +48,22 @@ public class UIManager : MonoBehaviour
         return (currPos.x > corners[0].x && currPos.x < corners[2].x && 
                 currPos.y > corners[0].y && currPos.y < corners[2].y);
 
-    }
+    }*/
+
+    /*public bool ClickedGenerateButton(Vector2 currPos)
+    {
+        Vector3[] corners = new Vector3[4];
+        generateButtonUI.GetWorldCorners(corners);
+        foreach (var cor in corners)
+        {
+            Debug.Log("corner: " + cor);
+
+        }
+
+        return (currPos.x > corners[0].x && currPos.x < corners[2].x &&
+                currPos.y > corners[0].y && currPos.y < corners[2].y);
+
+    }*/
     public bool IsInMachineUI(GameObject dragged)
     {
         //Debug.Log("machine ui position: " + machineUI.transform.position + "; machine size: " + machineUI.transform.localScale / 2);
@@ -47,6 +80,19 @@ public class UIManager : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void RemoveArtInMachineUI()
+    {
+        Collider[] colliders = Physics.OverlapBox(machineUI.transform.position, machineUI.transform.localScale / 2, Quaternion.identity);
+
+        foreach (Collider c in colliders)
+        {
+            if (c.gameObject.tag == "Art")
+            {
+                c.gameObject.SetActive(false);
+            }
+        }
     }
 
     // debug for GUI 

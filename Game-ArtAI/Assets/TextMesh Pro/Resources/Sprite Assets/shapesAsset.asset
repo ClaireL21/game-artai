@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: shapesAsset
   m_EditorClassIdentifier: 
   m_Version: 1.1.0
-  m_Material: {fileID: 2100000, guid: ce775ab972cab7b4aa29b7ece2148c5b, type: 2}
+  m_Material: {fileID: 2100000, guid: 5ca3d33f9569dad4e9644cee28e63d77, type: 2}
   m_FaceInfo:
     m_FaceIndex: 0
     m_FamilyName: 
@@ -36,7 +36,7 @@ MonoBehaviour:
     m_StrikethroughOffset: 0
     m_StrikethroughThickness: 0
     m_TabWidth: 0
-  m_SpriteAtlasTexture: {fileID: 2800000, guid: eba737abc334aad4da9089cf42a398e5, type: 3}
+  m_SpriteAtlasTexture: {fileID: 2800000, guid: e516727527a767c42a86c240e4e0a378, type: 3}
   m_SpriteCharacterTable:
   - m_ElementType: 2
     m_Unicode: 65534

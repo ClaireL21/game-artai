@@ -116,7 +116,7 @@ public class RequestsManager : MonoBehaviour
                                                   patternIndex,
                                                   thirdIndex,
                                                   size);
-        Debug.Log("RM request: " + request.toString());
+        //Debug.Log("RM request: " + request.toString());
 
         requests.Enqueue(request);
         if (colorIndex >= 0)
