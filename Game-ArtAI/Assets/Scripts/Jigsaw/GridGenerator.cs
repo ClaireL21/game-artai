@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class GridGenerator : MonoBehaviour
@@ -12,6 +13,7 @@ public class GridGenerator : MonoBehaviour
     [SerializeField] private float gridScale = 1.0f;
 
     private float[] columnWidths;
+    private float[] columnPos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -26,15 +28,35 @@ public class GridGenerator : MonoBehaviour
         
     }
 
+    // Unit column widths, where each column by default is 1 unit wide
+    // Vary column width by offsetting in the negative or positive direction by 1/(column + 1) of column width)
     private void InitializeColumnWidths()
     {
         columnWidths = new float[columns];
+        columnPos = new float[columns];
         for (int i = 0; i < columnWidths.Length; i++)
         {
             columnWidths[i] = 1.0f;
+            columnPos[i] = 0;
         }
 
-        int iters = (columns / 2) * 2;
+        float totalWidth = columns;
+        float offset = 1.0f / (1.0f + columns);
+        for (int i = 0; i < columnWidths.Length; i++)
+        {
+            if (i == columnWidths.Length - 1)
+            {
+                columnWidths[i] = totalWidth;
+            } else
+            {
+                float offsetVal = (float)Math.Round(UnityEngine.Random.Range(-offset, offset), 1, MidpointRounding.AwayFromZero);
+                columnWidths[i] += offsetVal;
+                totalWidth -= columnWidths[i];
+            }
+            Debug.Log(columnWidths[i]);
+        }
+        
+        /*int iters = (columns / 2) * 2;
         for (int i = 0; i < iters; i++)
         {
             int multiplier = 1;
@@ -45,7 +67,7 @@ public class GridGenerator : MonoBehaviour
             columnWidths[i] += multiplier * 0.2f;
             Debug.Log(columnWidths[i]);
 
-        }
+        }*/
 
     }
     private void GenerateGrid()
@@ -54,12 +76,19 @@ public class GridGenerator : MonoBehaviour
         startPos.x += 0.5f * gridScale;
         startPos.y += 0.5f * gridScale;
 
+        float currWidth = 0;
+        float halfWidth = gridScale * columns * 0.5f;
+
         for (int x = 0; x < columns; x++)
         {
             for (int y = 0; y < rows; y++)
             {
-                float colOffset = Mathf.Abs(1 - columnWidths[x]) * 0.5f;
-                Vector3 spawnPosition = startPos + new Vector3(x - colOffset, y) * gridScale;
+
+                //float colOffset = (currWidth + columnWidths[x] - (x + 1)) * 0.5f;
+                Vector3 spawnPosition = new Vector2((currWidth + columnWidths[x] * 0.5f) * gridScale - halfWidth, startPos.y +  y * gridScale);
+                /*float colOffset = Mathf.Abs(1 - columnWidths[x]) * 0.5f;
+                Vector3 spawnPosition = startPos + new Vector3(x - colOffset, y) * gridScale;*/
+
                 //GameObject pieceInstance = Instantiate(quadPrefab, spawnPosition, Quaternion.identity, transform);
                 //pieceInstance.transform.localScale = Vector3.one * gridScale;
 
@@ -74,6 +103,7 @@ public class GridGenerator : MonoBehaviour
                 pieceInstance.GetComponent<Renderer>().material.mainTextureScale = tiling;
                 pieceInstance.GetComponent<Renderer>().material.mainTextureOffset = offset;
             }
+            currWidth += columnWidths[x];
         }
     }
 

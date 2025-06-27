@@ -406,10 +406,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad5e65ea03102974abfd0bcb4fcc49b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  quadPrefab: {fileID: 5705538726141869326, guid: bf5a1b140646ae94f81c5ae81c5ab863, type: 3}
   puzzleMaterial: {fileID: 2100000, guid: 81f3bd8d3df109b488ce041aab80c92e, type: 2}
   rows: 3
-  columns: 5
+  columns: 4
   gridScale: 2
 --- !u!4 &1962747436
 Transform:
