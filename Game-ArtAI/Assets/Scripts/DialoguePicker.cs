@@ -29,9 +29,9 @@ public class DialoguePicker : MonoBehaviour
         
     }
 
-    public void SetDialogue(Tuple<int, int> inputs)
+    public void SetDialogue(RequestObject request)
     {
-        dialogueSpawner.SpawnDialogue(inputs, this.transform.position);
+        dialogueSpawner.SpawnDialogue(request, this.transform.position);
     }
 
 }

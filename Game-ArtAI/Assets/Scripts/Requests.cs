@@ -14,6 +14,7 @@ public class Requests : MonoBehaviour
     // gameobjects
     [SerializeField] GameObject artworks;
     [SerializeField] GameObject target;
+    //public List<GameObject> requests;
 
     // private vars
     float timer;
@@ -46,14 +47,14 @@ public class Requests : MonoBehaviour
         //    SelectRequest();
         //}
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        /*if (Input.GetKeyDown(KeyCode.Q))
         {
             SelectRequest();
-        }
+        }*/
 
     }
 
-    void SelectRequest()
+    /*void SelectRequest()
     {
         List<int> requestInfos = new List<int>();
 
@@ -84,7 +85,7 @@ public class Requests : MonoBehaviour
 
         timer = 5.0f;
         notActive = false;
-    }
+    }*/
 
 
 }
