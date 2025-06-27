@@ -96,5 +96,6 @@ public class Artwork : MonoBehaviour
     public void OnMouseDrag()
     {
         isMoved = true;
+        this.transform.parent = null;
     }
 }

@@ -73,11 +73,6 @@ public class RequestsManager : MonoBehaviour
     void Update()
     {
 
-        /*if (Input.GetKeyDown(KeyCode.Q))
-        {
-            SelectRequest();
-        }*/
-
     }
 
     public void AddToRequestArtQueues(int numItems)
@@ -122,8 +117,7 @@ public class RequestsManager : MonoBehaviour
                                                   thirdIndex,
                                                   size);
         Debug.Log("RM request: " + request.toString());
-        /*        UpdateRequestArtLists(request);
-        */
+
         requests.Enqueue(request);
         if (colorIndex >= 0)
         {
@@ -139,23 +133,6 @@ public class RequestsManager : MonoBehaviour
 
         }
     }
-
-    /*private void UpdateRequestArtLists(RequestObject request)
-    {
-        requests.Enqueue(request);
-        if (request.getColorIndex() >= 0)
-        {
-            artInfo.Enqueue(request.getColorIndex());
-        }
-        if (request.getPatternIndex() >= 0)
-        {
-            artInfo.Enqueue(request.getPatternIndex());
-        }
-        if (request.getThirdIndex() >= 0)
-        {
-            artInfo.Enqueue(request.getThirdIndex());
-        }
-    }*/
 
     public RequestObject GetRequest()
     {
@@ -183,37 +160,5 @@ public class RequestsManager : MonoBehaviour
             artInfo.Enqueue(UnityEngine.Random.Range(0, numColors + numPatterns + numThird));
         }
     }*/
-
-
-    /*void SelectRequest()
-    {
-        List<int> requestInfos = new List<int>();
-
-        var artTotal = artworks.transform.childCount;
-
-        for (int i = 0; i < artTotal / 2; i++)
-        {
-            requestInfos.Add(UnityEngine.Random.Range(0, numColors));
-        }
-
-        for (int i = artTotal / 2; i < artTotal; i++)
-        {
-            requestInfos.Add(UnityEngine.Random.Range(0, numPatterns));
-        }
-
-        // pick request & set 
-
-        Tuple<int, int> request = Tuple.Create(requestInfos[0], requestInfos[artTotal / 2]);
-        target.GetComponent<DialoguePicker>().SetDialogue(request);
-
-        requestInfos = requestInfos.OrderBy(x => UnityEngine.Random.value).ToList();
-
-        for (int i = 0; i < artTotal; i++)
-        {
-            var child = artworks.transform.GetChild(i);
-            child.GetComponent<Artwork>().Setup(requestInfos[i]); 
-        }
-    }*/
-
 
 }

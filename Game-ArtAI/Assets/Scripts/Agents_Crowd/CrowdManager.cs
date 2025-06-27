@@ -34,9 +34,11 @@ public class CrowdManager : MonoBehaviour
     private bool isDragging;
 
     // Drawing
+    public int maxArtists;
     public int drawingsCnt;
 
     /* Customer variables */
+    public int maxCustomers;
     public GameObject customerGoal;
     public int requestsCnt;
 
@@ -57,6 +59,8 @@ public class CrowdManager : MonoBehaviour
         protestorsCnt = 0;
         drawingsCnt = 0;
         requestsCnt = 0;
+        maxArtists = 4;
+        maxCustomers = 1;
     }
 
     // Update is called once per frame

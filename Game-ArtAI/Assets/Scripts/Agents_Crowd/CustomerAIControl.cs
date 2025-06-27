@@ -5,26 +5,54 @@ public class CustomerAIControl : AIControlTarget
 {
     public GameObject requestPrefab;
     private GameObject request;
-    private bool isRequesting;
+    private bool hasRequest;
+    private bool madeRequest;
+    private float chanceWillRequest = 0.5f;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         InitializeAgent();
-        SetDestinationCustomer();
+        SetDestinationNormal();
+        hasRequest = false;
+        madeRequest = false;
         request = null;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (agent.remainingDistance < 2)   // set new random destination
+        // Request was received
+        if (Input.GetKeyDown(KeyCode.R) && madeRequest)
         {
-            // Create request
-            if (!isRequesting && CrowdManager.CM.requestsCnt < 5)   // max requests at a time
+            hasRequest = false;
+            madeRequest = false;
+            CrowdManager.CM.requestsCnt--;
+            DeleteRequest();
+            SetDestinationNormal();
+        } 
+        // Check if agent is at its destination
+        else if (agent.remainingDistance < 2)
+        {
+            if (hasRequest) // current agent is a customer
             {
-                MakeRequest();
+                // Make request if request hasn't been made it yet
+                if (!madeRequest && CrowdManager.CM.requestsCnt < CrowdManager.CM.maxCustomers)   // max requests at a time
+                {
+                    MakeRequest();
+                }
+            }
+            else // current agent is at a normal destination
+            {
+                if (UnityEngine.Random.Range(0.0f, 1.0f) > chanceWillRequest)
+                {
+                    hasRequest = true;
+                    SetDestinationCustomer();
+                } else
+                {
+                    SetDestinationNormal();
+                }
             }
         }
     }
@@ -43,7 +71,11 @@ public class CustomerAIControl : AIControlTarget
        // Tuple<int, int> requestDetails = Tuple.Create(0, 0);
         RequestObject requestDetails = RequestsManager.RM.GetRequest();
         request.GetComponent<DialoguePicker>().SetDialogue(requestDetails);
-        isRequesting = true;
+        madeRequest = true;
         CrowdManager.CM.requestsCnt++;
+    }
+    private void DeleteRequest()
+    {
+        Destroy(request);
     }
 }

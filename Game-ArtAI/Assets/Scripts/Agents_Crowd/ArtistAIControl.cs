@@ -46,13 +46,20 @@ public class ArtistAIControl : AIControlTarget
         {
             // Set destination normal or create drawing
             SetDestinationNormal();
-            if (!isDrawing)
+            if (!isDrawing && CrowdManager.CM.drawingsCnt < CrowdManager.CM.maxArtists)
             {
                 CreateDrawing();
-            } else
+            } 
+            /*else
             {
                 CheckArtworkStatus();
-            }
+            }*/
+        }
+
+        // check if drawing has been taken
+        if (isDrawing)
+        {
+            CheckArtworkStatus();
         }
     }
 
@@ -69,14 +76,16 @@ public class ArtistAIControl : AIControlTarget
 
 
         isDrawing = true;
+        CrowdManager.CM.drawingsCnt++;
         int artIndex = RequestsManager.RM.GetArt();
         art.GetComponent<Artwork>().Setup(artIndex);
     }
-    private void CheckArtworkStatus()
+    private void CheckArtworkStatus()   // need to fix?
     {
         if (art.GetComponent<Artwork>().isMoved)
         {
             isDrawing = false;
+            CrowdManager.CM.drawingsCnt--;
         }
     }
 }
