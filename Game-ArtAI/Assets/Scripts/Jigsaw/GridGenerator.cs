@@ -79,7 +79,7 @@ public class GridGenerator : MonoBehaviour
 
         float currWidth = 0;
         float halfWidth = gridScale * columns * 0.5f;
-
+        
         for (int x = 0; x < columns; x++)
         {
             for (int y = 0; y < rows; y++)
@@ -98,10 +98,20 @@ public class GridGenerator : MonoBehaviour
 
                 //GameObject pieceInstance = CreateQuadMesh(spawnPosition, gridScale);
                 float width = columnWidths[x];
-                GameObject pieceInstance = CreatePuzzlePieceMeshUV(spawnPosition, gridScale, width * 0.5f, 0.5f, spawnPosition);
-                
-                Vector2 tiling = new Vector2(1f / columns, 1f / rows);
-                Vector2 offset = new Vector2((float)x / columns, (float)y / rows);
+               // GameObject pieceInstance = CreatePuzzlePieceMeshUV(spawnPosition, gridScale, width * 0.5f, 0.5f, spawnPosition);
+
+                if (y % 2 == 0)
+                {
+                    GameObject pieceInstance = CreateUnevenPuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, 0.7f, 1.3f, 0);
+                } else
+                {
+                    GameObject pieceInstance = CreateUnevenPuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, 1.3f, 0.7f, 1);
+
+                }
+
+
+                /*Vector2 tiling = new Vector2(1f / columns, 1f / rows);
+                Vector2 offset = new Vector2((float)x / columns, (float)y / rows);*/
 
                 /*pieceInstance.GetComponent<Renderer>().material.mainTextureScale = tiling;
                 pieceInstance.GetComponent<Renderer>().material.mainTextureOffset = offset;*/
@@ -213,7 +223,7 @@ public class GridGenerator : MonoBehaviour
         Mesh mesh = new Mesh();
 
         Vector3[] vertices;
-        Vector2[] uvs;
+        //Vector2[] uvs;
 
         if (type == 0)
         {
@@ -226,13 +236,13 @@ public class GridGenerator : MonoBehaviour
             new Vector3(-halfwidth, heightA - 0.5f, 0),
             };
 
-            uvs = new Vector2[]
+            /*uvs = new Vector2[]
             {
             new Vector2(0, 0),
             new Vector2(1, 0),
             new Vector2(1, 1),
             new Vector2(0, 0.54f),
-            };
+            };*/
         } else
         {
             vertices = new Vector3[]
@@ -243,13 +253,13 @@ public class GridGenerator : MonoBehaviour
             new Vector3(-halfwidth, 0.5f, 0),
             };
 
-            uvs = new Vector2[]
+            /*uvs = new Vector2[]
             {
             new Vector2(0, 0),
             new Vector2(1, 0.46f),
             new Vector2(1, 1),
             new Vector2(0, 1),
-            };
+            };*/
         }
 
         int[] triangles = new int[]
@@ -257,30 +267,31 @@ public class GridGenerator : MonoBehaviour
         0, 2, 1,
         0, 3, 2
         };
+        Vector2[] verts = verticesToWorld(vertices, position);
+        Vector2[] uvs = worldToUV(verts);
+        /* float height = Mathf.Max(heightA, heightB);
+         Vector2[] uvs = new Vector2[]
+         {
+         new Vector2(0, 0),
+         new Vector2(1, 0),
+         new Vector2(1, height),
+         new Vector2(0, height)
+         };
+ */
+        /* Vector2[] uvs = new Vector2[vertices.Length];
 
-       /* float height = Mathf.Max(heightA, heightB);
-        Vector2[] uvs = new Vector2[]
-        {
-        new Vector2(0, 0),
-        new Vector2(1, 0),
-        new Vector2(1, height),
-        new Vector2(0, height)
-        };
-*/
-       /* Vector2[] uvs = new Vector2[vertices.Length];
+         float minX = vertices.Min(v => v.x);
+         float maxX = vertices.Max(v => v.x);
+         float minY = vertices.Min(v => v.y);
+         float maxY = vertices.Max(v => v.y);
 
-        float minX = vertices.Min(v => v.x);
-        float maxX = vertices.Max(v => v.x);
-        float minY = vertices.Min(v => v.y);
-        float maxY = vertices.Max(v => v.y);
-
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            float u = Mathf.InverseLerp(minX, maxX, vertices[i].x);
-            float v = Mathf.InverseLerp(minY, maxY, vertices[i].y);
-            uvs[i] = new Vector2(u, v);
-            Debug.Log("x, y = " + x + ", " + y + "; " + uvs[i]);
-        }*/
+         for (int i = 0; i < vertices.Length; i++)
+         {
+             float u = Mathf.InverseLerp(minX, maxX, vertices[i].x);
+             float v = Mathf.InverseLerp(minY, maxY, vertices[i].y);
+             uvs[i] = new Vector2(u, v);
+             Debug.Log("x, y = " + x + ", " + y + "; " + uvs[i]);
+         }*/
 
         // UV offset and size for this tile
         /*float uvWidth = 1f / columns;
@@ -327,7 +338,7 @@ public class GridGenerator : MonoBehaviour
 
     // Creates a rectangular puzzle piece of specified width and height
     // halfwidth, halfheight --> [0, 0.5]
-    private GameObject CreatePuzzlePieceMesh(Vector3 position, float scale, float halfwidth, float halfheight)
+    /*private GameObject CreatePuzzlePieceMesh(Vector3 position, float scale, float halfwidth, float halfheight)
     {
         GameObject obj = new GameObject("Piece");
         obj.transform.position = position;
@@ -371,7 +382,7 @@ public class GridGenerator : MonoBehaviour
         // Material should be assigned externally or reused
         mr.material = new Material(puzzleMaterial); // Temporary
         return obj;
-    }
+    }*/
 
     private GameObject CreateQuadMesh(Vector3 position, float size)
     {
