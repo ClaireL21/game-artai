@@ -4,7 +4,8 @@ using UnityEngine;
 using static UnityEngine.Rendering.DebugUI.Table;
 using UnityEngine.UIElements;
 using System.Collections;
-
+using System.Collections.Generic;
+using System.Drawing;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -16,7 +17,7 @@ public class Sketchbook : MonoBehaviour
     // can change this to be hex or smthing
     
     private bool eraserMode;
-    private Color lineColor; 
+    private UnityEngine.Color lineColor; 
     private float lineWidth;
     private Vector2? previousDrawPosition;
     private Texture2D clonedTexture;
@@ -32,7 +33,7 @@ public class Sketchbook : MonoBehaviour
     void Start()
     {
         eraserMode = false;
-        lineColor = Color.black;
+        lineColor = UnityEngine.Color.black;
         lineWidth = 1.0f;
         previousDrawPosition = null;
         sketchNum = 0;
@@ -131,59 +132,27 @@ public class Sketchbook : MonoBehaviour
 
                     Debug.Log($"Drawing at: {currentPos} (Texture: {clonedTexture.width}x{clonedTexture.height})");
 
-                    int baseCellWidth = Mathf.FloorToInt(clonedTexture.width / 7.0f);
-                    int baseCellHeight = Mathf.FloorToInt(clonedTexture.height / 5.0f);
+                    //int baseCellWidth = Mathf.FloorToInt(clonedTexture.width / 7.0f);
+                    //int baseCellHeight = Mathf.FloorToInt(clonedTexture.height / 5.0f);
+                    int baseCellWidth = 50;
+                    int baseCellHeight = 50;
 
-                    //var colnum = Mathf.Floor(currentPos.x / (clonedTexture.width / 7f));
-                    //var rownum = Mathf.Floor(currentPos.y / (clonedTexture.height / 5f));
 
-                    var colnum = Mathf.Floor(currentPos.x / baseCellWidth);
-                    var rownum = Mathf.Floor(currentPos.y / baseCellHeight);
+                    UnityEngine.Color[] pixels = clonedTexture.GetPixels();
 
-                    Color[] pixels = clonedTexture.GetPixels();
+                    DrawSquare(baseCellWidth, currentPos, pixels);
 
-                    float sizeMultiplier = Mathf.Min(1.0f, lineWidth);
-                    //int squareWidth = Mathf.FloorToInt(Mathf.FloorToInt(clonedTexture.width / 7f) * sizeMultiplier);
-                    //int squareHeight = Mathf.FloorToInt(Mathf.FloorToInt(clonedTexture.height / 5f) * sizeMultiplier);
-
-                    int squareWidth = Mathf.FloorToInt(baseCellWidth * sizeMultiplier);
-                    int squareHeight = Mathf.FloorToInt(baseCellHeight * sizeMultiplier);
-
-                    int centerX = Mathf.FloorToInt(colnum * baseCellWidth + baseCellWidth / 2);
-                    int centerY = Mathf.FloorToInt(rownum * baseCellHeight + baseCellHeight / 2);
-
-                    //int startX = (int)(colnum * squareWidth);
-                    //int startY = (int)(rownum * squareHeight);
-                    int startX = centerX - squareWidth / 2;
-                    int startY = centerY - squareHeight / 2;
-
-                    //for (int i = (int)(tex.width / 7 * colnum); i < (int)(tex.width / 7 * (colnum + 1)); i++)
-                    //{
-                    //    for (int j = (int)(tex.height / 5 * rownum); j < (int)(tex.height / 5 * (rownum + 1)); j++)
-                    //    {
-
-                    //        int pos = (int)((j * tex.width) + i);
-
-                    //        if (pos >= 0 && pos < pixels.Length - 1)
-                    //        {
-
-                    //            pixels[pos] = Color.red;
-                    //        }
-                    //    }
-                    //}
-
-                    for (int i = startX; i < startX + squareWidth; i++)
+                    if (previousDrawPosition != null)
                     {
-                        for (int j = startY; j < startY + squareHeight; j++)
-                        {
-                            int pos = j * clonedTexture.width + i;
-                            if (pos >= 0 && pos < pixels.Length)
-                            {
-                                pixels[pos] = eraserMode ? Color.white : lineColor;
 
-                            }
-                        }
+                        ConnectStroke(currentPos, (Vector2)previousDrawPosition, baseCellWidth, pixels);
+
                     }
+
+                    previousDrawPosition = currentPos;
+
+                    // connect curr square & prev pos w/ bresenham algorithm 
+                    // draw square there 
 
                     clonedTexture.SetPixels(pixels);
                     clonedTexture.Apply();
@@ -197,7 +166,8 @@ public class Sketchbook : MonoBehaviour
             previousDrawPosition = null; 
         }
     }
-    private Texture2D GetOrCreateTextureClone(SpriteRenderer sr)
+
+    Texture2D GetOrCreateTextureClone(SpriteRenderer sr)
     {        
         // Check if we already have a usable texture
         if (clonedTexture != null && sr.sprite.texture == clonedTexture)
@@ -227,7 +197,7 @@ public class Sketchbook : MonoBehaviour
         };
 
         // Get pixels from the original sprite region only
-        Color[] pixels = originalTexture.GetPixels(
+        UnityEngine.Color[] pixels = originalTexture.GetPixels(
             (int)spriteRect.x,
             (int)spriteRect.y,
             width,
@@ -257,89 +227,6 @@ public class Sketchbook : MonoBehaviour
         sr.sprite = newSprite;
 
         return newTexture;
-    }
-
-    void UpdateSpriteFromTexture(SpriteRenderer sr, Texture2D tex)
-    {
-        Sprite oldSprite = sr.sprite;
-        Sprite newSprite = Sprite.Create(
-            tex, 
-            new Rect(0, 0, tex.width, tex.height),
-            oldSprite.pivot / oldSprite.pixelsPerUnit,
-            oldSprite.pixelsPerUnit
-        );
-
-        newSprite.name = oldSprite.name;
-        sr.sprite = newSprite;
-
-        if (Application.isEditor && !Application.isPlaying)
-        {
-            DestroyImmediate(oldSprite);
-        }
-        else
-        {
-            Destroy(oldSprite);
-        }
-
-    }
-
-    void DrawLine(Texture2D tex, Vector2 start, Vector2 end)
-    {
-        int brushSize = Mathf.Max(1, (int)lineWidth);
-        Color drawColor = eraserMode ? Color.white : lineColor;
-
-        // Bresenham's line algorithm
-        int x0 = (int)start.x;
-        int y0 = (int)start.y;
-        int x1 = (int)end.x;
-        int y1 = (int)end.y;
-
-        int dx = Mathf.Abs(x1 - x0);
-        int dy = Mathf.Abs(y1 - y0);
-        int sx = x0 < x1 ? 1 : -1;
-        int sy = y0 < y1 ? 1 : -1;
-        int err = dx - dy;
-
-        while (true)
-        {
-            // Draw circle at each point along the line
-            DrawCircle(tex, new Vector2(x0, y0));
-
-            if (x0 == x1 && y0 == y1) break;
-
-            int e2 = 2 * err;
-            if (e2 > -dy)
-            {
-                err -= dy;
-                x0 += sx;
-            }
-            if (e2 < dx)
-            {
-                err += dx;
-                y0 += sy;
-            }
-        }
-    }
-
-    void DrawCircle(Texture2D tex, Vector2 center)
-    {
-        int brushSize = Mathf.Max(1, (int)lineWidth);
-        Color drawColor = eraserMode ? Color.white : lineColor;
-
-        for (int x = (int)center.x - brushSize; x <= (int)center.x + brushSize; x++)
-        {
-            for (int y = (int)center.y - brushSize; y <= (int)center.y + brushSize; y++)
-            {
-                if (x >= 0 && x < tex.width && y >= 0 && y < tex.height)
-                {
-                    float dist = Vector2.Distance(center, new Vector2(x, y));
-                    if (dist <= brushSize)
-                    {
-                        tex.SetPixel(x, y, drawColor);
-                    }
-                }
-            }
-        }
     }
 
     public void SaveTextureToAssets(Texture2D texture, string fileName = "SavedTexture")
@@ -388,6 +275,84 @@ public class Sketchbook : MonoBehaviour
             // Use your texture here
         }
         yield return null;
+    }
+
+    void DrawSquare(int cellSize, Vector2 currentPos, UnityEngine.Color[] px)
+    {
+        float sizeMultiplier = Mathf.Min(1.0f, lineWidth);
+
+        int squareWidth = Mathf.FloorToInt(cellSize * sizeMultiplier);
+        int squareHeight = Mathf.FloorToInt(cellSize * sizeMultiplier);
+
+        int startX = (int)(currentPos.x - (squareWidth / 2));
+        int startY = (int)(currentPos.y - (squareHeight / 2));
+
+        for (int i = startX; i < startX + squareWidth /*/ 2*/; i++)
+        {
+            for (int j = startY; j < startY + squareHeight /*/ 2*/; j++)
+            {
+                int pos = j * clonedTexture.width + i;
+                if (pos >= 0 && pos < px.Length)
+                {
+                    px[pos] = eraserMode ? UnityEngine.Color.white : lineColor;
+
+                }
+            }
+        }
+    }
+
+    void ConnectStroke (Vector2 squareOne, Vector2 squareTwo, int size, UnityEngine.Color[] textPx)
+    {
+
+        float distance = Vector2.Distance(squareOne, squareTwo);
+        int steps = Mathf.CeilToInt(distance / (size * 0.25f)); // draw enough squares to fill the gap
+
+        for (int i = 0; i <= steps; i++)
+        {
+            float t = i / (float)steps;
+            Vector2 interpolated = Vector2.Lerp(squareOne, squareTwo, t);
+            DrawSquare(size, interpolated, textPx);
+        }
+
+        /*   
+           if (handleOverlap(squareOne, squareTwo, size))
+           {
+               return;
+           }
+
+           if (Vector2.Distance(squareOne, squareTwo) < size)
+           {
+               return;
+           }
+
+           Vector2 midpt = (squareOne + squareTwo) / 2;
+
+           DrawSquare(size, midpt, textPx);
+
+           // recursion to make sure gap filled 
+           ConnectStroke(squareOne, midpt, size, textPx);
+           ConnectStroke(midpt, squareTwo, size, textPx);
+        */
+    }
+
+    bool handleOverlap(Vector2 squareOne, Vector2 squareTwo, int size)
+    {
+        //bool isOverlap = false;
+
+        float halfSize = size / 2.0f;
+
+        float leftA = squareOne.x - halfSize;
+        float rightA = squareOne.x + halfSize;
+        float topA = squareOne.y + halfSize;
+        float bottomA = squareOne.y - halfSize;
+
+        float leftB = squareTwo.x - halfSize;
+        float rightB = squareTwo.x + halfSize;
+        float topB = squareTwo.y + halfSize;
+        float bottomB = squareTwo.y - halfSize;
+
+        return !(rightA <= leftB || leftA >= rightB || topA <= bottomB || bottomA >= topB);
+
     }
 
 }
