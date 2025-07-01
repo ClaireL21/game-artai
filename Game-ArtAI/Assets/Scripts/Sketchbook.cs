@@ -53,6 +53,7 @@ public class Sketchbook : MonoBehaviour
             sketchNum++;
         }
 
+        // hardcoding for time being for testing
         if (Input.GetKeyDown(KeyCode.L))
         {
 #if UNITY_EDITOR
@@ -90,11 +91,10 @@ public class Sketchbook : MonoBehaviour
 
             }
 
-            //clonedTexture = loadText;
-            //isLoad = false;
-            
+
 #else
-            SaveTextureRuntime(clonedTexture, $"Sketchbook_{sketchNum}");
+            string path = $"Assets/Textures/Sketchbook_{0}.png";
+            clonedTexture = LoadTextureFromDisk(string path);
 #endif
         }
 
@@ -148,12 +148,6 @@ public class Sketchbook : MonoBehaviour
                     {
                         clonedTexture = GetOrCreateTextureClone(sr);
                     }
-                    //else if (sr.sprite.texture != clonedTexture)
-                    //{
-                    //    clonedTexture = CloneTexture(clonedTexture);
-
-
-                    //}
 
                     Vector2 localPos = sr.transform.InverseTransformPoint(hit.point);
                     Rect spriteRect = sr.sprite.rect;
@@ -170,7 +164,6 @@ public class Sketchbook : MonoBehaviour
                     Debug.Log($"Drawing at: {currentPos} (Texture: {clonedTexture.width}x{clonedTexture.height})");
 
                     int baseCellWidth = 50;
-                    int baseCellHeight = 50;
 
                     UnityEngine.Color[] pixels = clonedTexture.GetPixels();
 
@@ -328,16 +321,19 @@ public class Sketchbook : MonoBehaviour
         File.WriteAllBytes(filePath, bytes);
         Debug.Log($"Texture saved to: {filePath}");
     }
-    public IEnumerator LoadTextureRuntime(string filePath)
+    
+    public Texture2D LoadTextureFromDisk(string path)
     {
-        if (File.Exists(filePath))
+        if (!File.Exists(path))
         {
-            byte[] bytes = File.ReadAllBytes(filePath);
-            Texture2D texture = new Texture2D(2, 2);
-            texture.LoadImage(bytes);
-            // Use your texture here
+            Debug.LogError("Texture file not found: " + path);
+            return null;
         }
-        yield return null;
+
+        byte[] data = File.ReadAllBytes(path);
+        Texture2D tex = new Texture2D(2, 2); // size will be replaced by LoadImage
+        tex.LoadImage(data); // PNG/JPG will load correctly
+        return tex;
     }
 
     void DrawSquare(int cellSize, Vector2 currentPos, UnityEngine.Color[] px)
