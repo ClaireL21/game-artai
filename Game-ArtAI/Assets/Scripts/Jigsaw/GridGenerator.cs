@@ -1,8 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
+using static UnityEngine.Rendering.HableCurve;
 
 public class GridGenerator : MonoBehaviour
 {
@@ -26,15 +30,133 @@ public class GridGenerator : MonoBehaviour
     {
         InitializeColumnWidths();
         InitializePuzzlePieceHeights();
-        GenerateGrid();
+        // GenerateGrid();
+        GenerateGridWithTabs();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void AddTabTB(List<Vector3> vertices, List<int> triangles, float radius, int segments, float hh)
     {
-        
+        int centerIndex = vertices.Count;
+        Vector3 center = new Vector3(0, hh, 0);
+
+        int direction = hh < 0 ? -1 : 1;
+
+        // Vertices
+        vertices.Add(center); // Center of top edge — for fan triangles
+        for (int i = 0; i <= segments; i++)
+        {
+            float angle = Mathf.PI * i / segments; // from 0 to PI
+            float x = Mathf.Cos(angle) * radius * direction;
+            float y = Mathf.Sin(angle) * radius * direction;
+            vertices.Add(center + new Vector3(x, y, 0)); // semicircle verts
+        }
+
+        // Triangles
+        for (int i = 0; i < segments; i++)
+        {
+            int start = centerIndex + 1; // semicircle vertices start at index 4
+            triangles.Add(centerIndex);                  // triangle center = top right corner of rect
+            triangles.Add(start + i + 1);      // outer point i+1
+            triangles.Add(start + i);          // outer point i*/
+        }
     }
 
+    private void AddTabLR(List<Vector3> vertices, List<int> triangles, float radius, int segments, float hw)
+    {
+        int centerIndex = vertices.Count;
+        Vector3 center = new Vector3(hw, 0, 0);
+
+        int direction = hw < 0 ? 1 : -1;
+
+        // Vertices
+        vertices.Add(center); // Center of top edge — for fan triangles
+        for (int i = 0; i <= segments; i++)
+        {
+            float angle = Mathf.PI * i / segments + Mathf.PI / 2; // from 0 to PI
+            float x = Mathf.Cos(angle) * radius * direction;
+            float y = Mathf.Sin(angle) * radius * direction;
+            vertices.Add(center + new Vector3(x, y, 0)); // semicircle verts
+        }
+
+        // Triangles
+        for (int i = 0; i < segments; i++)
+        {
+            int start = centerIndex + 1; // semicircle vertices start at index 4
+            triangles.Add(centerIndex);                  // triangle center = top right corner of rect
+            triangles.Add(start + i + 1);      // outer point i+1
+            triangles.Add(start + i);          // outer point i*/
+        }
+    }
+
+    private GameObject MakeDummyMesh(Vector3 position, float width, float height, float radius, int segments)
+    {
+        GameObject obj = new GameObject("Piece");
+        obj.transform.position = position;
+        obj.transform.localScale = Vector3.one;
+        obj.transform.parent = this.transform;
+
+        MeshFilter mf = obj.AddComponent<MeshFilter>();
+        MeshRenderer mr = obj.AddComponent<MeshRenderer>();
+
+        Mesh mesh = new Mesh();
+
+        List<Vector3> vertices = new List<Vector3>();
+        List<int> triangles = new List<int>();
+
+        float hw = width / 2f;
+        float hh = height / 2f;
+
+        // Step 1: rectangle base (4 corners)
+        vertices.Add(new Vector3(-hw, -hh, 0)); // 0 bottom left
+        vertices.Add(new Vector3(hw, -hh, 0));  // 1 bottom right
+        vertices.Add(new Vector3(hw, hh, 0));   // 2 top right
+        vertices.Add(new Vector3(-hw, hh, 0));  // 3 top left
+
+        // Step 2: top semicircle
+        /*int centerIndex = vertices.Count;
+        Vector3 center = new Vector3(0, hh, 0);
+        vertices.Add(center); // Center of top edge — for fan triangles
+
+        for (int i = 0; i <= segments; i++)
+        {
+            float angle = Mathf.PI * i / segments; // from 0 to PI
+            float x = Mathf.Cos(angle) * radius;
+            float y = Mathf.Sin(angle) * radius;
+            vertices.Add(center + new Vector3(x, y, 0)); // semicircle verts
+        }*/
+
+        // Step 3: triangles for rectangle
+        triangles.AddRange(new int[] { 0, 2, 1, 0, 3, 2 });
+
+        // Step 4: triangles for semicircle
+        /*for (int i = 0; i < segments; i++)
+        {
+            int start = centerIndex + 1; // semicircle vertices start at index 4
+            triangles.Add(centerIndex);                  // triangle center = top right corner of rect
+            triangles.Add(start + i + 1);      // outer point i+1
+            triangles.Add(start + i);          // outer point
+        }*/
+        AddTabTB(vertices, triangles, radius, segments, hh);    // up
+        AddTabTB(vertices, triangles, radius, segments, -hh);   // down
+        AddTabLR(vertices, triangles, radius, segments, hw);    // right
+        AddTabLR(vertices, triangles, radius, segments, -hw);
+
+        Vector2[] verts = verticesToWorld(vertices.ToArray(), Vector3.zero);
+        Vector2[] uvs = worldToUV(verts);
+
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = triangles.ToArray();
+        mesh.RecalculateNormals();
+        mesh.uv = uvs;
+        mf.mesh = mesh;
+        /*Material defaultMat = new Material(Shader.Find("Unlit/Color"));
+        defaultMat.color = Color.white;*/
+
+        mr.material = new Material(puzzleMaterial);
+
+//        Instantiate(mesh, Vector3.zero, Quaternion.identity, transform);
+        return obj;
+    }
     // Unit column widths, where each column by default is 1 unit wide
     // Vary column width by offsetting in the negative or positive direction by 1/(column + 1) of column width)
     private void InitializeColumnWidths()
@@ -101,6 +223,50 @@ public class GridGenerator : MonoBehaviour
                 puzzleAccHeights[lineIndex][i] = acc;
                 //UnityEngine.Debug.Log("Puzzle Acc: col line: " + lineIndex + "; row: " + i + "; acc: " + acc);
             }
+        }
+    }
+
+    private void GenerateGridWithTabs()
+    {
+        Vector3 startPos = Vector2.left * (gridScale * columns) / 2 + Vector2.down * (gridScale * rows) / 2;
+        startPos.x += 0.5f * gridScale;
+        startPos.y += 0.5f * gridScale;
+
+        float currWidth = 0;
+        float halfWidth = gridScale * columns * 0.5f;
+
+        GameObject obj = MakeDummyMesh(new Vector3(15, 0, 0), 2, 2, 0.2f, 5);
+
+
+        for (int x = 0; x < columns; x++)
+        {
+            for (int y = 0; y < rows; y++)
+            {
+
+                Vector3 spawnPosition = new Vector2((currWidth + columnWidths[x] * 0.5f) * gridScale - halfWidth, startPos.y + y * gridScale);
+                float width = columnWidths[x];
+
+                float heightA = puzzlePieceHeights[x][y];       // left side
+                float heightB = puzzlePieceHeights[x + 1][y];   // right side
+
+                GameObject pieceInstance;
+
+                // top or bottom edge piece
+                if (y == 0)
+                {
+                    pieceInstance = CreatePuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, y, x, "bottom");
+                }
+                else if (y == rows - 1)
+                {
+                    pieceInstance = CreatePuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, y, x, "top");
+                }
+                else
+                {
+                    pieceInstance = CreatePuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, y, x, "middle");
+                }
+
+            }
+            currWidth += columnWidths[x];
         }
     }
     private void GenerateGrid()
