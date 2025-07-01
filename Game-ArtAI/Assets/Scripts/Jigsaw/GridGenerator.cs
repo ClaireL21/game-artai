@@ -74,17 +74,18 @@ public class GridGenerator : MonoBehaviour
             puzzleAccHeights[i] = new float[rows];
         }
 
-        float totalHeight = this.rows;
+        
         float offset = 1.0f / (1.0f + this.rows);
         for (int lineIndex = 0; lineIndex < puzzlePieceHeights.Length; lineIndex++)
         {
+            float totalHeight = this.rows;
             int rows = puzzlePieceHeights[lineIndex].Length;
             float acc = 0.0f;
             for (int i = 0; i < rows; i++)
             {
                 float height;
 
-                /*if (i == this.rows - 1)
+                if (i == this.rows - 1)
                 {
                     height = totalHeight;
                 } else
@@ -92,11 +93,11 @@ public class GridGenerator : MonoBehaviour
                     float offsetVal = (float)Math.Round(UnityEngine.Random.Range(-offset, offset), 1, MidpointRounding.AwayFromZero);
                     height = 1 + offsetVal;
                     totalHeight -= height;
-                }*/
+                }
 
 
                 // curr piece is not an edge piece
-                if (i > 0 && i < rows - 1)
+               /* if (i > 0 && i < rows - 1)
                 {
                     height = 1.0f;
                 } else
@@ -125,7 +126,7 @@ public class GridGenerator : MonoBehaviour
                         }
                     }
 
-                }
+                }*/
                 acc += height;
                 puzzlePieceHeights[lineIndex][i] = height;
                 puzzleAccHeights[lineIndex][i] = acc;
