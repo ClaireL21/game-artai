@@ -17,11 +17,14 @@ public class GridGenerator : MonoBehaviour
     [SerializeField] private float gridScale = 1.0f;
 
     private float[] columnWidths;
+    private float[][] puzzlePieceHeights;
+    private float[][] puzzleAccHeights;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         InitializeColumnWidths();
+        InitializePuzzlePieceHeights();
         GenerateGrid();
     }
 
@@ -56,20 +59,79 @@ public class GridGenerator : MonoBehaviour
             }
             //Debug.Log(columnWidths[i]);
         }
-        
-        /*int iters = (columns / 2) * 2;
-        for (int i = 0; i < iters; i++)
+    }
+
+    // Heights of the sides of each puzzle piece, organize by "column lines"
+    // There are (column + 1) column lines
+    // Store column lines to ensure that adjacent puzzle pieces have the same side height
+    private void InitializePuzzlePieceHeights()
+    {
+        puzzlePieceHeights = new float[columns + 1][];
+        puzzleAccHeights = new float[columns + 1][];
+        for (int i = 0; i < puzzlePieceHeights.Length; i++)
         {
-            int multiplier = 1;
-            if (i % 2 == 0)
+            puzzlePieceHeights[i] = new float[rows];
+            puzzleAccHeights[i] = new float[rows];
+        }
+
+        float totalHeight = this.rows;
+        float offset = 1.0f / (1.0f + this.rows);
+        for (int lineIndex = 0; lineIndex < puzzlePieceHeights.Length; lineIndex++)
+        {
+            int rows = puzzlePieceHeights[lineIndex].Length;
+            float acc = 0.0f;
+            for (int i = 0; i < rows; i++)
             {
-                multiplier = -1;
+                float height;
+
+                /*if (i == this.rows - 1)
+                {
+                    height = totalHeight;
+                } else
+                {
+                    float offsetVal = (float)Math.Round(UnityEngine.Random.Range(-offset, offset), 1, MidpointRounding.AwayFromZero);
+                    height = 1 + offsetVal;
+                    totalHeight -= height;
+                }*/
+
+
+                // curr piece is not an edge piece
+                if (i > 0 && i < rows - 1)
+                {
+                    height = 1.0f;
+                } else
+                {
+                    // flat edge piece 
+                    // on even column lines
+                    if (lineIndex % 2 == 0)
+                    {
+                        if (i == 0)
+                        {
+                            height = 0.7f;
+                        } else
+                        {
+                            height = 1.3f;
+                        }
+                    }
+                    else
+                    {
+                        if (i == 0)
+                        {
+                            height = 1.3f;
+                        }
+                        else
+                        {
+                            height = 0.7f;
+                        }
+                    }
+
+                }
+                acc += height;
+                puzzlePieceHeights[lineIndex][i] = height;
+                puzzleAccHeights[lineIndex][i] = acc;
+                UnityEngine.Debug.Log("Puzzle Acc: col line: " + lineIndex + "; row: " + i + "; acc: " + acc);
             }
-            columnWidths[i] += multiplier * 0.2f;
-            Debug.Log(columnWidths[i]);
-
-        }*/
-
+        }
     }
     private void GenerateGrid()
     {
@@ -79,17 +141,17 @@ public class GridGenerator : MonoBehaviour
 
         float currWidth = 0;
         float halfWidth = gridScale * columns * 0.5f;
-        
+
         for (int x = 0; x < columns; x++)
         {
             for (int y = 0; y < rows; y++)
             {
 
                 //float colOffset = (currWidth + columnWidths[x] - (x + 1)) * 0.5f;
-                Vector3 spawnPosition = new Vector2((currWidth + columnWidths[x] * 0.5f) * gridScale - halfWidth, startPos.y +  y * gridScale);
-                Vector2 uvs = new Vector2(spawnPosition.x, spawnPosition.y) + new Vector2(columns, rows) * 0.5f;
+                Vector3 spawnPosition = new Vector2((currWidth + columnWidths[x] * 0.5f) * gridScale - halfWidth, startPos.y + y * gridScale);
+                /*Vector2 uvs = new Vector2(spawnPosition.x, spawnPosition.y) + new Vector2(columns, rows) * 0.5f;
                 uvs.x /= (gridScale * columns);
-                uvs.y /= (gridScale * rows);
+                uvs.y /= (gridScale * rows);*/
                 /*float colOffset = Mathf.Abs(1 - columnWidths[x]) * 0.5f;
                 Vector3 spawnPosition = startPos + new Vector3(x - colOffset, y) * gridScale;*/
 
@@ -98,16 +160,33 @@ public class GridGenerator : MonoBehaviour
 
                 //GameObject pieceInstance = CreateQuadMesh(spawnPosition, gridScale);
                 float width = columnWidths[x];
-               // GameObject pieceInstance = CreatePuzzlePieceMeshUV(spawnPosition, gridScale, width * 0.5f, 0.5f, spawnPosition);
+                // GameObject pieceInstance = CreatePuzzlePieceMeshUV(spawnPosition, gridScale, width * 0.5f, 0.5f, spawnPosition);
 
-                if (y % 2 == 0)
+                float heightA = puzzlePieceHeights[x][y];       // left side
+                float heightB = puzzlePieceHeights[x + 1][y];   // right side
+
+                GameObject pieceInstance;
+                // top or bottom edge piece
+                if (y == 0)
                 {
-                    GameObject pieceInstance = CreateUnevenPuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, 0.7f, 1.3f, 0);
+                    pieceInstance = CreateUnevenPuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, 0);
+                } else if (y == rows - 1)
+                {
+                    pieceInstance = CreateUnevenPuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, 1);
                 } else
                 {
-                    GameObject pieceInstance = CreateUnevenPuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, 1.3f, 0.7f, 1);
+                    pieceInstance = CreatePuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, y, x);
+                }
+                /*if (y % 2 == 0)
+                {
+                    GameObject pieceInstance = CreateUnevenPuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, 1.3f, 0.7f, 0);
 
                 }
+                else
+                {
+                    GameObject pieceInstance = CreateUnevenPuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, 0.7f, 1.3f, 1);
+
+                }*/
 
 
                 /*Vector2 tiling = new Vector2(1f / columns, 1f / rows);
@@ -155,9 +234,135 @@ public class GridGenerator : MonoBehaviour
 
         return uvs;
     }
+
+    // Find the unit coordinates for a piece in one of the middle rows
+    // row must be > 0 and < num rows
+    private Vector3[] FindCoordsMiddlePiece(int row, int col, float halfwidth)
+    {
+        if (!(row > 0 && row < this.rows))
+        {
+            return null;
+        }
+
+        Vector3[] coords;
+
+        float heightA = puzzlePieceHeights[col][row];
+        float heightB = puzzlePieceHeights[col + 1][row];
+
+        float bLDist = puzzleAccHeights[col][row - 1];          // distance from bottom edge of puzzle to bottom left corner of current piece
+        float bRDist = puzzleAccHeights[col + 1][row - 1];      // distance from bottom edge of puzzle to bottom right corner of current piece
+        float tRDist = rows - puzzleAccHeights[col + 1][row];   // distance from top edge of puzzle to top right corner of current piece
+        float tLDist = rows - puzzleAccHeights[col][row];       // distance from top edge of puzzle to top left corner of current piece
+
+        Vector3 bL = new Vector3(-halfwidth, bLDist - row - 0.5f, 0);
+        Vector3 bR = new Vector3(halfwidth, bRDist - row - 0.5f, 0);
+        Vector3 tR = new Vector3(halfwidth, this.rows - (row + 1) - tRDist + 0.5f, 0);
+        Vector3 tL = new Vector3(-halfwidth, this.rows - (row + 1) - tLDist + 0.5f, 0);
+
+        UnityEngine.Debug.Log("col, row = " + col + ", " + row + "; " + 
+            "bL: " + bL + ", bR: " + bR + ", tR: " + tR + ", tL: " + tL);
+        coords = new Vector3[] { bL, bR, tR, tL };
+
+        return coords;
+    }
+
+    private GameObject CreatePuzzlePieceMesh(Vector3 position, float scale, float halfwidth, int row, int col)
+    {
+        GameObject obj = new GameObject("Piece");
+        obj.transform.position = position;
+        obj.transform.localScale = Vector3.one * scale;
+        obj.transform.parent = this.transform;
+
+        MeshFilter mf = obj.AddComponent<MeshFilter>();
+        MeshRenderer mr = obj.AddComponent<MeshRenderer>();
+
+        Mesh mesh = new Mesh();
+
+        // Middle piece
+        Vector3[] vertices = FindCoordsMiddlePiece(row, col, halfwidth);
+
+        int[] triangles = new int[]
+        {
+        0, 2, 1,
+        0, 3, 2
+        };
+        Vector2[] verts = verticesToWorld(vertices, position);
+        Vector2[] uvs = worldToUV(verts);
+
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.uv = uvs;
+        mesh.RecalculateNormals();
+
+        mf.mesh = mesh;
+
+        mr.material = new Material(puzzleMaterial);
+        return obj;
+    }
+
+    // Creates a trapezoidal puzzle piece of specified width and heightA and heightB
+    // halfwidth, halfheight --> [0, 0.5]
+    // type = 0 --> top edge is skewed; type = 1 --> bottom edge is skewed
+    private GameObject CreateUnevenPuzzlePieceMesh(Vector3 position, float scale, float halfwidth,
+                                                    float heightA, float heightB, int type)
+    {
+        GameObject obj = new GameObject("Piece");
+        obj.transform.position = position;
+        obj.transform.localScale = Vector3.one * scale;
+        obj.transform.parent = this.transform;
+
+        MeshFilter mf = obj.AddComponent<MeshFilter>();
+        MeshRenderer mr = obj.AddComponent<MeshRenderer>();
+
+        Mesh mesh = new Mesh();
+
+        Vector3[] vertices;
+        //Vector2[] uvs;
+
+        if (type == 0)
+        {
+
+            vertices = new Vector3[]
+            {
+            new Vector3(-halfwidth, -0.5f, 0),
+            new Vector3(halfwidth, -0.5f, 0),
+            new Vector3(halfwidth, heightB - 0.5f, 0),
+            new Vector3(-halfwidth, heightA - 0.5f, 0),
+            };
+        }
+        else
+        {
+            vertices = new Vector3[]
+            {
+            new Vector3(-halfwidth, -heightA + 0.5f, 0),
+            new Vector3(halfwidth, -heightB + 0.5f, 0),
+            new Vector3(halfwidth, 0.5f, 0),
+            new Vector3(-halfwidth, 0.5f, 0),
+            };
+        }
+
+        int[] triangles = new int[]
+        {
+        0, 2, 1,
+        0, 3, 2
+        };
+        Vector2[] verts = verticesToWorld(vertices, position);
+        Vector2[] uvs = worldToUV(verts);
+
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.uv = uvs;
+        mesh.RecalculateNormals();
+
+        mf.mesh = mesh;
+
+        mr.material = new Material(puzzleMaterial);
+        return obj;
+    }
+
     // Creates a rectangular puzzle piece of specified width and height
     // halfwidth, halfheight --> [0, 0.5]
-    private GameObject CreatePuzzlePieceMeshUV(Vector3 position, float scale, float halfwidth, float halfheight, Vector3 spawnPosition)
+    /*private GameObject CreatePuzzlePieceMeshUV(Vector3 position, float scale, float halfwidth, float halfheight, Vector3 spawnPosition)
     {
         GameObject obj = new GameObject("Piece");
         obj.transform.position = position;
@@ -186,13 +391,13 @@ public class GridGenerator : MonoBehaviour
         Vector2[] verts = verticesToWorld(vertices, spawnPosition);
         Vector2[] uvs = worldToUV(verts);
 
-        /*Vector2[] uvs = new Vector2[]
+        *//*Vector2[] uvs = new Vector2[]
         {
         new Vector2(0, 0),
         new Vector2(1, 0),
         new Vector2(1, 1),
         new Vector2(0, 1)
-        };*/
+        };*//*
 
         mesh.vertices = vertices;
         mesh.triangles = triangles;
@@ -204,137 +409,11 @@ public class GridGenerator : MonoBehaviour
         // Material should be assigned externally or reused
         mr.material = new Material(puzzleMaterial); // Temporary
         return obj;
-    }
+    }*/
 
-    // Creates a trapezoidal puzzle piece of specified width and heightA and heightB
-    // halfwidth, halfheight --> [0, 0.5]
-    // type = 0 --> top edge is skewed; type = 1 --> bottom edge is skewed
-    private GameObject CreateUnevenPuzzlePieceMesh(Vector3 position, float scale, float halfwidth, 
-                                                    float heightA, float heightB, int type)
-    {
-        GameObject obj = new GameObject("Piece");
-        obj.transform.position = position;
-        obj.transform.localScale = Vector3.one * scale;
-        obj.transform.parent = this.transform;
 
-        MeshFilter mf = obj.AddComponent<MeshFilter>();
-        MeshRenderer mr = obj.AddComponent<MeshRenderer>();
 
-        Mesh mesh = new Mesh();
 
-        Vector3[] vertices;
-        //Vector2[] uvs;
-
-        if (type == 0)
-        {
-
-            vertices = new Vector3[]
-            {
-            new Vector3(-halfwidth, -0.5f, 0),
-            new Vector3(halfwidth, -0.5f, 0),
-            new Vector3(halfwidth, heightB - 0.5f, 0),
-            new Vector3(-halfwidth, heightA - 0.5f, 0),
-            };
-
-            /*uvs = new Vector2[]
-            {
-            new Vector2(0, 0),
-            new Vector2(1, 0),
-            new Vector2(1, 1),
-            new Vector2(0, 0.54f),
-            };*/
-        } else
-        {
-            vertices = new Vector3[]
-            {
-            new Vector3(-halfwidth, -heightA + 0.5f, 0),
-            new Vector3(halfwidth, -heightB + 0.5f, 0),
-            new Vector3(halfwidth, 0.5f, 0),
-            new Vector3(-halfwidth, 0.5f, 0),
-            };
-
-            /*uvs = new Vector2[]
-            {
-            new Vector2(0, 0),
-            new Vector2(1, 0.46f),
-            new Vector2(1, 1),
-            new Vector2(0, 1),
-            };*/
-        }
-
-        int[] triangles = new int[]
-        {
-        0, 2, 1,
-        0, 3, 2
-        };
-        Vector2[] verts = verticesToWorld(vertices, position);
-        Vector2[] uvs = worldToUV(verts);
-        /* float height = Mathf.Max(heightA, heightB);
-         Vector2[] uvs = new Vector2[]
-         {
-         new Vector2(0, 0),
-         new Vector2(1, 0),
-         new Vector2(1, height),
-         new Vector2(0, height)
-         };
- */
-        /* Vector2[] uvs = new Vector2[vertices.Length];
-
-         float minX = vertices.Min(v => v.x);
-         float maxX = vertices.Max(v => v.x);
-         float minY = vertices.Min(v => v.y);
-         float maxY = vertices.Max(v => v.y);
-
-         for (int i = 0; i < vertices.Length; i++)
-         {
-             float u = Mathf.InverseLerp(minX, maxX, vertices[i].x);
-             float v = Mathf.InverseLerp(minY, maxY, vertices[i].y);
-             uvs[i] = new Vector2(u, v);
-             Debug.Log("x, y = " + x + ", " + y + "; " + uvs[i]);
-         }*/
-
-        // UV offset and size for this tile
-        /*float uvWidth = 1f / columns;
-        float uvHeight = 1f / rows;
-
-        Vector2 uvOffset = new Vector2((float)x / columns, (float)y / rows);
-
-        // Map UVs to the full image, not the shape
-        Vector2[] uvs;
-        if (type == 0)
-        {
-            uvs = new Vector2[]
-            {
-            uvOffset + new Vector2(0, 0),
-            uvOffset + new Vector2(uvWidth, 0),
-            uvOffset + new Vector2(uvWidth, uvHeight),
-            uvOffset + new Vector2(0, uvHeight)
-            };
-        }
-        else
-        {
-            uvs = new Vector2[]
-            {
-            uvOffset + new Vector2(0, 0),
-            uvOffset + new Vector2(uvWidth, 0),
-            uvOffset + new Vector2(uvWidth, uvHeight),
-            uvOffset + new Vector2(0, uvHeight)
-            };
-        }*/
-
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-        mesh.uv = uvs;
-        mesh.RecalculateNormals();
-
-        mf.mesh = mesh;
-
-        // Material should be assigned externally or reused
-        mr.material = new Material(puzzleMaterial); // Temporary
-        return obj;
-    }
-
-    
 
     // Creates a rectangular puzzle piece of specified width and height
     // halfwidth, halfheight --> [0, 0.5]
@@ -384,7 +463,7 @@ public class GridGenerator : MonoBehaviour
         return obj;
     }*/
 
-    private GameObject CreateQuadMesh(Vector3 position, float size)
+    /*private GameObject CreateQuadMesh(Vector3 position, float size)
     {
         GameObject obj = new GameObject("Piece");
         obj.transform.position = position;
@@ -428,5 +507,5 @@ public class GridGenerator : MonoBehaviour
         // Material should be assigned externally or reused
         mr.material = new Material(puzzleMaterial); // Temporary
         return obj;
-    }
+    }*/
 }
