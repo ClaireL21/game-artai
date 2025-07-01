@@ -6,8 +6,13 @@ TagManager:
   tags:
   - Obstacle
   - RedGoal
-  - Agent
   - ProtestGoal
+  - CustomerGoal
+  - CustomerAgent
+  - ArtistAgent
+  - EnvGoal
+  - Art
+  - Request
   - Color
   - Size
   - Options

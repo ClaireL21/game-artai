@@ -13,10 +13,11 @@ GameObject:
   - component: {fileID: 971612560920368643}
   - component: {fileID: 4314212863490117778}
   - component: {fileID: 1041535791688933323}
-  - component: {fileID: 443908269647425327}
+  - component: {fileID: 6958430133214124199}
+  - component: {fileID: 6566123356111350846}
   m_Layer: 0
-  m_Name: RedAgent
-  m_TagString: Untagged
+  m_Name: CustomerAgent
+  m_TagString: CustomerAgent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -67,7 +68,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 78e02e51e8cdc3b4b96d7e828202f7c3, type: 2}
+  - {fileID: 2100000, guid: 929dd4fac7f530f4683c1308390d0fb2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -134,7 +135,7 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &443908269647425327
+--- !u!114 &6958430133214124199
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -143,12 +144,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 7803976924251463125}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 136008332938a664ebcf0d5ec75075f9, type: 3}
+  m_Script: {fileID: 11500000, guid: fcd774b4a40136c47ac0973c6d9d0e6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AgentId: 1
+--- !u!114 &6566123356111350846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7803976924251463125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 857b687737ea0d640963d190a69d9f73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   goals: []
+  agent: {fileID: 0}
   minSpeed: 0
   maxSpeed: 0
   agentSpeed: 0
+  isCustomer: 0
   isProtesting: 0
   protestorCounted: 0
+  requestPrefab: {fileID: 7778941013295098761, guid: f513adf831cfe76449466d8633455de9, type: 3}

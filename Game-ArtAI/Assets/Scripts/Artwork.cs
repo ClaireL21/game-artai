@@ -12,11 +12,14 @@ public class Artwork : MonoBehaviour
     Sprite spriteImg;
     bool runLogic = false; 
 
+    public bool isMoved;
+    public int debugLogArtIndex = -1;
+    public int debugLogCategory = -1;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        isMoved = false;
     }
 
     // Update is called once per frame
@@ -49,12 +52,33 @@ public class Artwork : MonoBehaviour
 
     public void Setup(int spriteInfo)
     {
+       /* int artIndex = RequestsManager.RM.GetArt();
+        debugLogArtIndex = artIndex;*/
 
-        Sprite[] all = Resources.LoadAll<Sprite>("emoji");
+        int category = spriteInfo / 16;
+        int index = spriteInfo % 16;
+        debugLogArtIndex = index;
+        debugLogCategory = category;
+        string spriteSheet;
+
+        switch (category)
+        {
+            case 0:
+                spriteSheet = "emoji";
+                break;
+            case 1:
+                spriteSheet = "animals";
+                break;
+            default:
+                spriteSheet = "shapes";
+                break;
+        }
+
+        Sprite[] all = Resources.LoadAll<Sprite>(spriteSheet);
 
         foreach (var s in all)
         {
-            if (s.name == $"emoji_{spriteInfo}")
+            if (s.name == $"{spriteSheet}_{index}")
             {
                 spriteImg = s;
                 break;
@@ -68,5 +92,10 @@ public class Artwork : MonoBehaviour
         timer = Random.Range(0.0f, 7.0f);
         runLogic = true; 
     }
-    
+
+    public void OnMouseDrag()
+    {
+        isMoved = true;
+        this.transform.parent = null;
+    }
 }
