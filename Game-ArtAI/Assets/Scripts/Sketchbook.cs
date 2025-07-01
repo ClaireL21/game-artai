@@ -57,10 +57,41 @@ public class Sketchbook : MonoBehaviour
         {
 #if UNITY_EDITOR
             // Assets/Textures/Sketchbook_0.png
-            loadText = AssetDatabase.LoadAssetAtPath<Texture2D>($"Assets/Textures/Sketchbook_{0}.png");
-            
-            clonedTexture = loadText;
-            isLoad = false;
+            string path = $"Assets/Textures/Sketchbook_{0}.png";
+            loadText = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+
+            if (loadText == null)
+            {
+                Debug.Log("not loading!!");
+            }
+            else
+            {
+                clonedTexture = CloneTexture(loadText);
+
+                GameObject sketchObj = GameObject.FindWithTag("Sketchbook");
+                if (sketchObj == null)
+                {
+                    Debug.Log("can't find sketchbook");
+                }
+                else
+                {
+                    SpriteRenderer sr = sketchObj.GetComponent<SpriteRenderer>();
+
+                    Sprite newSprite = Sprite.Create(
+                        clonedTexture,
+                        new Rect(0, 0, clonedTexture.width, clonedTexture.height),
+                        new Vector2(0.5f, 0.5f), 
+                        sr.sprite.pixelsPerUnit
+                    );
+
+                    sr.sprite = newSprite;
+
+                }
+
+            }
+
+            //clonedTexture = loadText;
+            //isLoad = false;
             
 #else
             SaveTextureRuntime(clonedTexture, $"Sketchbook_{sketchNum}");
@@ -113,10 +144,16 @@ public class Sketchbook : MonoBehaviour
                         return;
                     }
 
-                    if (clonedTexture == null || sr.sprite.texture != clonedTexture)
+                    if (clonedTexture == null /*|| sr.sprite.texture != clonedTexture*/)
                     {
                         clonedTexture = GetOrCreateTextureClone(sr);
                     }
+                    //else if (sr.sprite.texture != clonedTexture)
+                    //{
+                    //    clonedTexture = CloneTexture(clonedTexture);
+
+
+                    //}
 
                     Vector2 localPos = sr.transform.InverseTransformPoint(hit.point);
                     Rect spriteRect = sr.sprite.rect;
@@ -132,11 +169,8 @@ public class Sketchbook : MonoBehaviour
 
                     Debug.Log($"Drawing at: {currentPos} (Texture: {clonedTexture.width}x{clonedTexture.height})");
 
-                    //int baseCellWidth = Mathf.FloorToInt(clonedTexture.width / 7.0f);
-                    //int baseCellHeight = Mathf.FloorToInt(clonedTexture.height / 5.0f);
                     int baseCellWidth = 50;
                     int baseCellHeight = 50;
-
 
                     UnityEngine.Color[] pixels = clonedTexture.GetPixels();
 
@@ -166,6 +200,35 @@ public class Sketchbook : MonoBehaviour
             previousDrawPosition = null; 
         }
     }
+
+    Texture2D CloneTexture(Texture2D source)
+    {
+        // Create a RenderTexture with the same dimensions
+        RenderTexture rt = RenderTexture.GetTemporary(source.width, source.height, 0, RenderTextureFormat.Default, RenderTextureReadWrite.Linear);
+
+        // Blit the source texture to the render texture
+        Graphics.Blit(source, rt);
+
+        // Backup the currently active RenderTexture
+        RenderTexture previous = RenderTexture.active;
+
+        // Set the active RenderTexture to the temporary one we created
+        RenderTexture.active = rt;
+
+        // Create a new readable Texture2D and read the pixels from the RenderTexture
+        Texture2D readableTex = new Texture2D(source.width, source.height, TextureFormat.RGBA32, false);
+        readableTex.ReadPixels(new Rect(0, 0, rt.width, rt.height), 0, 0);
+        readableTex.Apply();
+
+        // Restore the previous active RenderTexture
+        RenderTexture.active = previous;
+
+        // Release the temporary RenderTexture
+        RenderTexture.ReleaseTemporary(rt);
+
+        return readableTex;
+    }
+
 
     Texture2D GetOrCreateTextureClone(SpriteRenderer sr)
     {        
@@ -313,45 +376,6 @@ public class Sketchbook : MonoBehaviour
             Vector2 interpolated = Vector2.Lerp(squareOne, squareTwo, t);
             DrawSquare(size, interpolated, textPx);
         }
-
-        /*   
-           if (handleOverlap(squareOne, squareTwo, size))
-           {
-               return;
-           }
-
-           if (Vector2.Distance(squareOne, squareTwo) < size)
-           {
-               return;
-           }
-
-           Vector2 midpt = (squareOne + squareTwo) / 2;
-
-           DrawSquare(size, midpt, textPx);
-
-           // recursion to make sure gap filled 
-           ConnectStroke(squareOne, midpt, size, textPx);
-           ConnectStroke(midpt, squareTwo, size, textPx);
-        */
-    }
-
-    bool handleOverlap(Vector2 squareOne, Vector2 squareTwo, int size)
-    {
-        //bool isOverlap = false;
-
-        float halfSize = size / 2.0f;
-
-        float leftA = squareOne.x - halfSize;
-        float rightA = squareOne.x + halfSize;
-        float topA = squareOne.y + halfSize;
-        float bottomA = squareOne.y - halfSize;
-
-        float leftB = squareTwo.x - halfSize;
-        float rightB = squareTwo.x + halfSize;
-        float topB = squareTwo.y + halfSize;
-        float bottomB = squareTwo.y - halfSize;
-
-        return !(rightA <= leftB || leftA >= rightB || topA <= bottomB || bottomA >= topB);
 
     }
 
