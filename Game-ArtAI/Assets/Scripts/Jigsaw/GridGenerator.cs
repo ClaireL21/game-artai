@@ -27,13 +27,16 @@ public class GridGenerator : MonoBehaviour
 
     private PuzzlePiece[][] puzzlePieces;
 
+    private static MeshGenerator MG;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         InitializeColumnWidths();
         InitializePuzzlePieceHeights();
         InitializePuzzlePieces();
-        // GenerateGrid();
+        //GenerateGrid();
+        MG = new MeshGenerator(transform, this.rows, this.columns, 0.2f, 5, this.gridScale, puzzleMaterial);
         GenerateGridWithTabs();
     }
 
@@ -281,8 +284,9 @@ public class GridGenerator : MonoBehaviour
 
                 Vector3 spawnPosition = startPos + new Vector3(x, y, 0) * gridScale;
                 PuzzlePiece piece = puzzlePieces[y][x];
-                GameObject obj2 = MeshGenerator.MakeDummyIndentMesh(spawnPosition, 1, 1, 0.2f, 5, 
-                    piece, this.transform, gridScale, this.rows, this.columns, puzzleMaterial);
+                /*GameObject obj2 = MG.MakeDummyIndentMesh(spawnPosition, 1, 1, 0.2f, 5, 
+                    piece, this.transform, gridScale, this.rows, this.columns, puzzleMaterial);*/
+                GameObject obj2 = MG.MakeDummyIndentMesh(spawnPosition, 1, 1, piece);
 
 
                 /*Vector3 spawnPosition = new Vector2((currWidth + columnWidths[x] * 0.5f) * gridScale - halfWidth, startPos.y + y * gridScale);

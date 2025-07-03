@@ -3,9 +3,26 @@ using UnityEngine;
 using static UnityEngine.Rendering.DebugUI.Table;
 using UnityEngine.UIElements;
 
-public static class MeshGenerator
+public class MeshGenerator
 {
+    private Transform transform;
+    private int rows;
+    private int columns;
+    private float radius;
+    private int segments;
+    private float gridScale;
+    private Material material;
 
+    public MeshGenerator(Transform transform, int rows, int columns, float radius, int segments, float gridScale, Material material)
+    {
+        this.transform = transform;
+        this.rows = rows;
+        this.columns = columns;
+        this.radius = radius;
+        this.segments = segments;
+        this.gridScale = gridScale;
+        this.material = material;
+    }
     public static List<int> Triangulate(List<Vector2> points)
     {
         List<int> indices = new List<int>();
@@ -87,7 +104,7 @@ public static class MeshGenerator
         return (aCrossBP >= 0.0f) && (bCrossCP >= 0.0f) && (cCrossAP >= 0.0f);
     }
 
-    private static void AddTabTB(List<Vector3> vertices, List<int> triangles, float radius, int segments, float hh)
+    private void AddTabTB(List<Vector3> vertices, List<int> triangles, float hh)
     {
         int centerIndex = vertices.Count;
         Vector3 center = new Vector3(0, hh, 0);
@@ -96,16 +113,16 @@ public static class MeshGenerator
 
         // Vertices
         vertices.Add(center); // Center of top edge for fan triangles
-        for (int i = 0; i <= segments; i++)
+        for (int i = 0; i <= this.segments; i++)
         {
-            float angle = Mathf.PI * i / segments; // from 0 to PI
-            float x = Mathf.Cos(angle) * radius * direction;
-            float y = Mathf.Sin(angle) * radius * direction;
+            float angle = Mathf.PI * i / this.segments; // from 0 to PI
+            float x = Mathf.Cos(angle) * this.radius * direction;
+            float y = Mathf.Sin(angle) * this.radius * direction;
             vertices.Add(center + new Vector3(x, y, 0)); // semicircle verts
         }
 
         // Triangles
-        for (int i = 0; i < segments; i++)
+        for (int i = 0; i < this.segments; i++)
         {
             int start = centerIndex + 1; // semicircle vertices start at index 4
             triangles.Add(centerIndex);                  // triangle center = top right corner of rect
@@ -114,7 +131,7 @@ public static class MeshGenerator
         }
     }
 
-    private static void AddTabLR(List<Vector3> vertices, List<int> triangles, float radius, int segments, float hw)
+    private void AddTabLR(List<Vector3> vertices, List<int> triangles, float hw)
     {
         int centerIndex = vertices.Count;
         Vector3 center = new Vector3(hw, 0, 0);
@@ -123,11 +140,11 @@ public static class MeshGenerator
 
         // Vertices
         vertices.Add(center); // Center of top edge for fan triangles
-        for (int i = 0; i <= segments; i++)
+        for (int i = 0; i <= this.segments; i++)
         {
-            float angle = Mathf.PI * i / segments + Mathf.PI / 2; // from 0 to PI
-            float x = Mathf.Cos(angle) * radius * direction;
-            float y = Mathf.Sin(angle) * radius * direction;
+            float angle = Mathf.PI * i / this.segments + Mathf.PI / 2; // from 0 to PI
+            float x = Mathf.Cos(angle) * this.radius * direction;
+            float y = Mathf.Sin(angle) * this.radius * direction;
             vertices.Add(center + new Vector3(x, y, 0)); // semicircle verts
         }
 
@@ -142,13 +159,13 @@ public static class MeshGenerator
     }
 
 
-    private static Vector2[] verticesToWorld(Vector3[] vertices, Vector3 spawnPosition, float gridScale)
+    private Vector2[] verticesToWorld(Vector3[] vertices, Vector3 spawnPosition)
     {
         Vector2[] worldVertices = new Vector2[vertices.Length];
         for (int i = 0; i < vertices.Length; i++)
         {
             worldVertices[i] = new Vector2(vertices[i][0], vertices[i][1]);   // need bottom left corner to be at origin?
-            worldVertices[i] *= gridScale;
+            worldVertices[i] *= this.gridScale;
             worldVertices[i] += new Vector2(spawnPosition[0], spawnPosition[1]);
 
             Vector3 debug = worldVertices[i];
@@ -158,10 +175,10 @@ public static class MeshGenerator
         //worldToUV(worldVertices);
         return worldVertices;
     }
-    private static Vector2[] worldToUV(Vector2[] screenVertices, int rows, int columns, float gridScale)
+    private Vector2[] worldToUV(Vector2[] screenVertices)
     {
-        float w = columns * gridScale;
-        float h = rows * gridScale;
+        float w = this.columns * this.gridScale;
+        float h = this.rows * this.gridScale;
 
         Vector2[] uvs = new Vector2[screenVertices.Length];
         for (int i = 0; i < uvs.Length; i++)
@@ -178,7 +195,7 @@ public static class MeshGenerator
 
         return uvs;
     }
-    public static GameObject MakeDummyTabMesh(Vector3 position, float width, float height, float radius, int segments, 
+   /* public GameObject MakeDummyTabMesh(Vector3 position, float width, float height, float radius, int segments, 
                                               Transform transform, float gridScale, int rows, int cols, Material mat)
     {
         GameObject obj = new GameObject("Piece");
@@ -219,21 +236,20 @@ public static class MeshGenerator
         mesh.RecalculateNormals();
         mesh.uv = uvs;
         mf.mesh = mesh;
-        /*Material defaultMat = new Material(Shader.Find("Unlit/Color"));
-        defaultMat.color = Color.white;*/
+        *//*Material defaultMat = new Material(Shader.Find("Unlit/Color"));
+        defaultMat.color = Color.white;*//*
 
         mr.material = new Material(mat);
 
         return obj;
-    }
+    }*/
 
-    public static GameObject MakeDummyIndentMesh(Vector3 position, float width, float height, float radius, int segments, 
-                                                 PuzzlePiece piece, Transform transform, float gridScale, int rows, int cols, Material mat)
+    public GameObject MakeDummyIndentMesh(Vector3 position, float width, float height, PuzzlePiece piece)
     {
         GameObject obj = new GameObject("Piece");
         obj.transform.position = position;
-        obj.transform.localScale = Vector3.one * gridScale;
-        obj.transform.parent = transform;
+        obj.transform.localScale = Vector3.one * this.gridScale;
+        obj.transform.parent = this.transform;
 
         MeshFilter mf = obj.AddComponent<MeshFilter>();
         MeshRenderer mr = obj.AddComponent<MeshRenderer>();
@@ -256,11 +272,11 @@ public static class MeshGenerator
         if (tempB == -1)
         {
             // add vertices for semicircle indent on top edge, clockwise from right to left
-            for (int i = 0; i <= segments; i++)
+            for (int i = 0; i <= this.segments; i++)
             {
-                float theta = Mathf.PI * (i / (float)segments); // 0
-                float x = -radius * Mathf.Cos(theta);
-                float y = radius * Mathf.Sin(theta); // indent goes downward
+                float theta = Mathf.PI * (i / (float)this.segments); // 0
+                float x = -this.radius * Mathf.Cos(theta);
+                float y = this.radius * Mathf.Sin(theta); // indent goes downward
                 vertices.Add(new Vector3(x, -hh + y, 0));
             }
         }
@@ -274,9 +290,9 @@ public static class MeshGenerator
             // add vertices for semicircle indent on top edge, clockwise from right to left
             for (int i = 0; i <= segments; i++)
             {
-                float theta = Mathf.PI * (i / (float)segments) + Mathf.PI * 1.5f; // 0
-                float x = -(radius * Mathf.Cos(theta));
-                float y = radius * Mathf.Sin(theta); // indent goes downward
+                float theta = Mathf.PI * (i / (float)this.segments) + Mathf.PI * 1.5f; // 0
+                float x = -(this.radius * Mathf.Cos(theta));
+                float y = this.radius * Mathf.Sin(theta); // indent goes downward
                 vertices.Add(new Vector3(hw + x, y, 0));
             }
         }
@@ -290,9 +306,9 @@ public static class MeshGenerator
             // add vertices for semicircle indent on top edge, clockwise from right to left
             for (int i = 0; i <= segments; i++)
             {
-                float theta = Mathf.PI * (i / (float)segments); // 0
-                float x = radius * Mathf.Cos(theta);
-                float y = -radius * Mathf.Sin(theta); // indent goes downward
+                float theta = Mathf.PI * (i / (float)this.segments); // 0
+                float x = this.radius * Mathf.Cos(theta);
+                float y = -this.radius * Mathf.Sin(theta); // indent goes downward
                 vertices.Add(new Vector3(x, hh + y, 0));
             }
         }
@@ -307,9 +323,9 @@ public static class MeshGenerator
             // add vertices for semicircle indent on top edge, clockwise from right to left
             for (int i = 0; i <= segments; i++)
             {
-                float theta = Mathf.PI * (i / (float)segments) + Mathf.PI / 2; // 0
-                float x = -radius * Mathf.Cos(theta);
-                float y = radius * Mathf.Sin(theta); // indent goes downward
+                float theta = Mathf.PI * (i / (float)this.segments) + Mathf.PI / 2; // 0
+                float x = -this.radius * Mathf.Cos(theta);
+                float y = this.radius * Mathf.Sin(theta); // indent goes downward
                 vertices.Add(new Vector3(-hw + x, y, 0));
             }
         }
@@ -324,30 +340,30 @@ public static class MeshGenerator
 
         if (tempT == 1)
         {
-            AddTabTB(vertices, triangles, radius, segments, hh);    // up
+            AddTabTB(vertices, triangles, hh);    // up
         }
         if (tempB == 1)
         {
-            AddTabTB(vertices, triangles, radius, segments, -hh);   // down
+            AddTabTB(vertices, triangles, -hh);   // down
         }
         if (tempL == 1)
         {
-            AddTabLR(vertices, triangles, radius, segments, -hw);   // left
+            AddTabLR(vertices, triangles, -hw);   // left
         }
         if (tempR == 1)
         {
-            AddTabLR(vertices, triangles, radius, segments, hw);    // right
+            AddTabLR(vertices, triangles, hw);    // right
         }
 
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.RecalculateNormals();
 
-        Vector2[] uvs = worldToUV(verticesToWorld(vertices.ToArray(), position, gridScale), rows, cols, gridScale);
+        Vector2[] uvs = worldToUV(verticesToWorld(vertices.ToArray(), position));
         mesh.uv = uvs;
 
         mf.mesh = mesh;
-        mr.material = new Material(mat);
+        mr.material = new Material(this.material);
 
         return obj;
     }
