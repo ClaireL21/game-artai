@@ -35,9 +35,11 @@ public class GridGenerator : MonoBehaviour
         InitializeColumnWidths();
         InitializePuzzlePieceHeights();
         InitializePuzzlePieces();
-        //GenerateGrid();
         MG = new MeshGenerator(transform, this.rows, this.columns, 0.2f, 5, this.gridScale, puzzleMaterial);
-        GenerateGridWithTabs();
+        //GenerateGrid();
+        //GenerateGridWithTabs();
+        GenerateUnevenTabsGrid();
+
     }
 
     /*private void AddTabTB(List<Vector3> vertices, List<int> triangles, float radius, int segments, float hh)
@@ -221,7 +223,7 @@ public class GridGenerator : MonoBehaviour
             puzzlePieces[r] = new PuzzlePiece[this.columns];
             for (int c = 0; c < puzzlePieces[r].Length; c++)
             {
-                PuzzlePiece piece = new PuzzlePiece();
+                PuzzlePiece piece = new PuzzlePiece(0, 0, 0, 0);
 
                 // bottom
                 if (r == 0)
@@ -284,9 +286,7 @@ public class GridGenerator : MonoBehaviour
 
                 Vector3 spawnPosition = startPos + new Vector3(x, y, 0) * gridScale;
                 PuzzlePiece piece = puzzlePieces[y][x];
-                /*GameObject obj2 = MG.MakeDummyIndentMesh(spawnPosition, 1, 1, 0.2f, 5, 
-                    piece, this.transform, gridScale, this.rows, this.columns, puzzleMaterial);*/
-                GameObject obj2 = MG.MakeDummyIndentMesh(spawnPosition, 1, 1, piece);
+                GameObject obj1 = MG.MakeRectMesh(spawnPosition, 1, 1, piece);
 
 
                 /*Vector3 spawnPosition = new Vector2((currWidth + columnWidths[x] * 0.5f) * gridScale - halfWidth, startPos.y + y * gridScale);
@@ -315,6 +315,59 @@ public class GridGenerator : MonoBehaviour
             /*currWidth += columnWidths[x];*/
         }
     }
+
+    private void GenerateUnevenTabsGrid()
+    {
+        Vector3 startPos = Vector2.left * (gridScale * columns) / 2 + Vector2.down * (gridScale * rows) / 2;
+        startPos.x += 0.5f * gridScale;
+        startPos.y += 0.5f * gridScale;
+
+        float currWidth = 0;
+        float halfWidth = gridScale * columns * 0.5f;
+
+        /*PuzzlePiece pieceTemp = new PuzzlePiece(0, 0, 1, 0);
+        GameObject pieceInstance = MG.MakeTrapezoidMesh(startPos, 1, 0.7f, 1.3f, pieceTemp, 0, 0, puzzleAccHeights);*/
+
+        GameObject pieceInstance = MG.MakeDummyUnevenTest(Vector3.zero + new Vector3(5, 5, 0), 1, 0.7f, 1.3f);
+        MG.MakeDummyUnevenTest(Vector3.zero + new Vector3(5, -5, 0), 1, 1.3f, 0.7f);
+        MG.MakeDummyUnevenTest(Vector3.zero + new Vector3(-5, 5, 0), 1, 0.8f, 1.2f);
+        MG.MakeDummyUnevenTest(Vector3.zero + new Vector3(-5, -5, 0), 1, 1.0f, 1.0f);
+
+
+        /*for (int x = 0; x < columns; x++)
+        {
+            for (int y = 0; y < rows; y++)
+            {
+
+                Vector3 spawnPosition = new Vector2((currWidth + columnWidths[x] * 0.5f) * gridScale - halfWidth, startPos.y + y * gridScale);
+                float width = columnWidths[x];
+
+                float heightA = puzzlePieceHeights[x][y];       // left side
+                float heightB = puzzlePieceHeights[x + 1][y];   // right side
+
+                PuzzlePiece piece = puzzlePieces[y][x];
+
+                //GameObject pieceInstance = MG.MakeTrapezoidMesh(spawnPosition, width, heightA, heightB, piece, y, x, puzzleAccHeights);
+
+                // top or bottom edge piece
+                *//*if (y == 0)
+                {
+                    pieceInstance = CreatePuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, y, x, "bottom");
+                }
+                else if (y == rows - 1)
+                {
+                    pieceInstance = CreatePuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, y, x, "top");
+                }
+                else
+                {
+                    pieceInstance = CreatePuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, y, x, "middle");
+                }*//*
+
+            }
+            currWidth += columnWidths[x];
+        }*/
+    }
+
     private void GenerateGrid()
     {
         Vector3 startPos = Vector2.left * (gridScale * columns) / 2 + Vector2.down * (gridScale * rows) / 2;

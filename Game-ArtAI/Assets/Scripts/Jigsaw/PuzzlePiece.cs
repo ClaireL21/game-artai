@@ -9,4 +9,12 @@ public class PuzzlePiece : MonoBehaviour
     public int right;
     public int top;
     public int left;
+
+    public PuzzlePiece(int bottom, int right, int top, int left)
+    {
+        this.bottom = bottom;
+        this.right = right;
+        this.top = top;
+        this.left = left;
+    }
 }
