@@ -24,7 +24,7 @@ public class MeshGenerator
         this.segments = segments;
         this.gridScale = gridScale;
         this.material = material;
-        sort = 0;
+        sort = -1;
     }
     public static List<int> Triangulate(List<Vector2> points)
     {
@@ -205,7 +205,7 @@ public class MeshGenerator
 
     public GameObject MakeTrapezoidMesh(Vector3 position, float width, float heightA, float heightB, PuzzlePiece piece, int row, int col, float[][] puzzleAccHeights)
     {
-        GameObject obj = new GameObject("Piece");
+        GameObject obj = new GameObject("Piece" + row + col);
         obj.transform.position = position;
         obj.transform.localScale = Vector3.one * this.gridScale;
         obj.transform.parent = this.transform;

@@ -408,7 +408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puzzleMaterial: {fileID: 2100000, guid: 81f3bd8d3df109b488ce041aab80c92e, type: 2}
-  rows: 3
+  rows: 2
   columns: 3
   gridScale: 3
 --- !u!4 &1962747436
@@ -441,6 +441,7 @@ MonoBehaviour:
   movableLayers:
     serializedVersion: 2
     m_Bits: 256
+  zMax: 8
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

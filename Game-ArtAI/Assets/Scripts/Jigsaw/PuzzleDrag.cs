@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class PuzzleDrag : MonoBehaviour
 {
@@ -6,14 +7,15 @@ public class PuzzleDrag : MonoBehaviour
     private Vector3 offset;
     private float yVal; // keeping fixed y val so no issues w/ scaling
     [SerializeField] private LayerMask movableLayers;
-    private int maxSortingOrder = 10;
-    private int tempSortVal = 0;
+    [SerializeField] private int zMax = 10;     // number of moves before resetting, should be greater than the number of pieces
+    private MeshRenderer[] pieceObjects;
+    private int pieceIndex = 0;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        pieceObjects = new MeshRenderer[zMax];
     }
 
     // Update is called once per frame
@@ -34,40 +36,15 @@ public class PuzzleDrag : MonoBehaviour
 
                 dragObj.rotation = Quaternion.identity;
                 
-                MeshRenderer mr = dragObj.gameObject.GetComponent<MeshRenderer>();
-                if (mr != null )
-                {
-                    tempSortVal = mr.sortingOrder;
-                    mr.sortingOrder = maxSortingOrder;
-                } else
-                {
-                    Debug.Log("No mesh renderer");
-                }
+                UpdateOrder();
                 
             }
 
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            //dragObj = null; 
             if (dragObj != null)
             {
-                Vector2 mousePos = Input.mousePosition;
-
-                // Check if it's over the UI drop area
-                /*if (UIManager.UIManage.IsInMachineUI(dragObj.gameObject))
-                {
-                     Debug.Log("Dropped into UI!");
-
-                     // hiding when dropped
-                     dragObj.gameObject.SetActive(false);
-                }*/
-                MeshRenderer mr = dragObj.gameObject.GetComponent<MeshRenderer>();
-                if (mr != null)
-                {
-                    mr.sortingOrder = tempSortVal;
-                    tempSortVal = 0;
-                }
                 dragObj = null;
             }
         }
@@ -75,7 +52,6 @@ public class PuzzleDrag : MonoBehaviour
         if (dragObj != null)
         {
             // need to use raycast to get pos of mouse 
-
             Plane dragPlane = new Plane(Vector3.up, new Vector3(0, yVal, 0));
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -90,6 +66,73 @@ public class PuzzleDrag : MonoBehaviour
             }
         }
 
+    }
+
+    void UpdateOrder()
+    {
+        //Debug.Log("Update:");
+        MeshRenderer mr = dragObj.gameObject.GetComponent<MeshRenderer>();
+        if (mr != null)
+        {
+            if (pieceIndex >= zMax)
+            {
+                //Debug.Log("Reset:");
+                // Reset pieces order
+                int newStartIndex = zMax - 1;
+                int search = -1;
+                for (int i = 0; i < zMax; i++)
+                {
+                    if (pieceObjects[i] == null)
+                    {
+                        search = Mathf.Max(search, i + 1);
+                        for (int j = search; j < zMax; j++)
+                        {
+                            if (pieceObjects[j] != null)
+                            {
+                                pieceObjects[i] = pieceObjects[j];
+                                pieceObjects[i].sortingOrder = i;
+                                pieceObjects[j] = null;
+                                newStartIndex = j;
+                                search = j + 1;
+                                break;
+                            }
+                        }
+                    }
+                }
+                pieceIndex = newStartIndex;
+            }
+            //Debug.Log("Assign:");
+            int temp = mr.sortingOrder;
+            mr.sortingOrder = pieceIndex;
+            pieceObjects[pieceIndex] = mr;
+            pieceIndex++;
+            if (temp >= 0)
+            {
+                pieceObjects[temp] = null;
+            }
+            //toString();
+        }
+        else
+        {
+            Debug.Log("No mesh renderer");
+        }
+        
+    }
+
+    private void toString()
+    {
+        for (int i = 0;i < pieceObjects.Length;i++)
+        {
+            if (pieceObjects[i] == null)
+            {
+                Debug.Log("i = " + i + "; NULL");
+
+            } else
+            {
+                Debug.Log("i = " + i + "; " + pieceObjects[i].name);
+
+            }
+        }
     }
 
 }
