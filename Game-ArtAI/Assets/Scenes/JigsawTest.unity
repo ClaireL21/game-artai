@@ -409,8 +409,8 @@ MonoBehaviour:
   spherePrefab: {fileID: 5705538726141869326, guid: d1c9a3a56b36f1e4cbb70567fc64650c, type: 3}
   puzzleMaterial: {fileID: 2100000, guid: 81f3bd8d3df109b488ce041aab80c92e, type: 2}
   rows: 3
-  columns: 4
-  gridScale: 2
+  columns: 3
+  gridScale: 3
 --- !u!4 &1962747436
 Transform:
   m_ObjectHideFlags: 0

@@ -265,7 +265,7 @@ public class GridGenerator : MonoBehaviour
             }
         }
     }
-    private void GenerateGridWithTabs()
+    /*private void GenerateGridWithTabs()
     {
         Vector3 startPos = Vector2.left * (gridScale * columns) / 2 + Vector2.down * (gridScale * rows) / 2;
         startPos.x += 0.5f * gridScale;
@@ -289,7 +289,7 @@ public class GridGenerator : MonoBehaviour
                 GameObject obj1 = MG.MakeRectMesh(spawnPosition, 1, 1, piece);
 
 
-                /*Vector3 spawnPosition = new Vector2((currWidth + columnWidths[x] * 0.5f) * gridScale - halfWidth, startPos.y + y * gridScale);
+                *//*Vector3 spawnPosition = new Vector2((currWidth + columnWidths[x] * 0.5f) * gridScale - halfWidth, startPos.y + y * gridScale);
                 float width = columnWidths[x];
 
                 float heightA = puzzlePieceHeights[x][y];       // left side
@@ -309,12 +309,12 @@ public class GridGenerator : MonoBehaviour
                 else
                 {
                     pieceInstance = CreatePuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, y, x, "middle");
-                }*/
+                }*//*
 
             }
-            /*currWidth += columnWidths[x];*/
+            *//*currWidth += columnWidths[x];*//*
         }
-    }
+    }*/
 
     private void GenerateUnevenTabsGrid()
     {
@@ -324,14 +324,6 @@ public class GridGenerator : MonoBehaviour
 
         float currWidth = 0;
         float halfWidth = gridScale * columns * 0.5f;
-
-        /*PuzzlePiece pieceTemp = new PuzzlePiece(0, 0, 1, 0);
-        GameObject pieceInstance = MG.MakeTrapezoidMesh(startPos, 1, 0.7f, 1.3f, pieceTemp, 0, 0, puzzleAccHeights);*/
-
-        /*GameObject pieceInstance = MG.MakeDummyUnevenTest(Vector3.zero + new Vector3(5, 5, 0), 1, 0.7f, 1.3f);
-        MG.MakeDummyUnevenTest(Vector3.zero + new Vector3(5, -5, 0), 1, 1.3f, 0.7f);
-        MG.MakeDummyUnevenTest(Vector3.zero + new Vector3(-5, 5, 0), 1, 0.8f, 1.2f);
-        MG.MakeDummyUnevenTest(Vector3.zero + new Vector3(-5, -5, 0), 1, 1.0f, 1.0f);*/
 
 
         for (int x = 0; x < columns; x++)
@@ -349,26 +341,12 @@ public class GridGenerator : MonoBehaviour
 
                 GameObject pieceInstance = MG.MakeTrapezoidMesh(spawnPosition, width, heightA, heightB, piece, y, x, puzzleAccHeights);
 
-                // top or bottom edge piece
-                /*if (y == 0)
-                {
-                    pieceInstance = CreatePuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, y, x, "bottom");
-                }
-                else if (y == rows - 1)
-                {
-                    pieceInstance = CreatePuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, y, x, "top");
-                }
-                else
-                {
-                    pieceInstance = CreatePuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, y, x, "middle");
-                }*/
-
             }
             currWidth += columnWidths[x];
         }
     }
 
-    private void GenerateGrid()
+    /*private void GenerateGrid()
     {
         Vector3 startPos = Vector2.left * (gridScale * columns) / 2 + Vector2.down * (gridScale * rows) / 2;
         startPos.x += 0.5f * gridScale;
@@ -405,8 +383,8 @@ public class GridGenerator : MonoBehaviour
             }
             currWidth += columnWidths[x];
         }
-    }
-    private Vector2[] verticesToWorld(Vector3[] vertices, Vector3 spawnPosition)
+    }*/
+    /*private Vector2[] verticesToWorld(Vector3[] vertices, Vector3 spawnPosition)
     {
         Vector2[] worldVertices = new Vector2[vertices.Length];
         for (int i = 0; i < vertices.Length; i++)
@@ -480,8 +458,8 @@ public class GridGenerator : MonoBehaviour
 
         Vector3[] coords;
 
-        /*float heightA = puzzlePieceHeights[col][row];
-        float heightB = puzzlePieceHeights[col + 1][row];*/
+        *//*float heightA = puzzlePieceHeights[col][row];
+        float heightB = puzzlePieceHeights[col + 1][row];*//*
 
         float bLDist = puzzleAccHeights[col][row - 1];          // distance from bottom edge of puzzle to bottom left corner of current piece
         float bRDist = puzzleAccHeights[col + 1][row - 1];      // distance from bottom edge of puzzle to bottom right corner of current piece
@@ -543,5 +521,5 @@ public class GridGenerator : MonoBehaviour
 
         mr.material = new Material(puzzleMaterial);
         return obj;
-    }
+    }*/
 }
