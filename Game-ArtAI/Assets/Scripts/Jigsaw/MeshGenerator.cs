@@ -210,6 +210,7 @@ public class MeshGenerator
 
         MeshFilter mf = obj.AddComponent<MeshFilter>();
         MeshRenderer mr = obj.AddComponent<MeshRenderer>();
+        MeshCollider collider = obj.AddComponent<MeshCollider>();
         Mesh mesh = new Mesh();
 
         List<Vector3> vertices = new List<Vector3>();
@@ -383,6 +384,7 @@ public class MeshGenerator
         mesh.uv = uvs;
 
         mf.mesh = mesh;
+        collider.sharedMesh = mesh;
         mr.material = new Material(this.material);
 
         return obj;
