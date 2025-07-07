@@ -35,7 +35,7 @@ public class GridGenerator : MonoBehaviour
         InitializeColumnWidths();
         InitializePuzzlePieceHeights();
         InitializePuzzlePieces();
-        MG = new MeshGenerator(transform, this.rows, this.columns, 0.2f, 5, this.gridScale, puzzleMaterial);
+        MG = new MeshGenerator(transform, this.rows, this.columns, 0.1f, 5, this.gridScale, puzzleMaterial);
         //GenerateGrid();
         //GenerateGridWithTabs();
         GenerateUnevenTabsGrid();
@@ -328,13 +328,13 @@ public class GridGenerator : MonoBehaviour
         /*PuzzlePiece pieceTemp = new PuzzlePiece(0, 0, 1, 0);
         GameObject pieceInstance = MG.MakeTrapezoidMesh(startPos, 1, 0.7f, 1.3f, pieceTemp, 0, 0, puzzleAccHeights);*/
 
-        GameObject pieceInstance = MG.MakeDummyUnevenTest(Vector3.zero + new Vector3(5, 5, 0), 1, 0.7f, 1.3f);
+        /*GameObject pieceInstance = MG.MakeDummyUnevenTest(Vector3.zero + new Vector3(5, 5, 0), 1, 0.7f, 1.3f);
         MG.MakeDummyUnevenTest(Vector3.zero + new Vector3(5, -5, 0), 1, 1.3f, 0.7f);
         MG.MakeDummyUnevenTest(Vector3.zero + new Vector3(-5, 5, 0), 1, 0.8f, 1.2f);
-        MG.MakeDummyUnevenTest(Vector3.zero + new Vector3(-5, -5, 0), 1, 1.0f, 1.0f);
+        MG.MakeDummyUnevenTest(Vector3.zero + new Vector3(-5, -5, 0), 1, 1.0f, 1.0f);*/
 
 
-        /*for (int x = 0; x < columns; x++)
+        for (int x = 0; x < columns; x++)
         {
             for (int y = 0; y < rows; y++)
             {
@@ -347,10 +347,10 @@ public class GridGenerator : MonoBehaviour
 
                 PuzzlePiece piece = puzzlePieces[y][x];
 
-                //GameObject pieceInstance = MG.MakeTrapezoidMesh(spawnPosition, width, heightA, heightB, piece, y, x, puzzleAccHeights);
+                GameObject pieceInstance = MG.MakeTrapezoidMesh(spawnPosition, width, heightA, heightB, piece, y, x, puzzleAccHeights);
 
                 // top or bottom edge piece
-                *//*if (y == 0)
+                /*if (y == 0)
                 {
                     pieceInstance = CreatePuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, y, x, "bottom");
                 }
@@ -361,11 +361,11 @@ public class GridGenerator : MonoBehaviour
                 else
                 {
                     pieceInstance = CreatePuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, y, x, "middle");
-                }*//*
+                }*/
 
             }
             currWidth += columnWidths[x];
-        }*/
+        }
     }
 
     private void GenerateGrid()

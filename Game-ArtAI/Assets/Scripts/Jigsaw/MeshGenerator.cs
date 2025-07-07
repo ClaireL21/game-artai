@@ -105,7 +105,7 @@ public class MeshGenerator
         return (aCrossBP >= 0.0f) && (bCrossCP >= 0.0f) && (cCrossAP >= 0.0f);
     }
 
-    private void AddTabTB(List<Vector3> vertices, List<int> triangles, float hh, float thetaOffset)
+    private void AddTabTB(List<Vector3> vertices, List<int> triangles, float hh)
     {
         int centerIndex = vertices.Count;
         Vector3 center = new Vector3(0, hh, 0);
@@ -116,7 +116,7 @@ public class MeshGenerator
         vertices.Add(center); // Center of top edge for fan triangles
         for (int i = 0; i <= this.segments; i++)
         {
-            float angle = Mathf.PI * i / this.segments + thetaOffset; // from 0 to PI
+            float angle = Mathf.PI * i / this.segments; // from 0 to PI
             float x = Mathf.Cos(angle) * this.radius * direction;
             float y = Mathf.Sin(angle) * this.radius * direction;
             vertices.Add(center + new Vector3(x, y, 0)); // semicircle verts
@@ -322,7 +322,7 @@ public class MeshGenerator
         return points;*/
     }
 
-    public GameObject MakeDummyUnevenTest(Vector3 position, float width, float heightA, float heightB)
+    public GameObject MakeTrapezoidMesh(Vector3 position, float width, float heightA, float heightB, PuzzlePiece piece, int row, int col, float[][] puzzleAccHeights)
     {
         GameObject obj = new GameObject("Piece");
         obj.transform.position = position;
@@ -339,9 +339,9 @@ public class MeshGenerator
         float halfwidth = width / 2f;
 
         Vector3[] corners;
-        corners = FindCoordsTopPiece(halfwidth, heightA, heightB);
+        //corners = FindCoordsTopPiece(halfwidth, heightA, heightB);
 
-        /*if (piece.bottom == 0)
+        if (piece.bottom == 0)
         {
             corners = FindCoordsBottomPiece(halfwidth, heightA, heightB);
         }
@@ -354,24 +354,24 @@ public class MeshGenerator
             corners = FindCoordsMiddlePiece(row, col, halfwidth, heightA, heightB, puzzleAccHeights);
         }
 
-        corners = new Vector3[] { new Vector3(-0.5f, -0.6f, 0), new Vector3(0.5f, -0.4f, 0), new Vector3(0.5f, 0.6f, 0), new Vector3(-0.5f, 0.7f, 0) };*/
+        //corners = new Vector3[] { new Vector3(-0.5f, -0.6f, 0), new Vector3(0.5f, -0.4f, 0), new Vector3(0.5f, 0.6f, 0), new Vector3(-0.5f, 0.7f, 0) };
 
         // bottom edge
         vertices.Add(corners[0]);
 
-        int tempBottom = 1;
+        /*int tempBottom = 1;
         int tempTop = -1;
         int tempLeft = 1;
-        int tempRight = -1;
+        int tempRight = -1;*/
 
-        int direction;
-        if (tempBottom != 0)
+        //int direction;
+        if (piece.bottom != 0)
         {
             //direction = -tempBottom;
             Vector2 circleCenter = FindCenterPoint(corners[0], corners[1], 0);
             float thetaOffset = Math.Abs(FindTheta(corners[0], corners[1], 0));
 
-            if (tempBottom == -1)
+            if (piece.bottom == -1)
             {
                 if (corners[0].y < corners[1].y) thetaOffset = -thetaOffset;
 
@@ -408,9 +408,9 @@ public class MeshGenerator
         vertices.Add(corners[1]);
 
         // right edge
-        if (tempRight != 0)
+        if (piece.right != 0)
         {
-            if (tempRight == -1)
+            if (piece.right == -1)
             {
                 // add vertices for semicircle indent on top edge, clockwise from right to left
                 for (int i = 0; i <= segments; i++)
@@ -438,12 +438,12 @@ public class MeshGenerator
         vertices.Add(corners[2]);
 
         // top edge
-        if (tempTop != 0)
+        if (piece.top != 0)
         {
             Vector2 circleCenter = FindCenterPoint(corners[3], corners[2], 0);
             float thetaOffset = Math.Abs(FindTheta(corners[3], corners[2], 0));
 
-            if (tempTop == -1)
+            if (piece.top == -1)
             {
                 if (corners[2].y > corners[3].y) thetaOffset = -thetaOffset;
 
@@ -471,14 +471,13 @@ public class MeshGenerator
             
         }
 
-
         // add top-left vertex
         vertices.Add(corners[3]);
 
         // left edge
-        if (tempLeft != 0)
+        if (piece.left != 0)
         {
-            if (tempLeft == -1)
+            if (piece.left == -1)
             {
                 // add vertices for semicircle indent on top edge, clockwise from right to left
                 for (int i = 0; i <= segments; i++)
@@ -501,74 +500,6 @@ public class MeshGenerator
             }
             
         }
-        /*if (tempBottom == -1)
-        {
-            Vector2 circleCenter = FindCenterPoint(corners[0], corners[1], 0);
-            float thetaOffset = FindTheta(corners[0], corners[1], 0);
-            if (corners[0].y > corners[1].y) thetaOffset = -thetaOffset;
-
-            Debug.Log(thetaOffset + " " + circleCenter);
-            // add vertices for semicircle indent on top edge, clockwise from right to left
-            for (int i = 0; i <= this.segments; i++)
-            {
-                float theta = Mathf.PI * (i / (float)this.segments) + thetaOffset; // 0
-                float x = -this.radius * Mathf.Cos(theta);
-                float y = this.radius * Mathf.Sin(theta); // indent goes downward
-                vertices.Add(new Vector3(x, circleCenter.y + y, 0));
-            }
-        }
-
-        // add bottom-right vertex
-        vertices.Add(corners[1]);
-
-        // right edge
-        if (tempRight == -1)
-        {
-            // add vertices for semicircle indent on top edge, clockwise from right to left
-            for (int i = 0; i <= segments; i++)
-            {
-                float theta = Mathf.PI * (i / (float)this.segments) + Mathf.PI * 1.5f; // 0
-                float x = -(this.radius * Mathf.Cos(theta));
-                float y = this.radius * Mathf.Sin(theta); // indent goes downward
-                vertices.Add(new Vector3(halfwidth + x, y, 0));
-            }
-        }
-
-        // add top-right vertex
-        vertices.Add(corners[2]);
-
-        // top edge
-        if (tempTop == -1)
-        {
-            Vector2 circleCenter = FindCenterPoint(corners[3], corners[2], 0);
-            float thetaOffset = FindTheta(corners[3], corners[2], 0);
-            if (corners[2].y > corners[3].y) thetaOffset = -thetaOffset;
-            // add vertices for semicircle indent on top edge, clockwise from right to left
-            for (int i = 0; i <= segments; i++)
-            {
-                float theta = Mathf.PI * (i / (float)this.segments) + thetaOffset; // 0
-                float x = this.radius * Mathf.Cos(theta);
-                float y = -this.radius * Mathf.Sin(theta); // indent goes downward
-                vertices.Add(new Vector3(x, circleCenter.y + y, 0));
-            }
-        }
-
-
-        // add top-left vertex
-        vertices.Add(corners[3]);
-
-        // left edge
-        if (tempLeft == -1)
-        {
-            // add vertices for semicircle indent on top edge, clockwise from right to left
-            for (int i = 0; i <= segments; i++)
-            {
-                float theta = Mathf.PI * (i / (float)this.segments) + Mathf.PI / 2; // 0
-                float x = -this.radius * Mathf.Cos(theta);
-                float y = this.radius * Mathf.Sin(theta); // indent goes downward
-                vertices.Add(new Vector3(-halfwidth + x, y, 0));
-            }
-        }*/
 
 
         // Prepare 2D list for triangulation
@@ -577,46 +508,6 @@ public class MeshGenerator
 
         // Triangulate using helper
         List<int> triangles = Triangulate(verts2D);
-
-        /*if (tempTop == 1)
-        {
-            Vector2 circleCenter = FindCenterPoint(corners[3], corners[2], 0);
-            float thetaOffset = FindTheta(corners[3], corners[2], 0);
-            if (corners[2].y < corners[3].y) thetaOffset = -thetaOffset;
-           // Vector2 circleCenter = FindCenterPoint(corners[2], corners[3], 0);
-            AddTabTB(vertices, triangles, circleCenter.y, thetaOffset);    // up
-        }
-        if (tempBottom == 1)
-        {
-            *//*Vector2 circleCenter = FindCenterPoint(corners[0], corners[1], 0);
-            float thetaOffset = FindTheta(corners[0], corners[1], 0);
-            if (corners[0].y > corners[1].y) thetaOffset = -thetaOffset;
-            AddTabTB(vertices, triangles, -circleCenter.y, thetaOffset);   // down
-            Debug.Log("here: " +
-                circleCenter.y);*//*
-
-            Vector2 circleCenter = FindCenterPoint(corners[0], corners[1], 0);
-            float thetaOffset = FindTheta(corners[0], corners[1], 0);
-            if (corners[0].y > corners[1].y) thetaOffset = -thetaOffset;
-
-            Debug.Log(thetaOffset + " " + circleCenter);
-            // add vertices for semicircle indent on top edge, clockwise from right to left
-            for (int i = 0; i <= this.segments; i++)
-            {
-                float theta = Mathf.PI * (i / (float)this.segments) + thetaOffset; // 0
-                float x = -this.radius * Mathf.Cos(theta);
-                float y = this.radius * Mathf.Sin(theta); // indent goes downward
-                vertices.Add(new Vector3(x, circleCenter.y - y, 0));
-            }
-        }
-        if (tempLeft == 1)
-        {
-            AddTabLR(vertices, triangles, -halfwidth);   // left
-        }
-        if (tempRight == 1)
-        {
-            AddTabLR(vertices, triangles, halfwidth);    // right
-        }*/
 
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
@@ -911,11 +802,11 @@ public class MeshGenerator
 
         if (piece.top == 1)
         {
-            AddTabTB(vertices, triangles, hh, 0);    // up
+            AddTabTB(vertices, triangles, hh);    // up
         }
         if (piece.bottom == 1)
         {
-            AddTabTB(vertices, triangles, -hh, 0);   // down
+            AddTabTB(vertices, triangles, -hh);   // down
         }
         if (piece.left == 1)
         {
