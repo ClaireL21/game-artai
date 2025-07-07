@@ -13,6 +13,7 @@ public class MeshGenerator
     private int segments;
     private float gridScale;
     private Material material;
+    private int sort;
 
     public MeshGenerator(Transform transform, int rows, int columns, float radius, int segments, float gridScale, Material material)
     {
@@ -23,6 +24,7 @@ public class MeshGenerator
         this.segments = segments;
         this.gridScale = gridScale;
         this.material = material;
+        sort = 0;
     }
     public static List<int> Triangulate(List<Vector2> points)
     {
@@ -386,6 +388,9 @@ public class MeshGenerator
         mf.mesh = mesh;
         collider.sharedMesh = mesh;
         mr.material = new Material(this.material);
+        mr.sortingOrder = sort;
+        mr.sortingLayerName = "PuzzlePieces";
+        //this.sort++;
 
         return obj;
     }

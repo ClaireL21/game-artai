@@ -22,7 +22,7 @@ TagManager:
   - UI
   - Movable
   - Navigation
-  - 
+  - Puzzle
   - 
   - 
   - 
@@ -49,6 +49,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: PuzzlePieces
+    uniqueID: 2957998893
     locked: 0
   m_RenderingLayers:
   - Default

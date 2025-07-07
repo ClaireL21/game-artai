@@ -1,11 +1,13 @@
 using UnityEngine;
 
-public class Drag : MonoBehaviour
+public class PuzzleDrag : MonoBehaviour
 {
     private Transform dragObj = null;
     private Vector3 offset;
     private float yVal; // keeping fixed y val so no issues w/ scaling
     [SerializeField] private LayerMask movableLayers;
+    private int maxSortingOrder = 10;
+    private int tempSortVal = 0;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -31,6 +33,17 @@ public class Drag : MonoBehaviour
                 yVal = dragObj.position.y;
 
                 dragObj.rotation = Quaternion.identity;
+                
+                MeshRenderer mr = dragObj.gameObject.GetComponent<MeshRenderer>();
+                if (mr != null )
+                {
+                    tempSortVal = mr.sortingOrder;
+                    mr.sortingOrder = maxSortingOrder;
+                } else
+                {
+                    Debug.Log("No mesh renderer");
+                }
+                
             }
 
         }
@@ -49,6 +62,12 @@ public class Drag : MonoBehaviour
                      // hiding when dropped
                      dragObj.gameObject.SetActive(false);
                 }*/
+                MeshRenderer mr = dragObj.gameObject.GetComponent<MeshRenderer>();
+                if (mr != null)
+                {
+                    mr.sortingOrder = tempSortVal;
+                    tempSortVal = 0;
+                }
                 dragObj = null;
             }
         }

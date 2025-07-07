@@ -186,7 +186,7 @@ public class GridGenerator : MonoBehaviour
                 PuzzlePiece piece = puzzlePieces[y][x];
 
                 GameObject pieceInstance = MG.MakeTrapezoidMesh(spawnPosition, width, heightA, heightB, piece, y, x, puzzleAccHeights);
-                pieceInstance.layer = LayerMask.NameToLayer("Movable");
+                pieceInstance.layer = LayerMask.NameToLayer("Puzzle");
                 pieceObjects[y][x] = pieceInstance;
             }
             currWidth += columnWidths[x];
