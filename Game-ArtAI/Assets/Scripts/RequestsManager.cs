@@ -22,12 +22,15 @@ public class RequestsManager : MonoBehaviour
     public static int numPatterns;
     public static int numThird;
 
+    [SerializeField]
     public Queue<RequestObject> requests;
     // To decode an artInfo item:
     //      artInfoItem = rand(0, numColors + numPatterns + numThird)
     //      so...  artInfoItem / 10 -> sprite sheet
     //             artInfoItem % 10 -> index of corresponding sprite sheet
     //      Note: all spritesheets must be same size for this to work
+
+    [SerializeField]
     public Queue<int> artInfo;
     //public int currNumArt;
     //public int currNumRequests;     // number of requests visible in the scene
@@ -53,9 +56,9 @@ public class RequestsManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        numColors = 12;
-        numPatterns = 12;
-        numThird = 12;
+        numColors = 16;
+        numPatterns = 16;
+        numThird = 16;
         requests = new Queue<RequestObject>();
         artInfo = new Queue<int>();
 
@@ -152,9 +155,12 @@ public class RequestsManager : MonoBehaviour
     {
         if (artInfo.Count > 0)
         {
-            return artInfo.Dequeue();
+            int elt = artInfo.Dequeue();
+            //Debug.Log("Art from queue: " + elt);
+            return elt;
         } else
         {
+            Debug.Log("RANDOM ART");
             return UnityEngine.Random.Range(0, numColors + numPatterns + numThird); // numColors + numPatterns + numThird
         }
     }
