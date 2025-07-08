@@ -62,22 +62,46 @@ public class DialogueSpawner : MonoBehaviour
         string requestText = "";
         debugText = "";
 
+        Material[] mats;
+        int indx;
+
         if (request.getColorIndex() >= 0)
         {
-            requestText += $" <sprite=\"emojiAsset\" index={request.getColorIndex()}>";
-            debugText += " <sprite=\"emojiAsset\" index=" + request.getColorIndex();
+            //requestText += $" <sprite=\"emojiAsset\" index={request.getColorIndex()}>";
+            //debugText += " <sprite=\"emojiAsset\" index=" + request.getColorIndex();
+
+            mats = Resources.LoadAll<Material>("Colors");
+            indx = request.getColorIndex();
+
+            var child = this.gameObject.transform.GetChild(0).transform.GetChild(0);
+            child.gameObject.SetActive(true);
+            child.GetComponent<SpriteRenderer>().sharedMaterial = mats[indx];
+
         }
         if (request.getPatternIndex() >= 0)
         {
-            requestText += $" <sprite=\"animalsAsset\" index={request.getPatternIndex()}>";
-            debugText += " <sprite=\"animalsAsset\" index=" + request.getPatternIndex();
+            //requestText += $" <sprite=\"animalsAsset\" index={request.getPatternIndex()}>";
+            //debugText += " <sprite=\"animalsAsset\" index=" + request.getPatternIndex();
+
+            mats = Resources.LoadAll<Material>("JigsawMats");
+            indx = request.getPatternIndex();
+
+            var child = this.gameObject.transform.GetChild(0).transform.GetChild(1);
+            child.gameObject.SetActive(true);
+            child.GetComponent<SpriteRenderer>().sharedMaterial = mats[indx];
 
         }
         if (request.getThirdIndex() >= 0)
         {
-            requestText += $" <sprite=\"shapesAsset\" index={request.getThirdIndex()}>";
-            debugText += " <sprite=\"shapesAsset\" index=" + request.getThirdIndex();
+            //requestText += $" <sprite=\"shapesAsset\" index={request.getThirdIndex()}>";
+            //debugText += " <sprite=\"shapesAsset\" index=" + request.getThirdIndex();
 
+            mats = Resources.LoadAll<Material>("Colors");
+            indx = request.getThirdIndex();
+
+            var child = this.gameObject.transform.GetChild(0).transform.GetChild(2);
+            child.gameObject.SetActive(true);
+            child.GetComponent<SpriteRenderer>().sharedMaterial = mats[indx];
         }
 
        /* requestText = "";

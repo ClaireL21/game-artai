@@ -7,8 +7,6 @@ public class RequestObject : MonoBehaviour
     private int thirdIndex;     // shape
     private int requestSize;
 
-    private string artType;
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -29,10 +27,6 @@ public class RequestObject : MonoBehaviour
         this.requestSize = requestSize;
     }
 
-    public RequestObject(string artType)
-    {
-        this.artType = artType;
-    }
 
     public int getColorIndex()
     {

@@ -17,10 +17,6 @@ public class RequestsManager : MonoBehaviour
     public float freqReqSizeThree = 0.3f;
 
 
-    public Material[] colorMats;
-
-    public Material[] patterns;
-
     // requests in sprite sheets
     public static int numColors;
     public static int numPatterns;
@@ -36,16 +32,6 @@ public class RequestsManager : MonoBehaviour
     //public int currNumArt;
     //public int currNumRequests;     // number of requests visible in the scene
     public static RequestsManager RM;
-
-    
-
-
-    // gameobjects
-    //public List<GameObject> requests;
-
-    // private vars
-    //float timer;
-    //public bool notActive = true; // should alter this 
 
     private void Awake()
     {
