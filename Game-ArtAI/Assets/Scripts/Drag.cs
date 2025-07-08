@@ -5,7 +5,7 @@ public class Drag : MonoBehaviour
     private Transform dragObj = null;
     private Vector3 offset;
     private float yVal; // keeping fixed y val so no issues w/ scaling
-    [SerializeField] private LayerMask movableLayers; 
+    [SerializeField] private LayerMask movableLayers;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

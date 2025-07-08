@@ -1,38 +1,68 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Xml.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
+using static UnityEngine.Rendering.HableCurve;
 
 public class GridGenerator : MonoBehaviour
 {
     [Header("Elements")]
-    //[SerializeField] private GameObject quadPrefab;
-    [SerializeField] private GameObject spherePrefab;
+    //[SerializeField] private GameObject spherePrefab;
 
     [SerializeField] private Material puzzleMaterial;
+    [SerializeField] private Material baseMaterial;
 
     [Header("Settings")]
     [SerializeField] private int rows = 3;
     [SerializeField] private int columns = 5;
     [SerializeField] private float gridScale = 1.0f;
+    [SerializeField] private float threshold = 1.0f;
 
     private float[] columnWidths;
     private float[][] puzzlePieceHeights;
     private float[][] puzzleAccHeights;
 
+    private PuzzlePiece[][] puzzlePieces;
+    private GameObject[][] pieceObjects;
+
+    private static MeshGenerator MG;
+    private static PuzzleDrag PD;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        // Initialize puzzle pieces and grid
         InitializeColumnWidths();
         InitializePuzzlePieceHeights();
-        GenerateGrid();
+        InitializePuzzlePieces();
+        MG = new MeshGenerator(this.transform, this.rows, this.columns, 0.1f, 5, this.gridScale, puzzleMaterial);
+        //PD = new PuzzleDrag(this.rows * this.columns + 10, LayerMask.NameToLayer("Puzzle"));
+        // Generate base and pieces
+        GenerateBase();
+        GenerateUnevenTabsGrid();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        //PD.CheckDrag();
+        SnapNearbyPiecesIfCorrect();
+
+        bool isFinished = CheckPuzzleFinished();
+        if (isFinished) UnityEngine.Debug.Log("Finished!");
+
+        /*if (Input.GetKeyDown(KeyCode.C))
+        {
+            CheckPuzzleFinished();
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            toString();
+        }*/
     }
 
     // Unit column widths, where each column by default is 1 unit wide
@@ -58,7 +88,6 @@ public class GridGenerator : MonoBehaviour
                 columnWidths[i] += offsetVal;
                 totalWidth -= columnWidths[i];
             }
-            //Debug.Log(columnWidths[i]);
         }
     }
 
@@ -99,11 +128,71 @@ public class GridGenerator : MonoBehaviour
                 acc += height;
                 puzzlePieceHeights[lineIndex][i] = height;
                 puzzleAccHeights[lineIndex][i] = acc;
-                //UnityEngine.Debug.Log("Puzzle Acc: col line: " + lineIndex + "; row: " + i + "; acc: " + acc);
             }
         }
     }
-    private void GenerateGrid()
+
+    private void InitializePuzzlePieces()
+    {
+        puzzlePieces = new PuzzlePiece[this.rows][];
+        pieceObjects = new GameObject[this.rows][];
+
+        for (int r = 0; r < puzzlePieces.Length; r++)
+        {
+            puzzlePieces[r] = new PuzzlePiece[this.columns];
+            pieceObjects[r] = new GameObject[this.columns];
+
+            for (int c = 0; c < puzzlePieces[r].Length; c++)
+            {
+                PuzzlePiece piece = new PuzzlePiece(0, 0, 0, 0);
+
+                // bottom
+                if (r == 0)
+                {
+                    piece.bottom = 0;
+                } else
+                {
+                    piece.bottom = puzzlePieces[r - 1][c].top * -1;
+                }
+
+                // left
+                if (c == 0)
+                {
+                    piece.left = 0;
+                } else
+                {
+                    piece.left = puzzlePieces[r][c - 1].right * -1;
+                }
+
+                // right
+                if (c == puzzlePieces[r].Length - 1)
+                {
+                    piece.right = 0;
+                } else
+                {
+                    piece.right = UnityEngine.Random.value < 0.5f ? -1 : 1;
+                }
+
+                // top
+                if (r == puzzlePieces.Length - 1)
+                {
+                    piece.top = 0;
+                } else
+                {
+                    piece.top = UnityEngine.Random.value < 0.5f ? -1 : 1;
+                }
+
+                puzzlePieces[r][c] = piece;
+            }
+        }
+    }
+
+    private void GenerateBase()
+    {
+        MG.MakeBaseMesh(Vector3.zero, this.columns, this.rows, baseMaterial);
+
+    }
+    private void GenerateUnevenTabsGrid()
     {
         Vector3 startPos = Vector2.left * (gridScale * columns) / 2 + Vector2.down * (gridScale * rows) / 2;
         startPos.x += 0.5f * gridScale;
@@ -111,6 +200,7 @@ public class GridGenerator : MonoBehaviour
 
         float currWidth = 0;
         float halfWidth = gridScale * columns * 0.5f;
+
 
         for (int x = 0; x < columns; x++)
         {
@@ -123,160 +213,77 @@ public class GridGenerator : MonoBehaviour
                 float heightA = puzzlePieceHeights[x][y];       // left side
                 float heightB = puzzlePieceHeights[x + 1][y];   // right side
 
-                GameObject pieceInstance;
+                PuzzlePiece piece = puzzlePieces[y][x];
+                GameObject pieceInstance = MG.MakeTrapezoidMesh(spawnPosition, 7 * Vector3.left, width, heightA, heightB, piece, y, x, puzzleAccHeights);
+                pieceInstance.layer = LayerMask.NameToLayer("Puzzle");
 
-                // top or bottom edge piece
-                if (y == 0)
-                {
-                    pieceInstance = CreatePuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, y, x, "bottom");
-                } else if (y == rows - 1)
-                {
-                    pieceInstance = CreatePuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, y, x, "top");
-                } else
-                {
-                    pieceInstance = CreatePuzzlePieceMesh(spawnPosition, gridScale, width * 0.5f, heightA, heightB, y, x, "middle");
-                }
-
+                piece.SetFinishedPos(new Vector3(spawnPosition.x, 0, spawnPosition.y));
+                piece.SetGameObject(pieceInstance);
+                pieceObjects[y][x] = pieceInstance;
             }
             currWidth += columnWidths[x];
         }
-    }
-    private Vector2[] verticesToWorld(Vector3[] vertices, Vector3 spawnPosition)
-    {
-        Vector2[] worldVertices = new Vector2[vertices.Length];
-        for (int i = 0; i < vertices.Length; i++)
+        this.transform.rotation = Quaternion.AngleAxis(90, Vector3.right);
+
+        // Unparent:
+        /*for (int x = 0; x < columns; x++)
         {
-            worldVertices[i] = new Vector2(vertices[i][0], vertices[i][1]);   // need bottom left corner to be at origin?
-            worldVertices[i] *= gridScale;
-            worldVertices[i] += new Vector2(spawnPosition[0], spawnPosition[1]);
-
-            Vector3 debug = worldVertices[i];
-            debug.z = spawnPosition[2];
-            //GameObject pieceInstance = Instantiate(spherePrefab, debug, Quaternion.identity, transform);
-        }
-        //worldToUV(worldVertices);
-        return worldVertices;
-    }
-    private Vector2[] worldToUV(Vector2[] screenVertices)
-    {
-        float w = columns * gridScale;
-        float h = rows * gridScale;
-
-        Vector2[] uvs = new Vector2[screenVertices.Length];
-        for (int i = 0; i < uvs.Length; i ++)
-        {
-            float x = (screenVertices[i][0] + w * 0.5f) / w;
-            float y = (screenVertices[i][1] + h * 0.5f) / h;
-            uvs[i] = new Vector2(x, y);
-
-            Vector3 debug = uvs[i];
-            debug.z = 0;
-            //GameObject pieceInstance = Instantiate(spherePrefab, debug, Quaternion.identity, transform);
-
-        }
-
-        return uvs;
-    }
-
-    private Vector3[] FindCoordsBottomPiece(int row, int col, float halfwidth, float heightA, float heightB)
-    {
-        Vector3[] vertices = new Vector3[]
+            for (int y = 0; y < rows; y++)
             {
-            new Vector3(-halfwidth, -0.5f, 0),
-            new Vector3(halfwidth, -0.5f, 0),
-            new Vector3(halfwidth, heightB - 0.5f, 0),
-            new Vector3(-halfwidth, heightA - 0.5f, 0),
-            };
-
-        return vertices;
+                //pieceObjects[y][x].transform.SetParent(null);
+            }
+        }*/
     }
-
-    private Vector3[] FindCoordsTopPiece(int row, int col, float halfwidth, float heightA, float heightB)
+    private bool CheckPuzzleFinished()
     {
-        Vector3[] vertices = new Vector3[]
+        for (int r = 0; r < this.rows; r++)
+        {
+            for (int c = 0; c < this.columns; c++)
             {
-            new Vector3(-halfwidth, -heightA + 0.5f, 0),
-            new Vector3(halfwidth, -heightB + 0.5f, 0),
-            new Vector3(halfwidth, 0.5f, 0),
-            new Vector3(-halfwidth, 0.5f, 0),
-            };
+                PuzzlePiece p = puzzlePieces[r][c];
+                float distance = Vector3.Distance(p.GetFinishedPos(), p.GetCurrPos());
 
-        return vertices;
+                if (distance > this.threshold)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
-    // Find the unit coordinates for a piece in one of the middle rows
-    // row must be > 0 and < num rows
-    private Vector3[] FindCoordsMiddlePiece(int row, int col, float halfwidth, float heightA, float heightB)
+    private void SnapNearbyPiecesIfCorrect()
     {
-        if (!(row > 0 && row < this.rows))
+        for (int r = 0; r < this.rows; r++)
         {
-            return null;
+            for (int c = 0; c < this.columns; c++)
+            {
+                PuzzlePiece p = puzzlePieces[r][c];
+                float distance = Vector3.Distance(p.GetFinishedPos(), p.GetCurrPos());
+
+                if (distance <= this.threshold)
+                {
+                    p.SnapCurrPosToFinish();
+                }
+            }
         }
-
-        Vector3[] coords;
-
-        /*float heightA = puzzlePieceHeights[col][row];
-        float heightB = puzzlePieceHeights[col + 1][row];*/
-
-        float bLDist = puzzleAccHeights[col][row - 1];          // distance from bottom edge of puzzle to bottom left corner of current piece
-        float bRDist = puzzleAccHeights[col + 1][row - 1];      // distance from bottom edge of puzzle to bottom right corner of current piece
-        //float tRDist = rows - puzzleAccHeights[col + 1][row];   // distance from top edge of puzzle to top right corner of current piece
-        //float tLDist = rows - puzzleAccHeights[col][row];       // distance from top edge of puzzle to top left corner of current piece
-
-        Vector3 bL = new Vector3(-halfwidth, bLDist - row - 0.5f, 0);
-        Vector3 bR = new Vector3(halfwidth, bRDist - row - 0.5f, 0);
-        Vector3 tR = new Vector3(halfwidth, bR.y + heightB, 0);
-        Vector3 tL = new Vector3(-halfwidth, bL.y + heightA, 0);
-        //Vector3 tR = new Vector3(halfwidth, this.rows - (row + 1) - tRDist + 0.5f, 0);
-        //Vector3 tL = new Vector3(-halfwidth, this.rows - (row + 1) - tLDist + 0.5f, 0);
-
-        UnityEngine.Debug.Log("col, row = " + col + ", " + row + "; " + 
-            "bL: " + bL + ", bR: " + bR + ", tR: " + tR + ", tL: " + tL);
-        coords = new Vector3[] { bL, bR, tR, tL };
-
-        return coords;
     }
 
-    private GameObject CreatePuzzlePieceMesh(Vector3 position, float scale, float halfwidth, float heightA, float heightB, int row, int col, string type)
+    private void toString()
     {
-        GameObject obj = new GameObject("Piece");
-        obj.transform.position = position;
-        obj.transform.localScale = Vector3.one * scale;
-        obj.transform.parent = this.transform;
-
-        MeshFilter mf = obj.AddComponent<MeshFilter>();
-        MeshRenderer mr = obj.AddComponent<MeshRenderer>();
-
-        Mesh mesh = new Mesh();
-
-        Vector3[] vertices;
-        if (type.Equals("bottom"))
+        for (int r = 0; r < this.rows; r++)
         {
-            vertices = FindCoordsBottomPiece(row, col, halfwidth, heightA, heightB);
-        } else if (type.Equals("top"))
-        {
-            vertices = FindCoordsTopPiece(row, col, halfwidth, heightA, heightB);
-        } else
-        {
-            vertices = FindCoordsMiddlePiece(row, col, halfwidth, heightA, heightB);
+            for (int c = 0; c < this.columns; c++)
+            {
+                PuzzlePiece p = puzzlePieces[r][c];
+                Vector3 pos = p.GetCurrPos();
+                Vector3 correctPos = p.GetFinishedPos();
+                float distance = Vector3.Distance(p.GetFinishedPos(), p.GetCurrPos());
+
+                Vector3 sum = correctPos - pos;
+                UnityEngine.Debug.Log(r + c + "Distance: " + distance);
+
+            }
         }
-
-        int[] triangles = new int[]
-        {
-        0, 2, 1,
-        0, 3, 2
-        };
-        Vector2[] verts = verticesToWorld(vertices, position);
-        Vector2[] uvs = worldToUV(verts);
-
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-        mesh.uv = uvs;
-        mesh.RecalculateNormals();
-
-        mf.mesh = mesh;
-
-        mr.material = new Material(puzzleMaterial);
-        return obj;
     }
 }
