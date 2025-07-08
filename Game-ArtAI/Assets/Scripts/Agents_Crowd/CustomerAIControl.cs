@@ -36,7 +36,7 @@ public class CustomerAIControl : AIControlTarget
             SetDestinationNormal();
         } 
         // Check if agent is at its destination
-        else if (agent.remainingDistance < 1)
+        else if (!agent.pathPending && agent.hasPath && agent.remainingDistance < 1)
         {
             if (hasRequest && this.goal.Equals("machine")) // current agent is a customer
             {
