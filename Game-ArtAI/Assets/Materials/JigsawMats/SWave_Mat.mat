@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Dots_Mat 1
-  m_Shader: {fileID: -6465566751694194690, guid: 14e9ea8a03d98fb45b065f4d2c004a0f, type: 3}
+  m_Name: SWave_Mat
+  m_Shader: {fileID: -6465566751694194690, guid: fa5a13a3d202d9348877c5f93f939ae7, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
