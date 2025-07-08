@@ -33,8 +33,10 @@ public class RequestsManager : MonoBehaviour
     //public int currNumRequests;     // number of requests visible in the scene
     public static RequestsManager RM;
 
+    [SerializeField]
+    private Material[] patterns;
 
-
+    
 
     // gameobjects
     //public List<GameObject> requests;
@@ -51,9 +53,9 @@ public class RequestsManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        numColors = 16;
-        numPatterns = 16;
-        numThird = 16;
+        numColors = 12;
+        numPatterns = 12;
+        numThird = 12;
         requests = new Queue<RequestObject>();
         artInfo = new Queue<int>();
 

@@ -891,7 +891,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &176604478
 Transform:
   m_ObjectHideFlags: 0
@@ -2727,6 +2727,19 @@ MonoBehaviour:
   freqReqSizeOne: 0.3
   freqReqSizeTwo: 0.4
   freqReqSizeThree: 0.3
+  patterns:
+  - {fileID: 2100000, guid: b04ded0432552264c8dc3ff4d0eb812a, type: 2}
+  - {fileID: 2100000, guid: 181a99ee8ecacb445967f1b47431e088, type: 2}
+  - {fileID: 2100000, guid: 3134b4295f2960547b363f91d8b0b6d8, type: 2}
+  - {fileID: 2100000, guid: c6b42a30332c5164aaab8fe2cb87cec1, type: 2}
+  - {fileID: 2100000, guid: 9982d2e36a7613940b1fd908764c1b1e, type: 2}
+  - {fileID: 2100000, guid: ebb08da6023f71d4bb1e4ae489b3775f, type: 2}
+  - {fileID: 2100000, guid: 4ae2a46aa12e8e9429e933646687687a, type: 2}
+  - {fileID: 2100000, guid: b6b792c52f6e814479a9944b9367d85b, type: 2}
+  - {fileID: 2100000, guid: 3ea24f1b4283cf74482ad712116a635d, type: 2}
+  - {fileID: 2100000, guid: d362bbd38b0956a49a1d90a5ef81e33b, type: 2}
+  - {fileID: 2100000, guid: 1b3f4168680d20944a01e1a9602e31ac, type: 2}
+  - {fileID: 2100000, guid: af83b14ecaa323f47af83c1515d9ab38, type: 2}
 --- !u!1 &624790663
 GameObject:
   m_ObjectHideFlags: 0
@@ -4736,6 +4749,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: artDrawings
       objectReference: {fileID: 0}
+    - target: {fileID: 832529567409184375, guid: ad3cf24515be5494780e23da27baab3f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5319562187899052915, guid: ad3cf24515be5494780e23da27baab3f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.75
@@ -6723,6 +6740,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RequestDia 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7778941013295098761, guid: f513adf831cfe76449466d8633455de9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7252,7 +7273,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2096805782
 Transform:
   m_ObjectHideFlags: 0
