@@ -13,6 +13,10 @@ TagManager:
   - EnvGoal
   - Art
   - Request
+  - Color
+  - Size
+  - Options
+  - Sketchbook
   layers:
   - Default
   - TransparentFX
@@ -23,6 +27,7 @@ TagManager:
   - Movable
   - Navigation
   - Puzzle
+  - Sketchbook
   - 
   - 
   - 
