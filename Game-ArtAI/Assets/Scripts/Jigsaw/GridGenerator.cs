@@ -241,35 +241,15 @@ public class GridGenerator : MonoBehaviour
             for (int c = 0; c < this.columns; c++)
             {
                 PuzzlePiece p = puzzlePieces[r][c];
-                /*Vector3 pos = p.GetCurrPos();
-                Vector3 correctPos = p.GetFinishedPos();*/
                 float distance = Vector3.Distance(p.GetFinishedPos(), p.GetCurrPos());
 
                 if (distance > this.threshold)
                 {
                     return false;
                 }
-                //UnityEngine.Debug.Log(r + c + "Distance: " + distance);
-
-                //UnityEngine.Debug.Log("row, col: " + r + ", " + c + "; Current Pos: " + p.gameObject.transform.position + "; Correct Pos: " + p.GetPosition() + "; Distance: " + Vector3.Distance(p.GetPosition(), p.gameObject.transform.position));
             }
         }
         return true;
-        /*for (int r = 0; r < this.rows; r++)
-        {
-            for (int c = 0; c < this.columns; c++)
-            {
-                PuzzlePiece p = puzzlePieces[r][c];
-                if (p == null) UnityEngine.Debug.Log("NULL" + r + c);
-                if (p == null || Vector3.Distance(p.GetFinishedPos(), p.GetCurrPos()) > threshold)
-                {
-                    UnityEngine.Debug.Log("puzzle was not finished: " + r + c + threshold);
-                    return false;
-                }
-            }
-        }
-        UnityEngine.Debug.Log("Puzzle finished!");
-        return true;*/
     }
 
     private void SnapNearbyPiecesIfCorrect()
@@ -303,7 +283,6 @@ public class GridGenerator : MonoBehaviour
                 Vector3 sum = correctPos - pos;
                 UnityEngine.Debug.Log(r + c + "Distance: " + distance);
 
-                //UnityEngine.Debug.Log("row, col: " + r + ", " + c + "; Current Pos: " + p.gameObject.transform.position + "; Correct Pos: " + p.GetPosition() + "; Distance: " + Vector3.Distance(p.GetPosition(), p.gameObject.transform.position));
             }
         }
     }
