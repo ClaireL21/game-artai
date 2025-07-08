@@ -203,10 +203,10 @@ public class MeshGenerator
         return theta;
     }
 
-    public GameObject MakeTrapezoidMesh(Vector3 position, float width, float heightA, float heightB, PuzzlePiece piece, int row, int col, float[][] puzzleAccHeights)
+    public GameObject MakeTrapezoidMesh(Vector3 position, Vector3 randPos, float width, float heightA, float heightB, PuzzlePiece piece, int row, int col, float[][] puzzleAccHeights)
     {
         GameObject obj = new GameObject("Piece" + row + col);
-        obj.transform.position = position;
+        obj.transform.position = randPos;
         obj.transform.localScale = Vector3.one * this.gridScale;
         obj.transform.parent = this.transform;
 
@@ -389,6 +389,65 @@ public class MeshGenerator
         collider.sharedMesh = mesh;
         mr.material = new Material(this.material);
         mr.sortingOrder = sort;
+        mr.sortingLayerName = "PuzzlePieces";
+        //this.sort++;
+
+        return obj;
+    }
+
+    public GameObject MakeBaseMesh(Vector3 position, float width, float height, Material mat)
+    {
+        GameObject obj = new GameObject("Base");
+        obj.transform.position = position;
+        obj.transform.localScale = Vector3.one * this.gridScale;
+        obj.transform.parent = this.transform;
+
+        MeshFilter mf = obj.AddComponent<MeshFilter>();
+        MeshRenderer mr = obj.AddComponent<MeshRenderer>();
+        Mesh mesh = new Mesh();
+
+        float halfwidth = width / 2f;
+        float halfheight = height / 2f;
+
+        Vector3[] vertices = new Vector3[]
+            {
+            new Vector3(-halfwidth, -halfheight, 0),
+            new Vector3(halfwidth, -halfheight, 0),
+            new Vector3(halfwidth, halfheight),
+            new Vector3(-halfwidth, halfheight),
+            };
+        
+        // Triangulate using helper
+        int[] triangles = new int[]
+        {
+            0, 2, 1,
+            0, 3, 2 
+        };
+        mesh.vertices = vertices;
+
+        // Prepare 2D list for triangulation
+        /*List<Vector2> verts2D = new List<Vector2>();
+
+        foreach (var v in vertices)
+            verts2D.Add(new Vector2(v.x, v.y));
+        List<int> triangles = Triangulate(verts2D);*/
+
+        mesh.triangles = triangles;
+        mesh.RecalculateNormals();
+
+        //Vector2[] uvs = worldToUV(verticesToWorld(vertices, position));
+        Vector2[] uvs = new Vector2[]
+        {
+            new Vector2(0, 0), // Bottom-left
+            new Vector2(1, 0), // Bottom-right
+            new Vector2(1, 1), // Top-right
+            new Vector2(0, 1)  // Top-left
+        };
+        mesh.uv = uvs;
+
+        mf.mesh = mesh;
+        mr.material = new Material(mat);
+        mr.sortingOrder = -2;
         mr.sortingLayerName = "PuzzlePieces";
         //this.sort++;
 

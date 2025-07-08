@@ -7,7 +7,7 @@ public class PuzzleDrag : MonoBehaviour
     private Vector3 offset;
     private float yVal; // keeping fixed y val so no issues w/ scaling
     [SerializeField] private LayerMask movableLayers;
-    [SerializeField] private int zMax = 10;     // number of moves before resetting, should be greater than the number of pieces
+    [SerializeField] public int zMax = 10;     // number of moves before resetting, should be greater than the number of pieces
     private MeshRenderer[] pieceObjects;
     private int pieceIndex = 0;
 

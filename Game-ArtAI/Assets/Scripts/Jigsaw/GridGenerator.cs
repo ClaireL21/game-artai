@@ -15,11 +15,13 @@ public class GridGenerator : MonoBehaviour
     //[SerializeField] private GameObject spherePrefab;
 
     [SerializeField] private Material puzzleMaterial;
+    [SerializeField] private Material baseMaterial;
 
     [Header("Settings")]
     [SerializeField] private int rows = 3;
     [SerializeField] private int columns = 5;
     [SerializeField] private float gridScale = 1.0f;
+    [SerializeField] private float threshold = 1.0f;
 
     private float[] columnWidths;
     private float[][] puzzlePieceHeights;
@@ -29,16 +31,38 @@ public class GridGenerator : MonoBehaviour
     private GameObject[][] pieceObjects;
 
     private static MeshGenerator MG;
+    private static PuzzleDrag PD;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        // Initialize puzzle pieces and grid
         InitializeColumnWidths();
         InitializePuzzlePieceHeights();
         InitializePuzzlePieces();
         MG = new MeshGenerator(this.transform, this.rows, this.columns, 0.1f, 5, this.gridScale, puzzleMaterial);
+        //PD = new PuzzleDrag(this.rows * this.columns + 10, LayerMask.NameToLayer("Puzzle"));
+        // Generate base and pieces
+        GenerateBase();
         GenerateUnevenTabsGrid();
+    }
 
+    void Update()
+    {
+        //PD.CheckDrag();
+        SnapNearbyPiecesIfCorrect();
+
+        bool isFinished = CheckPuzzleFinished();
+        if (isFinished) UnityEngine.Debug.Log("Finished!");
+
+        /*if (Input.GetKeyDown(KeyCode.C))
+        {
+            CheckPuzzleFinished();
+        }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            toString();
+        }*/
     }
 
     // Unit column widths, where each column by default is 1 unit wide
@@ -162,6 +186,12 @@ public class GridGenerator : MonoBehaviour
             }
         }
     }
+
+    private void GenerateBase()
+    {
+        MG.MakeBaseMesh(Vector3.zero, this.columns, this.rows, baseMaterial);
+
+    }
     private void GenerateUnevenTabsGrid()
     {
         Vector3 startPos = Vector2.left * (gridScale * columns) / 2 + Vector2.down * (gridScale * rows) / 2;
@@ -184,9 +214,11 @@ public class GridGenerator : MonoBehaviour
                 float heightB = puzzlePieceHeights[x + 1][y];   // right side
 
                 PuzzlePiece piece = puzzlePieces[y][x];
-
-                GameObject pieceInstance = MG.MakeTrapezoidMesh(spawnPosition, width, heightA, heightB, piece, y, x, puzzleAccHeights);
+                GameObject pieceInstance = MG.MakeTrapezoidMesh(spawnPosition, 7 * Vector3.left, width, heightA, heightB, piece, y, x, puzzleAccHeights);
                 pieceInstance.layer = LayerMask.NameToLayer("Puzzle");
+
+                piece.SetFinishedPos(new Vector3(spawnPosition.x, 0, spawnPosition.y));
+                piece.SetGameObject(pieceInstance);
                 pieceObjects[y][x] = pieceInstance;
             }
             currWidth += columnWidths[x];
@@ -201,5 +233,78 @@ public class GridGenerator : MonoBehaviour
                 //pieceObjects[y][x].transform.SetParent(null);
             }
         }*/
+    }
+    private bool CheckPuzzleFinished()
+    {
+        for (int r = 0; r < this.rows; r++)
+        {
+            for (int c = 0; c < this.columns; c++)
+            {
+                PuzzlePiece p = puzzlePieces[r][c];
+                /*Vector3 pos = p.GetCurrPos();
+                Vector3 correctPos = p.GetFinishedPos();*/
+                float distance = Vector3.Distance(p.GetFinishedPos(), p.GetCurrPos());
+
+                if (distance > this.threshold)
+                {
+                    return false;
+                }
+                //UnityEngine.Debug.Log(r + c + "Distance: " + distance);
+
+                //UnityEngine.Debug.Log("row, col: " + r + ", " + c + "; Current Pos: " + p.gameObject.transform.position + "; Correct Pos: " + p.GetPosition() + "; Distance: " + Vector3.Distance(p.GetPosition(), p.gameObject.transform.position));
+            }
+        }
+        return true;
+        /*for (int r = 0; r < this.rows; r++)
+        {
+            for (int c = 0; c < this.columns; c++)
+            {
+                PuzzlePiece p = puzzlePieces[r][c];
+                if (p == null) UnityEngine.Debug.Log("NULL" + r + c);
+                if (p == null || Vector3.Distance(p.GetFinishedPos(), p.GetCurrPos()) > threshold)
+                {
+                    UnityEngine.Debug.Log("puzzle was not finished: " + r + c + threshold);
+                    return false;
+                }
+            }
+        }
+        UnityEngine.Debug.Log("Puzzle finished!");
+        return true;*/
+    }
+
+    private void SnapNearbyPiecesIfCorrect()
+    {
+        for (int r = 0; r < this.rows; r++)
+        {
+            for (int c = 0; c < this.columns; c++)
+            {
+                PuzzlePiece p = puzzlePieces[r][c];
+                float distance = Vector3.Distance(p.GetFinishedPos(), p.GetCurrPos());
+
+                if (distance <= this.threshold)
+                {
+                    p.SnapCurrPosToFinish();
+                }
+            }
+        }
+    }
+
+    private void toString()
+    {
+        for (int r = 0; r < this.rows; r++)
+        {
+            for (int c = 0; c < this.columns; c++)
+            {
+                PuzzlePiece p = puzzlePieces[r][c];
+                Vector3 pos = p.GetCurrPos();
+                Vector3 correctPos = p.GetFinishedPos();
+                float distance = Vector3.Distance(p.GetFinishedPos(), p.GetCurrPos());
+
+                Vector3 sum = correctPos - pos;
+                UnityEngine.Debug.Log(r + c + "Distance: " + distance);
+
+                //UnityEngine.Debug.Log("row, col: " + r + ", " + c + "; Current Pos: " + p.gameObject.transform.position + "; Correct Pos: " + p.GetPosition() + "; Distance: " + Vector3.Distance(p.GetPosition(), p.gameObject.transform.position));
+            }
+        }
     }
 }

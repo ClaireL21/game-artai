@@ -9,6 +9,8 @@ public class PuzzlePiece : MonoBehaviour
     public int right;
     public int top;
     public int left;
+    private Vector3 finishedPos;
+    private GameObject puzzleObj;
 
     public PuzzlePiece(int bottom, int right, int top, int left)
     {
@@ -16,5 +18,34 @@ public class PuzzlePiece : MonoBehaviour
         this.right = right;
         this.top = top;
         this.left = left;
+        this.finishedPos = Vector3.zero;
+        this.puzzleObj = null;
+    }
+    public void SnapCurrPosToFinish()
+    {
+        this.puzzleObj.transform.position = this.finishedPos;
+    }
+    public Vector3 GetCurrPos()
+    {
+        if (this.puzzleObj == null)
+        {
+            Debug.Log("null object");
+            return Vector3.zero;
+        }
+        return this.puzzleObj.transform.position;
+    }
+    public Vector3 GetFinishedPos()
+    {
+        return this.finishedPos;
+    }
+    
+    public void SetGameObject(GameObject gameObj)
+    {
+        this.puzzleObj = gameObj;
+    }
+
+    public void SetFinishedPos(Vector3 position)
+    {
+        this.finishedPos = position;
     }
 }
