@@ -17,6 +17,10 @@ public class RequestsManager : MonoBehaviour
     public float freqReqSizeThree = 0.3f;
 
 
+    public Material[] colorMats;
+
+    public Material[] patterns;
+
     // requests in sprite sheets
     public static int numColors;
     public static int numPatterns;
@@ -33,10 +37,8 @@ public class RequestsManager : MonoBehaviour
     //public int currNumRequests;     // number of requests visible in the scene
     public static RequestsManager RM;
 
-    [SerializeField]
-    private Material[] patterns;
-
     
+
 
     // gameobjects
     //public List<GameObject> requests;

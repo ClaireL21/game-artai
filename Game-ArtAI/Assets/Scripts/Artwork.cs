@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Drawing;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -6,7 +7,8 @@ using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class Artwork : MonoBehaviour
 {
-    [SerializeField] Sprite process; 
+    [SerializeField] Sprite process;
+    [SerializeField] Sprite circle; 
 
     float timer = 0.0f;
     Sprite spriteImg;
@@ -15,6 +17,13 @@ public class Artwork : MonoBehaviour
     public bool isMoved;
     public int debugLogArtIndex = -1;
     public int debugLogCategory = -1;
+
+    private Material mat;
+    private string spriteType;
+
+    // time sprite 
+
+    // circle sprite
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -46,7 +55,18 @@ public class Artwork : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
 
         // setting the sprite 
-        this.GetComponent<SpriteRenderer>().sprite = spriteImg;
+        //this.GetComponent<SpriteRenderer>().sprite = spriteImg;
+
+        // setting sprite & material
+        this.GetComponent<SpriteRenderer>().sprite = circle;
+        this.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = circle;
+
+        // getting material based on category 
+        if (mat != null)
+        {
+            this.GetComponent<SpriteRenderer>().sharedMaterial = mat;
+            this.transform.GetChild(0).GetComponent<SpriteRenderer>().sharedMaterial = mat;
+        }
 
     }
 
@@ -55,8 +75,8 @@ public class Artwork : MonoBehaviour
        /* int artIndex = RequestsManager.RM.GetArt();
         debugLogArtIndex = artIndex;*/
 
-        int category = spriteInfo / 16;
-        int index = spriteInfo % 16;
+        int category = spriteInfo / 12;
+        int index = spriteInfo % 12;
         debugLogArtIndex = index;
         debugLogCategory = category;
         string spriteSheet;
@@ -66,12 +86,15 @@ public class Artwork : MonoBehaviour
         {
             case 0:
                 spriteSheet = "emoji";
+                spriteType = "color1";
                 break;
             case 1:
                 spriteSheet = "animals";
+                spriteType = "texture";
                 break;
             default:
                 spriteSheet = "shapes";
+                spriteType = "color2";
                 break;
         }
 
@@ -86,6 +109,28 @@ public class Artwork : MonoBehaviour
             }
         }
 
+        Material[] mats;
+
+        switch (spriteType)
+        {
+            case "color1":
+                mats = Resources.LoadAll<Material>("Colors");
+                mat = mats[index];
+
+                break;
+            case "texture":
+                mats = Resources.LoadAll<Material>("JigsawMats");
+                mat = mats[index];
+
+                break;
+            case "color2":
+                mats = Resources.LoadAll<Material>("Colors");
+                mat = mats[index];
+
+                break;
+            default:
+                break;
+        }
 
         this.GetComponent<SpriteRenderer>().sprite = process;
 
