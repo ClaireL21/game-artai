@@ -61,6 +61,7 @@ public class Artwork : MonoBehaviour
         debugLogCategory = category;
         string spriteSheet;
 
+        // change this to use materials 
         switch (category)
         {
             case 0:

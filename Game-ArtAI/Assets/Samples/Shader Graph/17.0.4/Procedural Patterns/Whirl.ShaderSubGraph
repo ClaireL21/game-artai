@@ -2703,8 +2703,8 @@
     "m_ObjectId": "94b724aa6190422da3813586fbe20af6",
     "m_Title": "Create radial UVs with user intensity",
     "m_Position": {
-        "x": -2572.666748046875,
-        "y": -472.00006103515627
+        "x": -2572.66650390625,
+        "y": -472.0001220703125
     }
 }
 
@@ -2821,7 +2821,7 @@
     "m_Title": "Determine number of spokes",
     "m_Position": {
         "x": -302.6666259765625,
-        "y": -372.66668701171877
+        "y": -372.666748046875
     }
 }
 
@@ -3388,7 +3388,7 @@
     "m_ObjectId": "f654777a8fc6466b9ee7f664e74cb4f3",
     "m_Title": "Determine width and draw",
     "m_Position": {
-        "x": 313.3333740234375,
+        "x": 313.33349609375,
         "y": -421.33343505859377
     }
 }

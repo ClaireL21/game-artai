@@ -119,6 +119,9 @@ public class RequestsManager : MonoBehaviour
         //Debug.Log("RM request: " + request.toString());
 
         requests.Enqueue(request);
+
+        // setting the artwork 
+        // encoded - 1D array
         if (colorIndex >= 0)
         {
             artInfo.Enqueue(colorIndex);
