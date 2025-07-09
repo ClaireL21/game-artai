@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -6,7 +7,10 @@ public class UIManager : MonoBehaviour
     //[SerializeField] private RectTransform bottomUI;
     [SerializeField] private BoxCollider machineUI;
     [SerializeField] private BoxCollider generateButtonUI;
+    [SerializeField] private BoxCollider sketchBookUI;
+    [SerializeField] private BoxCollider exitUI; 
 
+    [SerializeField] private GameObject sketchBook;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,6 +35,16 @@ public class UIManager : MonoBehaviour
                 {
                     Debug.Log("Sprite clicked: " + gameObject.name);
                     RemoveArtInMachineUI();
+                }
+
+                else if (hit.collider != null && hit.collider == sketchBookUI)
+                {
+                    OpenBook();
+                }
+
+                else if (hit.collider != null && hit.collider == exitUI)
+                {
+                    CloseBook();
                 }
             }
         }
@@ -93,6 +107,21 @@ public class UIManager : MonoBehaviour
                 c.gameObject.SetActive(false);
             }
         }
+    }
+
+    public void OpenBook()
+    {
+        sketchBookUI.gameObject.SetActive(false);
+        sketchBook.SetActive(true);
+    }
+
+    public void CloseBook()
+    {
+        // clear canvas
+        sketchBook.GetComponent<Sketchbook>().resetCanvas();
+
+        sketchBookUI.gameObject.SetActive(true);
+        sketchBook.SetActive(false);
     }
 
     // debug for GUI 

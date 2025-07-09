@@ -23,6 +23,8 @@ public class Sketchbook : MonoBehaviour
     [SerializeField]
     GameObject palette;
 
+    [SerializeField]
+    Sprite canvas;
 
     private bool eraserMode;
     private UnityEngine.Color lineColor;
@@ -168,7 +170,7 @@ public class Sketchbook : MonoBehaviour
                         return;
                     }
 
-                    if (clonedTexture == null /*|| sr.sprite.texture != clonedTexture*/)
+                    if (clonedTexture == null || sr.sprite.texture != clonedTexture)
                     {
                         clonedTexture = GetOrCreateTextureClone(sr);
                     }
@@ -413,4 +415,13 @@ public class Sketchbook : MonoBehaviour
             tool.gameObject.GetComponent<SpriteRenderer>().color = color;
         }
     }
+
+    public void resetCanvas()
+    {
+        GameObject sketchObj = GameObject.FindWithTag("Sketchbook");
+        SpriteRenderer sr = sketchObj.GetComponent<SpriteRenderer>();
+
+        sr.sprite = canvas;
+    }
+
 }
