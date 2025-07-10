@@ -105,14 +105,14 @@ public class UIManager : MonoBehaviour
     {
         bool processSprite = false;
 
-        //if (RequestsManager.requestArray.Count == 0)
-        //{
-        //    Debug.Log("unable to process");
-        //}
-        //else
-        //{
-        //    processSprite = true;
-        //}
+        if (RequestsManager.requestArray.Count == 0)
+        {
+            Debug.Log("unable to process");
+        }
+        else
+        {
+            processSprite = true;
+        }
 
         if (processSprite)
         {
@@ -122,14 +122,14 @@ public class UIManager : MonoBehaviour
             {
                 if (c.gameObject.tag == "Art")
                 {
-                    //if (RequestsManager.requestArray.Contains(int.Parse(c.gameObject.name)))
-                    //{
-                    //    Debug.Log("correct art");
-                    //}
-                    //else if (RequestsManager.requestArray.Contains(int.Parse(c.gameObject.name)))
-                    //{
-                    //    Debug.Log("wrong art");
-                    //}
+                    if (RequestsManager.requestArray.Contains(int.Parse(c.gameObject.name)))
+                    {
+                        Debug.Log("correct art");
+                    }
+                    else if (RequestsManager.requestArray.Contains(int.Parse(c.gameObject.name)))
+                    {
+                        Debug.Log("wrong art");
+                    }
 
                     Debug.Log($"artwork inputted: {c.gameObject.name}");
                     c.gameObject.SetActive(false);

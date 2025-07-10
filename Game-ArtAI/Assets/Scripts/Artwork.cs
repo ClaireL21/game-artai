@@ -134,7 +134,7 @@ public class Artwork : MonoBehaviour
 
         this.GetComponent<SpriteRenderer>().sprite = process;
 
-        //this.gameObject.name = $"{spriteInfo.ToString()}";
+        this.gameObject.name = $"{spriteInfo.ToString()}";
 
         // picking a random time for how long it takes the artist to create art 
         timer = Random.Range(0.0f, 7.0f);
@@ -145,5 +145,6 @@ public class Artwork : MonoBehaviour
     {
         isMoved = true;
         this.transform.parent = null;
+        this.transform.GetChild(0).gameObject.SetActive(false);
     }
 }
