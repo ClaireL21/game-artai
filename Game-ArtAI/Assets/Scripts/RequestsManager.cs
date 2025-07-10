@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+
 //using NUnit.Framework;
 using UnityEngine;
 public class RequestsManager : MonoBehaviour
@@ -32,6 +34,9 @@ public class RequestsManager : MonoBehaviour
     //public int currNumArt;
     //public int currNumRequests;     // number of requests visible in the scene
     public static RequestsManager RM;
+
+    //public static RequestObject currRequest { get; set; }
+    public static List<int> requestArray = new List<int>();
 
     private void Awake()
     {
@@ -105,7 +110,8 @@ public class RequestsManager : MonoBehaviour
         RequestObject request = new RequestObject(colorIndex,
                                                   patternIndex,
                                                   thirdIndex,
-                                                  size);
+                                                  size,
+                                                  numColors);
         //Debug.Log("RM request: " + request.toString());
 
         requests.Enqueue(request);
@@ -146,6 +152,7 @@ public class RequestsManager : MonoBehaviour
             return UnityEngine.Random.Range(0, numColors + numPatterns + numThird); // numColors + numPatterns + numThird
         }
     }
+
     /*private void AddRandomArt()
     {
         while (artInfo.Count < currNumArt)

@@ -134,6 +134,8 @@ public class Artwork : MonoBehaviour
 
         this.GetComponent<SpriteRenderer>().sprite = process;
 
+        //this.gameObject.name = $"{spriteInfo.ToString()}";
+
         // picking a random time for how long it takes the artist to create art 
         timer = Random.Range(0.0f, 7.0f);
         runLogic = true; 

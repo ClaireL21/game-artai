@@ -7,6 +7,8 @@ public class RequestObject : MonoBehaviour
     private int thirdIndex;     // shape
     private int requestSize;
 
+    private int numMats = 0; 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,6 +29,13 @@ public class RequestObject : MonoBehaviour
         this.requestSize = requestSize;
     }
 
+    public RequestObject(int colorIndex, int patternIndex, int thirdIndex, int requestSize, int mats)
+    {
+        this.colorIndex = colorIndex;
+        this.patternIndex = patternIndex;
+        this.thirdIndex = thirdIndex;
+        this.numMats = mats;
+    }
 
     public int getColorIndex()
     {
@@ -43,6 +52,10 @@ public class RequestObject : MonoBehaviour
     public int getSize()
     {
         return this.requestSize;
+    }
+    public int getMats()
+    {
+        return this.numMats;
     }
     public string toString()
     {

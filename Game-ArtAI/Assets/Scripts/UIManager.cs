@@ -1,5 +1,8 @@
+using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -8,14 +11,17 @@ public class UIManager : MonoBehaviour
     [SerializeField] private BoxCollider machineUI;
     [SerializeField] private BoxCollider generateButtonUI;
     [SerializeField] private BoxCollider sketchBookUI;
-    [SerializeField] private BoxCollider exitUI; 
+    [SerializeField] private BoxCollider exitUI;
 
+    [SerializeField] private GameObject progressBarUI;
     [SerializeField] private GameObject sketchBook;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         UIManage = this;
+        progressBarUI.GetComponent<Image>().fillAmount = 0f;
     }
 
     // Update is called once per frame
@@ -81,7 +87,6 @@ public class UIManager : MonoBehaviour
     public bool IsInMachineUI(GameObject dragged)
     {
         //Debug.Log("machine ui position: " + machineUI.transform.position + "; machine size: " + machineUI.transform.localScale / 2);
-
         
         Collider[] colliders = Physics.OverlapBox(machineUI.transform.position, machineUI.transform.localScale / 2, Quaternion.identity);
         //Gizmos.DrawWireCube(transform.position, transform.localScale);
@@ -98,13 +103,37 @@ public class UIManager : MonoBehaviour
 
     public void RemoveArtInMachineUI()
     {
-        Collider[] colliders = Physics.OverlapBox(machineUI.transform.position, machineUI.transform.localScale / 2, Quaternion.identity);
+        bool processSprite = false;
 
-        foreach (Collider c in colliders)
+        //if (RequestsManager.requestArray.Count == 0)
+        //{
+        //    Debug.Log("unable to process");
+        //}
+        //else
+        //{
+        //    processSprite = true;
+        //}
+
+        if (processSprite)
         {
-            if (c.gameObject.tag == "Art")
+            Collider[] colliders = Physics.OverlapBox(machineUI.transform.position, machineUI.transform.localScale / 2, Quaternion.identity);
+
+            foreach (Collider c in colliders)
             {
-                c.gameObject.SetActive(false);
+                if (c.gameObject.tag == "Art")
+                {
+                    //if (RequestsManager.requestArray.Contains(int.Parse(c.gameObject.name)))
+                    //{
+                    //    Debug.Log("correct art");
+                    //}
+                    //else if (RequestsManager.requestArray.Contains(int.Parse(c.gameObject.name)))
+                    //{
+                    //    Debug.Log("wrong art");
+                    //}
+
+                    Debug.Log($"artwork inputted: {c.gameObject.name}");
+                    c.gameObject.SetActive(false);
+                }
             }
         }
     }
@@ -123,6 +152,19 @@ public class UIManager : MonoBehaviour
         sketchBookUI.gameObject.SetActive(true);
         sketchBook.SetActive(false);
     }
+
+    public void progressBar()
+    {
+        var progressSprite = progressBarUI.GetComponent<Image>();
+
+        progressSprite.fillAmount += 0.2f;
+        if (progressSprite.fillAmount == 1.0f)
+        {
+            Debug.Log("Progress bar full!");
+        }
+
+    }
+
 
     // debug for GUI 
     //void OnGUI()

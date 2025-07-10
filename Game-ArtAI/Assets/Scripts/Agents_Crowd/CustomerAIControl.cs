@@ -10,6 +10,9 @@ public class CustomerAIControl : AIControlTarget
     private float chanceWillRequest = 0.5f;
     public float remainingDistance;
 
+    private RequestObject requestDetails;
+
+    //[SerializeField] Transform UIManagerScript; 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -73,11 +76,44 @@ public class CustomerAIControl : AIControlTarget
         request.transform.localPosition = new Vector3(0, this.transform.localScale.y + 1, 0);*/
 
        // Tuple<int, int> requestDetails = Tuple.Create(0, 0);
-        RequestObject requestDetails = RequestsManager.RM.GetRequest();
+        requestDetails = RequestsManager.RM.GetRequest();
         request.GetComponent<DialoguePicker>().SetDialogue(requestDetails);
         madeRequest = true;
         CrowdManager.CM.requestsCnt++;
+        //SendRequest();
+        //RequestsManager.currRequest = requestDetails;
     }
+
+    public void SendRequest()
+    {
+        var reqArr = RequestsManager.requestArray;
+
+        if (requestDetails.getColorIndex() >= 0)
+        {
+            reqArr.Add(requestDetails.getColorIndex());
+        }
+        if (requestDetails.getPatternIndex() >= 0)
+        {
+            reqArr.Add(requestDetails.getPatternIndex() + requestDetails.getMats());
+        }
+        if (requestDetails.getThirdIndex() >= 0)
+        {
+            reqArr.Add(requestDetails.getThirdIndex() + requestDetails.getMats() + requestDetails.getMats());
+        }
+
+    }
+
+    public void CompletedRequest()
+    {
+        //UIManagerScript.GetComponent<UIManager>().requestArray.Clear();
+
+        hasRequest = false;
+        madeRequest = false;
+        CrowdManager.CM.requestsCnt--;
+        DeleteRequest();
+        SetDestinationNormal();
+    }
+
     private void DeleteRequest()
     {
         Destroy(request);
