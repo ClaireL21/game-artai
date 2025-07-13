@@ -59,6 +59,8 @@ public class RequestsManager : MonoBehaviour
             freqReqSizeThree = 0.3f;
         }
 
+        requestArray.Add(-1);
+
         AddToRequestArtQueues(5);
 
         //timer = 5.0f;
@@ -67,7 +69,7 @@ public class RequestsManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+      
     }
 
     public void AddToRequestArtQueues(int numItems)

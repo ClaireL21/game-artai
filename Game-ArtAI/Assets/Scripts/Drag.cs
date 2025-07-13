@@ -31,6 +31,20 @@ public class Drag : MonoBehaviour
                 yVal = dragObj.position.y;
 
                 dragObj.rotation = Quaternion.identity;
+
+                //if (dragObj == null)
+                //{
+                    if (dragObj.gameObject.name == "flippedSprite")
+                    {
+                        var parent = dragObj.transform.parent;
+                        parent.GetComponent<Artwork>().artClicked = true;
+                    }
+                    else
+                    {
+                        dragObj.GetComponent<Artwork>().artClicked = true;
+                    }
+                //}
+
             }
 
         }

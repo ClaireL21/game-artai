@@ -12,6 +12,8 @@ public class CustomerAIControl : AIControlTarget
 
     private RequestObject requestDetails;
 
+    public static bool deleteReq = false;
+
     //[SerializeField] Transform UIManagerScript; 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -29,6 +31,7 @@ public class CustomerAIControl : AIControlTarget
     void Update()
     {
         remainingDistance = agent.remainingDistance;
+
         // Request was received
         if (Input.GetKeyDown(KeyCode.R) && madeRequest)
         {
@@ -62,6 +65,12 @@ public class CustomerAIControl : AIControlTarget
                 }
             }
         }
+
+        if (deleteReq)
+        {
+            CompletedRequest();
+            deleteReq = true;
+        }
     }
     private void MakeRequest()
     {
@@ -80,7 +89,7 @@ public class CustomerAIControl : AIControlTarget
         request.GetComponent<DialoguePicker>().SetDialogue(requestDetails);
         madeRequest = true;
         CrowdManager.CM.requestsCnt++;
-        //SendRequest();
+        SendRequest();
         //RequestsManager.currRequest = requestDetails;
     }
 
@@ -101,12 +110,11 @@ public class CustomerAIControl : AIControlTarget
             reqArr.Add(requestDetails.getThirdIndex() + requestDetails.getMats() + requestDetails.getMats());
         }
 
+        reqArr.Remove(-1);
     }
 
     public void CompletedRequest()
     {
-        //UIManagerScript.GetComponent<UIManager>().requestArray.Clear();
-
         hasRequest = false;
         madeRequest = false;
         CrowdManager.CM.requestsCnt--;

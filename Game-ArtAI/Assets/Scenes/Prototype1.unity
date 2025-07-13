@@ -163,6 +163,37 @@ Transform:
   - {fileID: 528001162}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &27989663
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 27989664}
+  m_Layer: 0
+  m_Name: Test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &27989664
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27989663}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -18.76, y: 20.49, z: -0.20675087}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &29273108
 GameObject:
   m_ObjectHideFlags: 0
@@ -1002,8 +1033,8 @@ MonoBehaviour:
   generateButtonUI: {fileID: 640273353}
   sketchBookUI: {fileID: 2098801777}
   exitUI: {fileID: 2133948980}
-  progressBarUI: {fileID: 1531411121}
   sketchBook: {fileID: 245048411}
+  progressBarUI: {fileID: 1531411121}
 --- !u!4 &145804389
 Transform:
   m_ObjectHideFlags: 0
@@ -9651,3 +9682,4 @@ SceneRoots:
   - {fileID: 1885674299}
   - {fileID: 245048413}
   - {fileID: 1867518164}
+  - {fileID: 27989664}

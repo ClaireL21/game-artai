@@ -14,6 +14,8 @@ public class Artwork : MonoBehaviour
     Sprite spriteImg;
     bool runLogic = false; 
 
+    public bool artClicked = false;
+
     public bool isMoved;
     public int debugLogArtIndex = -1;
     public int debugLogCategory = -1;
@@ -45,7 +47,14 @@ public class Artwork : MonoBehaviour
             if (timer <= 0.0f)
             {
                 StartCoroutine(AnimateSpeech(2.0f));
+                runLogic = false;
             }
+        }
+
+        if (artClicked)
+        {
+            DragArt();
+            artClicked = false;
         }
     }
 
@@ -134,17 +143,24 @@ public class Artwork : MonoBehaviour
 
         this.GetComponent<SpriteRenderer>().sprite = process;
 
-        this.gameObject.name = $"{spriteInfo.ToString()}";
+        this.gameObject.name = $"{spriteInfo}";
 
         // picking a random time for how long it takes the artist to create art 
         timer = Random.Range(0.0f, 7.0f);
         runLogic = true; 
     }
 
-    public void OnMouseDrag()
+    // prev mouse drag
+    public void DragArt()
     {
+        Debug.Log("mouse drag called");
+
         isMoved = true;
-        this.transform.parent = null;
+
+        var moveTest = GameObject.Find("/Test");
+
+        //this.transform.parent = null;
+        this.transform.parent = moveTest.transform;
         this.transform.GetChild(0).gameObject.SetActive(false);
     }
 }

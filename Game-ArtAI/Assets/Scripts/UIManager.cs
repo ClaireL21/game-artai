@@ -12,10 +12,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private BoxCollider generateButtonUI;
     [SerializeField] private BoxCollider sketchBookUI;
     [SerializeField] private BoxCollider exitUI;
-
-    [SerializeField] private GameObject progressBarUI;
     [SerializeField] private GameObject sketchBook;
-
+    [SerializeField] private GameObject progressBarUI;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -27,6 +25,14 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (RequestsManager.requestArray.Count == 0)
+        {
+            ProgressBar();
+            RequestsManager.requestArray.Add(-1);
+            CustomerAIControl.deleteReq = true;
+        }
+
         // check if it hit generate art button
         if (Input.GetMouseButtonDown(0))
         {
@@ -125,10 +131,12 @@ public class UIManager : MonoBehaviour
                     if (RequestsManager.requestArray.Contains(int.Parse(c.gameObject.name)))
                     {
                         Debug.Log("correct art");
+                        RequestsManager.requestArray.Remove(int.Parse(c.gameObject.name));
                     }
                     else if (RequestsManager.requestArray.Contains(int.Parse(c.gameObject.name)))
                     {
                         Debug.Log("wrong art");
+                        // what to do w/ wrong art? 
                     }
 
                     Debug.Log($"artwork inputted: {c.gameObject.name}");
@@ -153,7 +161,7 @@ public class UIManager : MonoBehaviour
         sketchBook.SetActive(false);
     }
 
-    public void progressBar()
+    public void ProgressBar()
     {
         var progressSprite = progressBarUI.GetComponent<Image>();
 
