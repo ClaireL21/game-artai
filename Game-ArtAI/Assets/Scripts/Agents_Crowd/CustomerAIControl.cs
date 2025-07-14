@@ -66,7 +66,7 @@ public class CustomerAIControl : AIControlTarget
             }
         }
 
-        if (deleteReq)
+        if (deleteReq && madeRequest)
         {
             CompletedRequest();
             deleteReq = false;

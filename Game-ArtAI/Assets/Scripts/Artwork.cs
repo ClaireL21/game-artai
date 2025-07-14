@@ -54,7 +54,7 @@ public class Artwork : MonoBehaviour
         if (artClicked)
         {
             DragArt();
-            artClicked = false;
+            //artClicked = false;
         }
     }
 
