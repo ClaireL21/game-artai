@@ -170,7 +170,20 @@ public class UIManager : MonoBehaviour
         {
             Debug.Log("Progress bar full!");
         }
+        else if (progressSprite.fillAmount >= 0.5f)
+        {
+            // initiate drawing mode
 
+        }
+
+    }
+
+    // For prototype purposes 
+    public void HideUI()
+    {
+        // hide bottom sprites 
+
+        // hide jigsaw 
     }
 
 
