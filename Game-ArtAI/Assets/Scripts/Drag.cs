@@ -34,12 +34,13 @@ public class Drag : MonoBehaviour
 
                 //if (dragObj == null)
                 //{
+                int parseVal;
                     if (dragObj.gameObject.name == "flippedSprite")
                     {
                         var parent = dragObj.transform.parent;
                         parent.GetComponent<Artwork>().artClicked = true;
                     }
-                    else
+                    else if (int.TryParse(dragObj.gameObject.name, out parseVal))
                     {
                         dragObj.GetComponent<Artwork>().artClicked = true;
                     }

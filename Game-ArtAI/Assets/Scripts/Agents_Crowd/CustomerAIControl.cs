@@ -69,7 +69,7 @@ public class CustomerAIControl : AIControlTarget
         if (deleteReq)
         {
             CompletedRequest();
-            deleteReq = true;
+            deleteReq = false;
         }
     }
     private void MakeRequest()
