@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +16,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject sketchBook;
     [SerializeField] private GameObject progressBarUI;
 
+    [SerializeField] private GameObject BottomUISprites;
+    [SerializeField] private GameObject JigsawHelper;
+    [SerializeField] private GameObject SketchbookHelpText; // remove later!
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -25,6 +30,10 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            ProgressBar();
+        }
 
         if (RequestsManager.requestArray.Count == 0)
         {
@@ -150,6 +159,8 @@ public class UIManager : MonoBehaviour
     {
         sketchBookUI.gameObject.SetActive(false);
         sketchBook.SetActive(true);
+
+        SketchbookHelpText.gameObject.SetActive(false);
     }
 
     public void CloseBook()
@@ -159,6 +170,9 @@ public class UIManager : MonoBehaviour
 
         sketchBookUI.gameObject.SetActive(true);
         sketchBook.SetActive(false);
+
+        // nice to have helper text maybe?
+        SketchbookHelpText.gameObject.SetActive(true);
     }
 
     public void ProgressBar()
@@ -173,7 +187,8 @@ public class UIManager : MonoBehaviour
         else if (progressSprite.fillAmount >= 0.5f)
         {
             // initiate drawing mode
-
+            HideUI();
+            SketchbookHelpText.gameObject.SetActive(true);
         }
 
     }
@@ -182,8 +197,12 @@ public class UIManager : MonoBehaviour
     public void HideUI()
     {
         // hide bottom sprites 
+        BottomUISprites.SetActive(false);
+        SketchbookHelpText.SetActive(false);
 
         // hide jigsaw 
+        JigsawHelper.SetActive(false);
+
     }
 
 

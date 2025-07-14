@@ -1035,6 +1035,9 @@ MonoBehaviour:
   exitUI: {fileID: 2133948980}
   sketchBook: {fileID: 245048411}
   progressBarUI: {fileID: 1531411121}
+  BottomUISprites: {fileID: 192656336}
+  JigsawHelper: {fileID: 850749754}
+  SketchbookHelpText: {fileID: 816219734}
 --- !u!4 &145804389
 Transform:
   m_ObjectHideFlags: 0
@@ -1604,7 +1607,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &245048412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4580,7 +4583,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &816219735
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9241,37 +9244,6 @@ Transform:
   - {fileID: 648015251}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1967764617
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1967764618}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1967764618
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1967764617}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 100, y: 25, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1968770793 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2715345314635879103, guid: c2ebb501faee60643b85aa1234dd9f06, type: 3}
@@ -9993,4 +9965,3 @@ SceneRoots:
   - {fileID: 245048413}
   - {fileID: 1867518164}
   - {fileID: 27989664}
-  - {fileID: 1967764618}
