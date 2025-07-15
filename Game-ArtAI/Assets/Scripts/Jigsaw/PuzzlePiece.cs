@@ -32,6 +32,7 @@ public class PuzzlePiece : MonoBehaviour
             Debug.Log("null object");
             return Vector3.zero;
         }
+        //return this.puzzleObj.transform.localPosition;
         return this.puzzleObj.transform.position;
     }
     public Vector3 GetFinishedPos()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
@@ -55,14 +56,14 @@ public class GridGenerator : MonoBehaviour
         bool isFinished = CheckPuzzleFinished();
         if (isFinished) UnityEngine.Debug.Log("Finished!");
 
-        /*if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C))
         {
             CheckPuzzleFinished();
         }
         if (Input.GetKeyDown(KeyCode.P))
         {
             toString();
-        }*/
+        }
     }
 
     // Unit column widths, where each column by default is 1 unit wide
@@ -214,16 +215,19 @@ public class GridGenerator : MonoBehaviour
                 float heightB = puzzlePieceHeights[x + 1][y];   // right side
 
                 PuzzlePiece piece = puzzlePieces[y][x];
-                GameObject pieceInstance = MG.MakeTrapezoidMesh(spawnPosition, 7 * Vector3.left, width, heightA, heightB, piece, y, x, puzzleAccHeights);
+                GameObject pieceInstance = MG.MakeTrapezoidMesh(spawnPosition, (this.columns / 2 + 1) * this.gridScale * Vector3.left, width, heightA, heightB, piece, y, x, puzzleAccHeights);
                 pieceInstance.layer = LayerMask.NameToLayer("Puzzle");
 
-                piece.SetFinishedPos(new Vector3(spawnPosition.x, 0, spawnPosition.y));
+                Vector3 localOffset = new Vector3(spawnPosition.x, spawnPosition.y, 0);
+                Vector3 finishedPos = this.transform.position + this.transform.rotation * localOffset;
+                piece.SetFinishedPos(finishedPos);
+                //Instantiate(spherePrefab, finishedPos, Quaternion.identity);
                 piece.SetGameObject(pieceInstance);
                 pieceObjects[y][x] = pieceInstance;
             }
             currWidth += columnWidths[x];
         }
-        this.transform.rotation = Quaternion.AngleAxis(90, Vector3.right);
+        //this.transform.rotation = Quaternion.AngleAxis(90, Vector3.right);
 
         // Unparent:
         /*for (int x = 0; x < columns; x++)
@@ -280,7 +284,7 @@ public class GridGenerator : MonoBehaviour
                 Vector3 correctPos = p.GetFinishedPos();
                 float distance = Vector3.Distance(p.GetFinishedPos(), p.GetCurrPos());
 
-                Vector3 sum = correctPos - pos;
+                //Vector3 sum = correctPos - pos;
                 UnityEngine.Debug.Log(r + c + "Distance: " + distance);
 
             }
