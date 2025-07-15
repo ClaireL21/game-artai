@@ -20,11 +20,23 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject JigsawHelper;
     [SerializeField] private GameObject SketchbookHelpText; // remove later!
 
+    [SerializeField] private BoxCollider puzzleDoneUI;
+    [SerializeField] private SpriteRenderer puzzleDoneColor;
+    private Color gray = new Color(162f / 255f, 181f / 255f, 184f / 255f);
+    private Color green = new Color(157f / 255f, 222f / 255f, 101f / 255f);
+
+    [SerializeField] private GameObject puzzlePrefab;
+    private GameObject puzzle;
+    private GridGenerator puzzleGrid;
+    
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         UIManage = this;
         progressBarUI.GetComponent<Image>().fillAmount = 0f;
+        puzzleDoneColor.color = gray;
+        puzzle = null;
     }
 
     // Update is called once per frame
@@ -52,10 +64,14 @@ public class UIManager : MonoBehaviour
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
 
-                if (hit.collider != null && hit.collider == generateButtonUI)
+                if (hit.collider != null && hit.collider == generateButtonUI && puzzle == null)
                 {
                     Debug.Log("Sprite clicked: " + gameObject.name);
                     RemoveArtInMachineUI();
+                    puzzle = Instantiate(puzzlePrefab);
+                    puzzleGrid = puzzle.GetComponent<GridGenerator>();
+                    puzzleGrid.SetupPuzzle(UnityEngine.Random.Range(2, 4), UnityEngine.Random.Range(2, 5));
+
                 }
 
                 else if (hit.collider != null && hit.collider == sketchBookUI)
@@ -67,6 +83,30 @@ public class UIManager : MonoBehaviour
                 {
                     CloseBook();
                 }
+
+                else if (hit.collider != null && hit.collider == puzzleDoneUI)
+                {
+                    if (puzzle != null && puzzleGrid.puzzleInitialized())
+                    {
+                        if (puzzleGrid.isFinished)
+                        {
+                            Destroy(puzzle);
+                            puzzle = null;
+                            puzzleDoneColor.color = gray;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (puzzle != null && puzzleGrid.puzzleInitialized())
+        {
+            if (puzzleGrid.isFinished)
+            {
+                puzzleDoneColor.color = green;
+            } else
+            {
+                puzzleDoneColor.color = gray;
             }
         }
     }

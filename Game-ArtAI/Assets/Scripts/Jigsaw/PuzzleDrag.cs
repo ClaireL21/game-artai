@@ -52,7 +52,10 @@ public class PuzzleDrag : MonoBehaviour
         if (dragObj != null)
         {
             // need to use raycast to get pos of mouse 
-            Plane dragPlane = new Plane(Vector3.up, new Vector3(0, yVal, 0));
+            Vector3 normal = Vector3.back;
+            normal = this.transform.rotation * normal;
+            Vector3 point = this.transform.position;
+            Plane dragPlane = new Plane(normal, point);
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if (dragPlane.Raycast(ray, out float distance))
@@ -60,7 +63,7 @@ public class PuzzleDrag : MonoBehaviour
                 Vector3 worldPoint = ray.GetPoint(distance);
                 dragObj.position = worldPoint + offset;
 
-                dragObj.position = new Vector3(dragObj.position.x, yVal, dragObj.position.z);
+                //dragObj.position = new Vector3(dragObj.position.x, yVal, dragObj.position.z);
 
                 dragObj.forward = Camera.main.transform.forward;
             }
