@@ -153,7 +153,7 @@ public class Artwork : MonoBehaviour
     // prev mouse drag
     public void DragArt()
     {
-        Debug.Log("mouse drag called");
+        //Debug.Log("mouse drag called");
 
         isMoved = true;
 

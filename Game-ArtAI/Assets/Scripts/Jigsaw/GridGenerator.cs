@@ -30,14 +30,15 @@ public class GridGenerator : MonoBehaviour
 
     private PuzzlePiece[][] puzzlePieces;
     private GameObject[][] pieceObjects;
-
+    
     private static MeshGenerator MG;
-    private static PuzzleDrag PD;
+    private bool isInitialized = false;
+    public bool isFinished = false;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void SetupPuzzle(int rows, int columns)
     {
-        // Initialize puzzle pieces and grid
+        this.rows = rows;
+        this.columns = columns;
         InitializeColumnWidths();
         InitializePuzzlePieceHeights();
         InitializePuzzlePieces();
@@ -46,24 +47,26 @@ public class GridGenerator : MonoBehaviour
         // Generate base and pieces
         GenerateBase();
         GenerateUnevenTabsGrid();
+        isInitialized = true;
     }
 
     void Update()
     {
         //PD.CheckDrag();
         SnapNearbyPiecesIfCorrect();
+        this.isFinished = CheckPuzzleFinished();
 
-        bool isFinished = CheckPuzzleFinished();
-        if (isFinished) UnityEngine.Debug.Log("Finished!");
+        /*bool isFinished = CheckPuzzleFinished();
+        if (isFinished) UnityEngine.Debug.Log("Finished!");*/
 
-        if (Input.GetKeyDown(KeyCode.C))
+        /*if (Input.GetKeyDown(KeyCode.C))
         {
             CheckPuzzleFinished();
         }
         if (Input.GetKeyDown(KeyCode.P))
         {
             toString();
-        }
+        }*/
     }
 
     // Unit column widths, where each column by default is 1 unit wide
@@ -238,7 +241,12 @@ public class GridGenerator : MonoBehaviour
             }
         }*/
     }
-    private bool CheckPuzzleFinished()
+
+    public bool puzzleInitialized()
+    {
+        return this.isInitialized;
+    }
+    public bool CheckPuzzleFinished()
     {
         for (int r = 0; r < this.rows; r++)
         {
