@@ -22,20 +22,19 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private BoxCollider puzzleDoneUI;
     [SerializeField] private SpriteRenderer puzzleDoneColor;
+    private Color gray = new Color(162f / 255f, 181f / 255f, 184f / 255f);
+    private Color green = new Color(157f / 255f, 222f / 255f, 101f / 255f);
 
     [SerializeField] private GameObject puzzlePrefab;
     private GameObject puzzle;
     private GridGenerator puzzleGrid;
-    private Color gray = new Color(162f / 255f, 181f / 255f, 184f / 255f);
-    private Color green = new Color(157f / 255f, 222f / 255f, 101f / 255f);
-    //bool puzzleIsFinished;
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         UIManage = this;
         progressBarUI.GetComponent<Image>().fillAmount = 0f;
-        //puzzleExists = false;
         puzzleDoneColor.color = gray;
         puzzle = null;
     }

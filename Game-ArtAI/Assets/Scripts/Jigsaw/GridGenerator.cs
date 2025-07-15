@@ -43,7 +43,6 @@ public class GridGenerator : MonoBehaviour
         InitializePuzzlePieceHeights();
         InitializePuzzlePieces();
         MG = new MeshGenerator(this.transform, this.rows, this.columns, 0.1f, 5, this.gridScale, puzzleMaterial);
-        //PD = new PuzzleDrag(this.rows * this.columns + 10, LayerMask.NameToLayer("Puzzle"));
         // Generate base and pieces
         GenerateBase();
         GenerateUnevenTabsGrid();
@@ -52,7 +51,6 @@ public class GridGenerator : MonoBehaviour
 
     void Update()
     {
-        //PD.CheckDrag();
         SnapNearbyPiecesIfCorrect();
         this.isFinished = CheckPuzzleFinished();
 
@@ -288,8 +286,6 @@ public class GridGenerator : MonoBehaviour
             for (int c = 0; c < this.columns; c++)
             {
                 PuzzlePiece p = puzzlePieces[r][c];
-                Vector3 pos = p.GetCurrPos();
-                Vector3 correctPos = p.GetFinishedPos();
                 float distance = Vector3.Distance(p.GetFinishedPos(), p.GetCurrPos());
 
                 //Vector3 sum = correctPos - pos;
