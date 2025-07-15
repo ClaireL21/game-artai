@@ -42,9 +42,7 @@ public class Drag : MonoBehaviour
                 offset = dragObj.position - hit.point;
                 yVal = dragObj.position.y;
 
-                Debug.Log($"prior rot: {dragObj.rotation}");
                 dragObj.rotation = Quaternion.identity;
-                Debug.Log($"curr rot: {dragObj.rotation}");
 
                 //if (dragObj == null)
                 //{
