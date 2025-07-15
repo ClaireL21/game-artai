@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+
 //using NUnit.Framework;
 using UnityEngine;
 public class RequestsManager : MonoBehaviour
@@ -36,17 +38,8 @@ public class RequestsManager : MonoBehaviour
     //public int currNumRequests;     // number of requests visible in the scene
     public static RequestsManager RM;
 
-    [SerializeField]
-    private Material[] patterns;
-
-    
-
-    // gameobjects
-    //public List<GameObject> requests;
-
-    // private vars
-    //float timer;
-    //public bool notActive = true; // should alter this 
+    //public static RequestObject currRequest { get; set; }
+    public static List<int> requestArray = new List<int>();
 
     private void Awake()
     {
@@ -69,6 +62,8 @@ public class RequestsManager : MonoBehaviour
             freqReqSizeThree = 0.3f;
         }
 
+        requestArray.Add(-1);
+
         AddToRequestArtQueues(5);
 
         //timer = 5.0f;
@@ -77,7 +72,7 @@ public class RequestsManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+      
     }
 
     public void AddToRequestArtQueues(int numItems)
@@ -120,7 +115,8 @@ public class RequestsManager : MonoBehaviour
         RequestObject request = new RequestObject(colorIndex,
                                                   patternIndex,
                                                   thirdIndex,
-                                                  size);
+                                                  size,
+                                                  numColors);
         //Debug.Log("RM request: " + request.toString());
 
         requests.Enqueue(request);
@@ -164,6 +160,7 @@ public class RequestsManager : MonoBehaviour
             return UnityEngine.Random.Range(0, numColors + numPatterns + numThird); // numColors + numPatterns + numThird
         }
     }
+
     /*private void AddRandomArt()
     {
         while (artInfo.Count < currNumArt)

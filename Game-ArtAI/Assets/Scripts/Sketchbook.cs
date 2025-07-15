@@ -15,9 +15,19 @@ using System.IO;
 public class Sketchbook : MonoBehaviour
 {
     // can change this to be hex or smthing
-    
+
+    [SerializeField]
+    GameObject options;
+    [SerializeField]
+    GameObject sizes;
+    [SerializeField]
+    GameObject palette;
+
+    [SerializeField]
+    Sprite canvas;
+
     private bool eraserMode;
-    private UnityEngine.Color lineColor; 
+    private UnityEngine.Color lineColor;
     private float lineWidth;
     private Vector2? previousDrawPosition;
     private Texture2D clonedTexture;
@@ -38,6 +48,15 @@ public class Sketchbook : MonoBehaviour
         previousDrawPosition = null;
         sketchNum = 0;
         isLoad = false;
+
+        // visual feedback 
+
+        // setting eraser as inactive
+        optionFeedback(false, options.transform.GetChild(0));
+
+        // setting width 
+
+        // setting color
     }
 
     // Update is called once per frame
@@ -45,11 +64,11 @@ public class Sketchbook : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.S))
         {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
             SaveTextureToAssets(clonedTexture, $"Sketchbook_{sketchNum}");
-        #else
+#else
             SaveTextureRuntime(clonedTexture, $"Sketchbook_{sketchNum}");
-        #endif
+#endif
             sketchNum++;
         }
 
@@ -81,7 +100,7 @@ public class Sketchbook : MonoBehaviour
                     Sprite newSprite = Sprite.Create(
                         clonedTexture,
                         new Rect(0, 0, clonedTexture.width, clonedTexture.height),
-                        new Vector2(0.5f, 0.5f), 
+                        new Vector2(0.5f, 0.5f),
                         sr.sprite.pixelsPerUnit
                     );
 
@@ -125,11 +144,18 @@ public class Sketchbook : MonoBehaviour
                 {
                     if (clickedObj.name == "Eraser")
                     {
-                        eraserMode = true; 
+                        eraserMode = true;
+
+                        optionFeedback(true, options.transform.GetChild(0));
+                        optionFeedback(false, options.transform.GetChild(1));
+
                     }
                     else
                     {
-                        eraserMode = false; 
+                        eraserMode = false;
+
+                        optionFeedback(false, options.transform.GetChild(0));
+                        optionFeedback(true, options.transform.GetChild(1));
                     }
                 }
 
@@ -144,7 +170,7 @@ public class Sketchbook : MonoBehaviour
                         return;
                     }
 
-                    if (clonedTexture == null /*|| sr.sprite.texture != clonedTexture*/)
+                    if (clonedTexture == null || sr.sprite.texture != clonedTexture)
                     {
                         clonedTexture = GetOrCreateTextureClone(sr);
                     }
@@ -190,7 +216,7 @@ public class Sketchbook : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            previousDrawPosition = null; 
+            previousDrawPosition = null;
         }
     }
 
@@ -224,7 +250,7 @@ public class Sketchbook : MonoBehaviour
 
 
     Texture2D GetOrCreateTextureClone(SpriteRenderer sr)
-    {        
+    {
         // Check if we already have a usable texture
         if (clonedTexture != null && sr.sprite.texture == clonedTexture)
         {
@@ -288,26 +314,26 @@ public class Sketchbook : MonoBehaviour
     public void SaveTextureToAssets(Texture2D texture, string fileName = "SavedTexture")
     {
 #if UNITY_EDITOR
-            // Convert texture to PNG byte array
-            byte[] bytes = texture.EncodeToPNG();
+        // Convert texture to PNG byte array
+        byte[] bytes = texture.EncodeToPNG();
 
-            // Create the path (Assets folder by default)
-            string folderPath = "Assets/Textures/";
-            string filePath = Path.Combine(folderPath, fileName + ".png");
+        // Create the path (Assets folder by default)
+        string folderPath = "Assets/Textures/";
+        string filePath = Path.Combine(folderPath, fileName + ".png");
 
-            // Create directory if it doesn't exist
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
+        // Create directory if it doesn't exist
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
 
-            // Write the file
-            File.WriteAllBytes(filePath, bytes);
+        // Write the file
+        File.WriteAllBytes(filePath, bytes);
 
-            // Refresh the asset database
-            AssetDatabase.Refresh();
+        // Refresh the asset database
+        AssetDatabase.Refresh();
 
-            Debug.Log($"Texture saved to: {filePath}");
+        Debug.Log($"Texture saved to: {filePath}");
 #else
         Debug.LogWarning("Texture saving is only available in the Unity Editor");
 #endif
@@ -321,7 +347,7 @@ public class Sketchbook : MonoBehaviour
         File.WriteAllBytes(filePath, bytes);
         Debug.Log($"Texture saved to: {filePath}");
     }
-    
+
     public Texture2D LoadTextureFromDisk(string path)
     {
         if (!File.Exists(path))
@@ -360,7 +386,7 @@ public class Sketchbook : MonoBehaviour
         }
     }
 
-    void ConnectStroke (Vector2 squareOne, Vector2 squareTwo, int size, UnityEngine.Color[] textPx)
+    void ConnectStroke(Vector2 squareOne, Vector2 squareTwo, int size, UnityEngine.Color[] textPx)
     {
 
         float distance = Vector2.Distance(squareOne, squareTwo);
@@ -373,6 +399,29 @@ public class Sketchbook : MonoBehaviour
             DrawSquare(size, interpolated, textPx);
         }
 
+    }
+
+    void optionFeedback(bool activity, Transform tool)
+    {
+        var hex = "#4A4A4A";
+        if (activity)
+        {
+            hex = "#FFFFFF";
+        }
+
+        UnityEngine.Color color;
+        if (ColorUtility.TryParseHtmlString(hex, out color))
+        {
+            tool.gameObject.GetComponent<SpriteRenderer>().color = color;
+        }
+    }
+
+    public void resetCanvas()
+    {
+        GameObject sketchObj = GameObject.FindWithTag("Sketchbook");
+        SpriteRenderer sr = sketchObj.GetComponent<SpriteRenderer>();
+
+        sr.sprite = canvas;
     }
 
 }

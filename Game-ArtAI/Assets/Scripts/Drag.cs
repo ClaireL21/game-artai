@@ -26,11 +26,38 @@ public class Drag : MonoBehaviour
             // getting obj that is hit
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, movableLayers))
             {
-                dragObj = hit.transform;
+                int parseVal;
+                if (hit.transform.gameObject.name == "flippedSprite")
+                {
+                    dragObj = hit.transform.parent;
+                    dragObj.GetComponent<Artwork>().artClicked = true;
+                }
+                else if (int.TryParse(hit.transform.gameObject.name, out parseVal))
+                {
+                    dragObj = hit.transform;
+                    dragObj.GetComponent<Artwork>().artClicked = true;
+                }
+
+                //dragObj = hit.transform;
                 offset = dragObj.position - hit.point;
                 yVal = dragObj.position.y;
 
                 dragObj.rotation = Quaternion.identity;
+
+                //if (dragObj == null)
+                //{
+                //int parseVal;
+                //if (dragObj.gameObject.name == "flippedSprite")
+                //{
+                //    var parent = dragObj.transform.parent;
+                //    parent.GetComponent<Artwork>().artClicked = true;
+                //}
+                //else if (int.TryParse(dragObj.gameObject.name, out parseVal))
+                //{
+                //    dragObj.GetComponent<Artwork>().artClicked = true;
+                //}
+                //}
+
             }
 
         }
@@ -49,6 +76,19 @@ public class Drag : MonoBehaviour
                      // hiding when dropped
                      dragObj.gameObject.SetActive(false);
                 }*/
+
+                int parseVal;
+                if (dragObj.gameObject.name == "flippedSprite")
+                {
+                    var parent = dragObj.transform.parent;
+                    parent.GetComponent<Artwork>().artClicked = false;
+                }
+                else if (int.TryParse(dragObj.gameObject.name, out parseVal))
+                {
+                    dragObj.GetComponent<Artwork>().artClicked = false;
+                }
+
+
                 dragObj = null;
             }
         }

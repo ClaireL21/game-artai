@@ -3,6 +3,7 @@ using UnityEngine;
 using static UnityEngine.Rendering.DebugUI.Table;
 using UnityEngine.UIElements;
 using System;
+using UnityEngine.SearchService;
 
 public class MeshGenerator
 {
@@ -206,9 +207,12 @@ public class MeshGenerator
     public GameObject MakeTrapezoidMesh(Vector3 position, Vector3 randPos, float width, float heightA, float heightB, PuzzlePiece piece, int row, int col, float[][] puzzleAccHeights)
     {
         GameObject obj = new GameObject("Piece" + row + col);
-        obj.transform.position = randPos;
+        //obj.transform.position = randPos;
         obj.transform.localScale = Vector3.one * this.gridScale;
         obj.transform.parent = this.transform;
+        obj.transform.rotation = obj.transform.parent.rotation;
+        obj.transform.position = obj.transform.parent.position;
+        obj.transform.localPosition = randPos;
 
         MeshFilter mf = obj.AddComponent<MeshFilter>();
         MeshRenderer mr = obj.AddComponent<MeshRenderer>();
@@ -398,9 +402,11 @@ public class MeshGenerator
     public GameObject MakeBaseMesh(Vector3 position, float width, float height, Material mat)
     {
         GameObject obj = new GameObject("Base");
-        obj.transform.position = position;
         obj.transform.localScale = Vector3.one * this.gridScale;
         obj.transform.parent = this.transform;
+        obj.transform.rotation = obj.transform.parent.rotation;
+        obj.transform.position = obj.transform.parent.position;
+        obj.transform.localPosition = position;
 
         MeshFilter mf = obj.AddComponent<MeshFilter>();
         MeshRenderer mr = obj.AddComponent<MeshRenderer>();

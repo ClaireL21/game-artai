@@ -10,6 +10,11 @@ public class CustomerAIControl : AIControlTarget
     private float chanceWillRequest = 0.5f;
     public float remainingDistance;
 
+    private RequestObject requestDetails;
+
+    public static bool deleteReq = false;
+
+    //[SerializeField] Transform UIManagerScript; 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -26,6 +31,7 @@ public class CustomerAIControl : AIControlTarget
     void Update()
     {
         remainingDistance = agent.remainingDistance;
+
         // Request was received
         if (Input.GetKeyDown(KeyCode.R) && madeRequest)
         {
@@ -59,6 +65,12 @@ public class CustomerAIControl : AIControlTarget
                 }
             }
         }
+
+        if (deleteReq && madeRequest)
+        {
+            CompletedRequest();
+            deleteReq = false;
+        }
     }
     private void MakeRequest()
     {
@@ -73,11 +85,43 @@ public class CustomerAIControl : AIControlTarget
         request.transform.localPosition = new Vector3(0, this.transform.localScale.y + 1, 0);*/
 
        // Tuple<int, int> requestDetails = Tuple.Create(0, 0);
-        RequestObject requestDetails = RequestsManager.RM.GetRequest();
+        requestDetails = RequestsManager.RM.GetRequest();
         request.GetComponent<DialoguePicker>().SetDialogue(requestDetails);
         madeRequest = true;
         CrowdManager.CM.requestsCnt++;
+        SendRequest();
+        //RequestsManager.currRequest = requestDetails;
     }
+
+    public void SendRequest()
+    {
+        var reqArr = RequestsManager.requestArray;
+
+        if (requestDetails.getColorIndex() >= 0)
+        {
+            reqArr.Add(requestDetails.getColorIndex());
+        }
+        if (requestDetails.getPatternIndex() >= 0)
+        {
+            reqArr.Add(requestDetails.getPatternIndex() + requestDetails.getMats());
+        }
+        if (requestDetails.getThirdIndex() >= 0)
+        {
+            reqArr.Add(requestDetails.getThirdIndex() + requestDetails.getMats() + requestDetails.getMats());
+        }
+
+        reqArr.Remove(-1);
+    }
+
+    public void CompletedRequest()
+    {
+        hasRequest = false;
+        madeRequest = false;
+        CrowdManager.CM.requestsCnt--;
+        DeleteRequest();
+        SetDestinationNormal();
+    }
+
     private void DeleteRequest()
     {
         Destroy(request);
