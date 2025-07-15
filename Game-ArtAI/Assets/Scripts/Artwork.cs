@@ -84,8 +84,8 @@ public class Artwork : MonoBehaviour
        /* int artIndex = RequestsManager.RM.GetArt();
         debugLogArtIndex = artIndex;*/
 
-        int category = spriteInfo / 12;
-        int index = spriteInfo % 12;
+        int category = spriteInfo / RequestsManager.numColors;
+        int index = spriteInfo % RequestsManager.numColors;
         debugLogArtIndex = index;
         debugLogCategory = category;
         string spriteSheet;

@@ -42,7 +42,7 @@ public class ArtistAIControl : AIControlTarget
             }
             // yelling animation
         }
-        else if (agent.remainingDistance < 2)   // set new random destination
+        else if (!agent.pathPending && agent.hasPath && agent.remainingDistance < 2)   // set new random destination
         {
             // Set destination normal or create drawing
             SetDestinationNormal();

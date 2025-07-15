@@ -1255,6 +1255,7 @@ GameObject:
   - component: {fileID: 214120531}
   - component: {fileID: 214120530}
   - component: {fileID: 214120533}
+  - component: {fileID: 214120534}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1380,6 +1381,20 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &214120534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 214120529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce925ca86dbc60f489fb0943159f6c38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _material: {fileID: 0}
+  _shader: {fileID: 4800000, guid: bde410e49a696b646b9a5952c8a95a39, type: 3}
 --- !u!1 &226253411
 GameObject:
   m_ObjectHideFlags: 0
@@ -8912,6 +8927,51 @@ Transform:
   - {fileID: 192656337}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1829085247
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1829085248}
+  - component: {fileID: 1829085249}
+  m_Layer: 0
+  m_Name: GrayscaleController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1829085248
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1829085247}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1963379266}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1829085249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1829085247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f386a5673ab1bc045a8404cc2eb6a548, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grayscaleMaterial: {fileID: 2100000, guid: 1f9729184a9005e4c9505093050f4057, type: 2}
 --- !u!1001 &1860018438
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9471,6 +9531,7 @@ Transform:
   - {fileID: 621158281}
   - {fileID: 1116395096}
   - {fileID: 648015251}
+  - {fileID: 1829085248}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1968770793 stripped
