@@ -175,6 +175,7 @@ public class UIManager : MonoBehaviour
 
             foreach (Collider c in colliders)
             {
+                Debug.Log("c name" + c.gameObject.name);
                 if (c.gameObject.tag == "Art")
                 {
                     if (RequestsManager.requestArray.Contains(int.Parse(c.gameObject.name)))
