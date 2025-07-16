@@ -28,6 +28,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject puzzlePrefab;
     private GameObject puzzle;
     private GridGenerator puzzleGrid;
+
+    private bool incorrectReq = false;
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -52,6 +54,18 @@ public class UIManager : MonoBehaviour
             ProgressBar();
             RequestsManager.requestArray.Add(-1);
             CustomerAIControl.deleteReq = true;
+
+            // customer feedback
+            if (incorrectReq)
+            {
+                Debug.Log("fulfilled req: wrong");
+                incorrectReq = false;
+            }
+            else
+            {
+                Debug.Log("fulfilled req: correct");
+            }
+
         }
 
         // check if it hit generate art button
@@ -176,17 +190,19 @@ public class UIManager : MonoBehaviour
             foreach (Collider c in colliders)
             {
                 Debug.Log("c name" + c.gameObject.name);
-                if (c.gameObject.tag == "Art")
+                if (c.gameObject.CompareTag("Art"))
                 {
                     if (RequestsManager.requestArray.Contains(int.Parse(c.gameObject.name)))
                     {
                         Debug.Log("correct art");
                         RequestsManager.requestArray.Remove(int.Parse(c.gameObject.name));
                     }
-                    else if (RequestsManager.requestArray.Contains(int.Parse(c.gameObject.name)))
+                    else
                     {
                         Debug.Log("wrong art");
-                        // what to do w/ wrong art? 
+
+                        RequestsManager.requestArray.Remove(0);
+                        incorrectReq = true;
                     }
 
                     Debug.Log($"artwork inputted: {c.gameObject.name}");
@@ -229,7 +245,7 @@ public class UIManager : MonoBehaviour
         {
             // initiate drawing mode
             HideUI();
-            SketchbookHelpText.gameObject.SetActive(true);
+            SketchbookHelpText.SetActive(true);
         }
 
     }

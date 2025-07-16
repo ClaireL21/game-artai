@@ -38,44 +38,19 @@ public class Drag : MonoBehaviour
                     dragObj.GetComponent<Artwork>().artClicked = true;
                 }
 
-                //dragObj = hit.transform;
                 offset = dragObj.position - hit.point;
                 yVal = dragObj.position.y;
 
                 dragObj.rotation = Quaternion.identity;
-
-                //if (dragObj == null)
-                //{
-                //int parseVal;
-                //if (dragObj.gameObject.name == "flippedSprite")
-                //{
-                //    var parent = dragObj.transform.parent;
-                //    parent.GetComponent<Artwork>().artClicked = true;
-                //}
-                //else if (int.TryParse(dragObj.gameObject.name, out parseVal))
-                //{
-                //    dragObj.GetComponent<Artwork>().artClicked = true;
-                //}
-                //}
 
             }
 
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            //dragObj = null; 
             if (dragObj != null)
             {
                 Vector2 mousePos = Input.mousePosition;
-
-                // Check if it's over the UI drop area
-                /*if (UIManager.UIManage.IsInMachineUI(dragObj.gameObject))
-                {
-                     Debug.Log("Dropped into UI!");
-
-                     // hiding when dropped
-                     dragObj.gameObject.SetActive(false);
-                }*/
 
                 int parseVal;
                 if (dragObj.gameObject.name == "flippedSprite")
