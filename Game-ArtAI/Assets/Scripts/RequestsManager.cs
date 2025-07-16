@@ -49,9 +49,9 @@ public class RequestsManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        numColors = 16;
-        numPatterns = 16;
-        numThird = 16;
+        numColors = 12;
+        numPatterns = 12;
+        numThird = 12;
         requests = new Queue<RequestObject>();
         artInfo = new Queue<int>();
 
