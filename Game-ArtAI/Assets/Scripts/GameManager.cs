@@ -2,16 +2,21 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] public int dayCounter = 1;
+
+    void Awake()
     {
-        
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject); // Keep between scenes
+        }
+        /*else
+        {
+            Destroy(gameObject); // Prevent duplicates
+        }*/
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
