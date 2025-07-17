@@ -16,7 +16,6 @@ public class DayNightCycle : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //GameManager.instance.dayCounter = 1;
         dayText.text = GameManager.instance.dayCounter.ToString();
     }
 
