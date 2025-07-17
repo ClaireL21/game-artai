@@ -1,14 +1,15 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class DayNightCycle : MonoBehaviour
 {
-    private float dayLength = 10.0f;
-    [SerializeField] private float timer = 0f;
-
+    [SerializeField] private float dayLength = 10.0f;
+    private float timer = 0f;
     [SerializeField] private TextMeshProUGUI dayText;
+    [SerializeField] private Image clockHand;
 
     private string endDayScene = "EndDay";
 
@@ -23,6 +24,8 @@ public class DayNightCycle : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
+        float degree = 360 - (timer / dayLength) * 360;
+        clockHand.transform.rotation = Quaternion.Euler(0, 0, degree);
 
         if (timer >= dayLength)
         {
