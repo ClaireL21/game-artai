@@ -40,6 +40,7 @@ public class RequestsManager : MonoBehaviour
 
     //public static RequestObject currRequest { get; set; }
     public static List<int> requestArray = new List<int>();
+    public static List<int> requestReference;
 
     private void Awake()
     {

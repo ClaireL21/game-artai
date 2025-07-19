@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CustomerAIControl : AIControlTarget
@@ -96,6 +97,10 @@ public class CustomerAIControl : AIControlTarget
     public void SendRequest()
     {
         var reqArr = RequestsManager.requestArray;
+        if (reqArr.Count > 0 && !reqArr.Contains(-1))
+        {
+            reqArr.Clear();
+        }
 
         if (requestDetails.getColorIndex() >= 0)
         {
@@ -111,6 +116,12 @@ public class CustomerAIControl : AIControlTarget
         }
 
         reqArr.Remove(-1);
+
+        if (RequestsManager.requestReference != null && RequestsManager.requestReference.Count > 0)
+        {
+            RequestsManager.requestReference.Clear();
+        }
+        RequestsManager.requestReference = new List<int>(reqArr);
     }
 
     public void CompletedRequest()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
@@ -30,6 +31,8 @@ public class UIManager : MonoBehaviour
     private GridGenerator puzzleGrid;
 
     private bool incorrectReq = false;
+
+    private List<int> inputMats;
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -39,6 +42,8 @@ public class UIManager : MonoBehaviour
         progressBarUI.GetComponent<Image>().fillAmount = 0f;
         puzzleDoneColor.color = gray;
         puzzle = null;
+
+        inputMats = new List<int>();
     }
 
     // Update is called once per frame
@@ -51,9 +56,11 @@ public class UIManager : MonoBehaviour
 
         if (RequestsManager.requestArray.Count == 0)
         {
+
+            PuzzleSetup();
+
             ProgressBar();
             RequestsManager.requestArray.Add(-1);
-            CustomerAIControl.deleteReq = true;
 
             // customer feedback
             if (incorrectReq)
@@ -82,10 +89,7 @@ public class UIManager : MonoBehaviour
                 {
                     Debug.Log("Sprite clicked: " + gameObject.name);
                     RemoveArtInMachineUI();
-                    puzzle = Instantiate(puzzlePrefab);
-                    puzzleGrid = puzzle.GetComponent<GridGenerator>();
-                    puzzleGrid.SetupPuzzle(UnityEngine.Random.Range(2, 4), UnityEngine.Random.Range(2, 5));
-
+                    
                 }
 
                 else if (hit.collider != null && hit.collider == sketchBookUI)
@@ -107,6 +111,8 @@ public class UIManager : MonoBehaviour
                             Destroy(puzzle);
                             puzzle = null;
                             puzzleDoneColor.color = gray;
+
+                            CustomerAIControl.deleteReq = true;
                         }
                     }
                 }
@@ -153,22 +159,22 @@ public class UIManager : MonoBehaviour
                 currPos.y > corners[0].y && currPos.y < corners[2].y);
 
     }*/
-    public bool IsInMachineUI(GameObject dragged)
-    {
-        //Debug.Log("machine ui position: " + machineUI.transform.position + "; machine size: " + machineUI.transform.localScale / 2);
+    //public bool IsInMachineUI(GameObject dragged)
+    //{
+    //    //Debug.Log("machine ui position: " + machineUI.transform.position + "; machine size: " + machineUI.transform.localScale / 2);
         
-        Collider[] colliders = Physics.OverlapBox(machineUI.transform.position, machineUI.transform.localScale / 2, Quaternion.identity);
-        //Gizmos.DrawWireCube(transform.position, transform.localScale);
+    //    Collider[] colliders = Physics.OverlapBox(machineUI.transform.position, machineUI.transform.localScale / 2, Quaternion.identity);
+    //    //Gizmos.DrawWireCube(transform.position, transform.localScale);
 
-        foreach (Collider c in colliders)
-        {
-            if (c.gameObject == dragged)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+    //    foreach (Collider c in colliders)
+    //    {
+    //        if (c.gameObject == dragged)
+    //        {
+    //            return true;
+    //        }
+    //    }
+    //    return false;
+    //}
 
     public void RemoveArtInMachineUI()
     {
@@ -201,9 +207,11 @@ public class UIManager : MonoBehaviour
                     {
                         Debug.Log("wrong art");
 
-                        RequestsManager.requestArray.Remove(0);
+                        RequestsManager.requestArray.RemoveAt(0);
                         incorrectReq = true;
                     }
+
+                    inputMats.Add(int.Parse(c.gameObject.name));
 
                     Debug.Log($"artwork inputted: {c.gameObject.name}");
                     c.gameObject.SetActive(false);
@@ -262,6 +270,68 @@ public class UIManager : MonoBehaviour
 
     }
 
+    public void PuzzleSetup()
+    {
+        puzzle = Instantiate(puzzlePrefab);
+        puzzleGrid = puzzle.GetComponent<GridGenerator>();
+
+        // setting up jigsaw mats 
+
+        
+        Material jigsawMat = null;
+        Material color1 = null; 
+        Material color2 = null;
+
+        Material[] mats;
+
+        foreach (var m in inputMats) {
+            int category = m / RequestsManager.numColors;
+            int index = m % RequestsManager.numColors;
+
+            switch (category)
+            {
+                case 0:
+                    mats = Resources.LoadAll<Material>("Colors");
+                    color1 = mats[index];
+
+                    break;
+
+                case 1:
+                    mats = Resources.LoadAll<Material>("JigsawMats");
+                    jigsawMat = mats[index];
+
+                    break;
+
+                default:
+                    mats = Resources.LoadAll<Material>("Colors");
+                    color2 = mats[index];
+
+                    break;
+            }
+        }
+
+        if (jigsawMat != null)
+        {
+            GridGenerator.puzzleMaterial = jigsawMat;
+
+            GridGenerator.puzzleMaterial.SetColor("_BaseB", color1.color);
+
+            if (color2 != null)
+            {
+                GridGenerator.puzzleMaterial.SetColor("_BaseW", color2.color);
+            }
+
+        }
+        else
+        {
+            GridGenerator.puzzleMaterial = color1;
+        }
+        
+
+        //puzzleGrid.puzzleMaterial = inputMats[0];
+
+        puzzleGrid.SetupPuzzle(UnityEngine.Random.Range(2, 4), UnityEngine.Random.Range(2, 5));
+    }
 
     // debug for GUI 
     //void OnGUI()
