@@ -116,6 +116,11 @@ public class UIManager : MonoBehaviour
                             puzzle = null;
                             puzzleDoneColor.color = gray;
 
+                            // reset procedural texture color 
+                            proceduralTexture.SetColor("_BaseW", UnityEngine.Color.black);
+                            proceduralTexture.SetColor("_BaseW", UnityEngine.Color.white);
+                            proceduralTexture.SetInt("_isAnimated", 1);
+
                             CustomerAIControl.deleteReq = true;
                         }
                     }
@@ -128,10 +133,6 @@ public class UIManager : MonoBehaviour
             if (puzzleGrid.isFinished)
             {
                 puzzleDoneColor.color = green;
-                // reset procedural texture color 
-                proceduralTexture.SetColor("_BaseW", UnityEngine.Color.black);
-                GridGenerator.puzzleMaterial.SetColor("_BaseW", UnityEngine.Color.white);
-                proceduralTexture.SetInt("_isAnimated", 1);
                 
             } else
             {
