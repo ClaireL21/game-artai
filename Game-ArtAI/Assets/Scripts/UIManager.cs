@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor.PackageManager.Requests;
@@ -23,8 +24,8 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private BoxCollider puzzleDoneUI;
     [SerializeField] private SpriteRenderer puzzleDoneColor;
-    private Color gray = new Color(162f / 255f, 181f / 255f, 184f / 255f);
-    private Color green = new Color(157f / 255f, 222f / 255f, 101f / 255f);
+    private UnityEngine.Color gray = new UnityEngine.Color(162f / 255f, 181f / 255f, 184f / 255f);
+    private UnityEngine.Color green = new UnityEngine.Color(157f / 255f, 222f / 255f, 101f / 255f);
 
     [SerializeField] private GameObject puzzlePrefab;
     private GameObject puzzle;
@@ -33,7 +34,9 @@ public class UIManager : MonoBehaviour
     private bool incorrectReq = false;
 
     private List<int> inputMats;
-    
+    public static bool animateTexture = true;
+
+    private Material proceduralTexture; 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -125,6 +128,11 @@ public class UIManager : MonoBehaviour
             if (puzzleGrid.isFinished)
             {
                 puzzleDoneColor.color = green;
+                // reset procedural texture color 
+                proceduralTexture.SetColor("_BaseW", UnityEngine.Color.black);
+                GridGenerator.puzzleMaterial.SetColor("_BaseW", UnityEngine.Color.white);
+                proceduralTexture.SetInt("_isAnimated", 1);
+                
             } else
             {
                 puzzleDoneColor.color = gray;
@@ -268,6 +276,7 @@ public class UIManager : MonoBehaviour
         if (jigsawMat != null)
         {
             GridGenerator.puzzleMaterial = jigsawMat;
+            proceduralTexture = jigsawMat;
 
             GridGenerator.puzzleMaterial.SetColor("_BaseB", color1.color);
 
@@ -277,7 +286,16 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                GridGenerator.puzzleMaterial.SetColor("_BaseW", Color.white);
+                GridGenerator.puzzleMaterial.SetColor("_BaseW", UnityEngine.Color.white);
+            }
+
+            if (animateTexture)
+            {
+                GridGenerator.puzzleMaterial.SetInt("_isAnimated", 1);
+            }
+            else
+            {
+                GridGenerator.puzzleMaterial.SetInt("_isAnimated", 0);
             }
 
         }
@@ -315,6 +333,32 @@ public class UIManager : MonoBehaviour
         {
             GameObject obj = GameObject.Find($"{RequestsManager.requestReference[i]}");
             obj.name = incorrect[0].ToString();
+
+            Material[] mats;
+            int category = incorrect[0] / RequestsManager.numColors;
+            int index = incorrect[0] % RequestsManager.numColors;
+            Material mat;
+
+            switch (category)
+            {
+                case 0:
+                    mats = Resources.LoadAll<Material>("Colors");
+                    mat = mats[index];
+                    break;
+
+                case 1:
+                    mats = Resources.LoadAll<Material>("JigsawMats");
+                    mat = mats[index];
+                    break;
+
+                default:
+                    mats = Resources.LoadAll<Material>("Colors");
+                    mat = mats[index];
+                    break;
+            }
+
+            obj.GetComponent<SpriteRenderer>().sharedMaterial = mat;
+            this.transform.GetChild(0).GetComponent<SpriteRenderer>().sharedMaterial = mat;
         }
 
     }

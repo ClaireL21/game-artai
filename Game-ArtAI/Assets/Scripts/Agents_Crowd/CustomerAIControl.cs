@@ -15,8 +15,6 @@ public class CustomerAIControl : AIControlTarget
 
     public static bool deleteReq = false;
 
-    //[SerializeField] Transform UIManagerScript; 
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
