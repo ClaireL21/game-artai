@@ -67,6 +67,7 @@ public class UIManager : MonoBehaviour
             {
                 Debug.Log("fulfilled req: wrong");
                 incorrectReq = false;
+                ManageIncorrect();
             }
             else
             {
@@ -130,51 +131,6 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-
-    /*public bool IsinBottomUI (Vector2 currPos)
-    {
-        Vector3[] corners = new Vector3[4];
-        bottomUI.GetWorldCorners(corners);
-        foreach (var cor in corners) {
-            Debug.Log("corner: " + cor);
-
-        }
-
-        return (currPos.x > corners[0].x && currPos.x < corners[2].x && 
-                currPos.y > corners[0].y && currPos.y < corners[2].y);
-
-    }*/
-
-    /*public bool ClickedGenerateButton(Vector2 currPos)
-    {
-        Vector3[] corners = new Vector3[4];
-        generateButtonUI.GetWorldCorners(corners);
-        foreach (var cor in corners)
-        {
-            Debug.Log("corner: " + cor);
-
-        }
-
-        return (currPos.x > corners[0].x && currPos.x < corners[2].x &&
-                currPos.y > corners[0].y && currPos.y < corners[2].y);
-
-    }*/
-    //public bool IsInMachineUI(GameObject dragged)
-    //{
-    //    //Debug.Log("machine ui position: " + machineUI.transform.position + "; machine size: " + machineUI.transform.localScale / 2);
-        
-    //    Collider[] colliders = Physics.OverlapBox(machineUI.transform.position, machineUI.transform.localScale / 2, Quaternion.identity);
-    //    //Gizmos.DrawWireCube(transform.position, transform.localScale);
-
-    //    foreach (Collider c in colliders)
-    //    {
-    //        if (c.gameObject == dragged)
-    //        {
-    //            return true;
-    //        }
-    //    }
-    //    return false;
-    //}
 
     public void RemoveArtInMachineUI()
     {
@@ -276,7 +232,6 @@ public class UIManager : MonoBehaviour
         puzzleGrid = puzzle.GetComponent<GridGenerator>();
 
         // setting up jigsaw mats 
-
         
         Material jigsawMat = null;
         Material color1 = null; 
@@ -320,6 +275,10 @@ public class UIManager : MonoBehaviour
             {
                 GridGenerator.puzzleMaterial.SetColor("_BaseW", color2.color);
             }
+            else
+            {
+                GridGenerator.puzzleMaterial.SetColor("_BaseW", Color.white);
+            }
 
         }
         else
@@ -327,23 +286,37 @@ public class UIManager : MonoBehaviour
             GridGenerator.puzzleMaterial = color1;
         }
         
-
-        //puzzleGrid.puzzleMaterial = inputMats[0];
-
         puzzleGrid.SetupPuzzle(UnityEngine.Random.Range(2, 4), UnityEngine.Random.Range(2, 5));
     }
 
-    // debug for GUI 
-    //void OnGUI()
-    //{
-    //    Vector3[] corners = new Vector3[4];
-    //    bottomUI.GetWorldCorners(corners);
+    public void ManageIncorrect()
+    {
+        List<int> incorrect = new List<int>();
 
-    //    Vector2 min = new Vector2(corners[0].x, corners[0].y);
-    //    Vector2 max = new Vector2(corners[2].x, corners[2].y);
+        // cycle through input
+        foreach (var userIn in inputMats)
+        {
+            // check if in request manager 
+            bool inReq = RequestsManager.requestReference.Contains(userIn);
 
-    //    Rect r = new Rect(min.x, Screen.height - max.y, max.x - min.x, max.y - min.y);
-    //    GUI.color = Color.red;
-    //    GUI.DrawTexture(r, Texture2D.whiteTexture);
-    //}
+            // sort based on this 
+            if (inReq)
+            {
+                RequestsManager.requestReference.Remove(userIn);
+            }
+            else
+            {
+                incorrect.Add(userIn);
+            }
+        }
+
+        // replace prev correct ones in scene w/ incorrect 
+        for (int i = 0; i < incorrect.Count; i++)
+        {
+            GameObject obj = GameObject.Find($"{RequestsManager.requestReference[i]}");
+            obj.name = incorrect[0].ToString();
+        }
+
+    }
+
 }
