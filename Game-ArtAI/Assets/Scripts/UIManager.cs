@@ -335,6 +335,9 @@ public class UIManager : MonoBehaviour
             GameObject obj = GameObject.Find($"{RequestsManager.requestReference[i]}");
             obj.name = incorrect[0].ToString();
 
+            Debug.Log($"Replacement obj: {obj.name}");
+            Debug.Log($"Incorrect obj: {incorrect[i]}");
+
             Material[] mats;
             int category = incorrect[0] / RequestsManager.numColors;
             int index = incorrect[0] % RequestsManager.numColors;
@@ -359,7 +362,9 @@ public class UIManager : MonoBehaviour
             }
 
             obj.GetComponent<SpriteRenderer>().sharedMaterial = mat;
-            this.transform.GetChild(0).GetComponent<SpriteRenderer>().sharedMaterial = mat;
+            var child = obj.transform.GetChild(0);
+            //child.gameObject.SetActive(true);
+            child.GetComponent<SpriteRenderer>().sharedMaterial = mat;
         }
 
     }
