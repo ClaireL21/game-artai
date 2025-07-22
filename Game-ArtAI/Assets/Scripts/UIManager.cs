@@ -70,11 +70,13 @@ public class UIManager : MonoBehaviour
             {
                 Debug.Log("fulfilled req: wrong");
                 incorrectReq = false;
+                GameManager.instance.currDayReqWrong += 1;
                 ManageIncorrect();
             }
             else
             {
                 Debug.Log("fulfilled req: correct");
+                GameManager.instance.currDayReqRight += 1;
             }
 
         }

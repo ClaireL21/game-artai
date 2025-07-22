@@ -129,6 +129,8 @@ public class CustomerAIControl : AIControlTarget
         CrowdManager.CM.requestsCnt--;
         DeleteRequest();
         SetDestinationNormal();
+
+        GameManager.instance.allRequestsCnt++;
     }
 
     private void DeleteRequest()
