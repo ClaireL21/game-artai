@@ -68,13 +68,6 @@ public class ArtistAIControl : AIControlTarget
         art = Instantiate(artPrefab, this.transform);
         art.transform.localPosition = new Vector3(0, this.transform.localScale.y * 0.85f, 0);
 
-        /*Quaternion spawnRotation = Quaternion.Euler(20, 0, 0);
-        Vector3 spawnPos = this.transform.position + new Vector3(0, this.transform.localScale.y * 0.5f + 2, 0);
-        art = Instantiate(artPrefab, spawnPos, spawnRotation);
-        art.transform.localScale *= 2;
-        art.transform.SetParent(this.transform, worldPositionStays: true);*/
-
-
         isDrawing = true;
         CrowdManager.CM.drawingsCnt++;
         int artIndex = RequestsManager.RM.GetArt();

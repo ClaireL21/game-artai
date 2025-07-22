@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml.Linq;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
@@ -15,8 +16,9 @@ public class GridGenerator : MonoBehaviour
     [Header("Elements")]
     //[SerializeField] private GameObject spherePrefab;
 
-    [SerializeField] private Material puzzleMaterial;
+    [SerializeField] public static Material puzzleMaterial;
     [SerializeField] private Material baseMaterial;
+    [SerializeField] private Material test;
 
     [Header("Settings")]
     [SerializeField] private int rows = 3;
@@ -37,6 +39,9 @@ public class GridGenerator : MonoBehaviour
 
     public void SetupPuzzle(int rows, int columns)
     {
+
+        //puzzleMaterial = test;
+
         this.rows = rows;
         this.columns = columns;
         InitializeColumnWidths();

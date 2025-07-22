@@ -44,6 +44,9 @@
         },
         {
             "m_Id": "234fd01d54784a7880b63a6d5e50e6ad"
+        },
+        {
+            "m_Id": "4ed91c7cb86f4876a262b9e22083cd60"
         }
     ],
     "m_GroupDatas": [],
@@ -131,6 +134,9 @@
         "m_Blocks": [
             {
                 "m_Id": "88cbceeb43ef43458239c24be1781b88"
+            },
+            {
+                "m_Id": "4ed91c7cb86f4876a262b9e22083cd60"
             }
         ]
     },
@@ -375,6 +381,55 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "472896eb2174407aad630fe5786cfa03",
+    "m_Id": 0,
+    "m_DisplayName": "Alpha",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Alpha",
+    "m_StageCapability": 2,
+    "m_Value": 1.0,
+    "m_DefaultValue": 1.0,
+    "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.BlockNode",
+    "m_ObjectId": "4ed91c7cb86f4876a262b9e22083cd60",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "SurfaceDescription.Alpha",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 0.0,
+            "height": 0.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "472896eb2174407aad630fe5786cfa03"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_SerializedDescriptor": "SurfaceDescription.Alpha"
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
     "m_ObjectId": "5059aca5b175416a8f25780449cf6ba6",
     "m_Group": {
@@ -448,7 +503,7 @@
         "m_Id": "cf9c3323e7c64cfda39d087aaf9aa461"
     },
     "m_AllowMaterialOverride": false,
-    "m_SurfaceType": 0,
+    "m_SurfaceType": 1,
     "m_ZTestMode": 4,
     "m_ZWriteControl": 0,
     "m_AlphaMode": 0,
