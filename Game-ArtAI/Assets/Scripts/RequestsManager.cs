@@ -10,13 +10,13 @@ public class RequestsManager : MonoBehaviour
     [Header("Request Settings")]
 
     [Range(0.0f, 1.0f)]
-    public float freqReqSizeOne = 0.3f;
+    public float freqReqSizeOne = 1.0f;
 
     [Range(0.0f, 1.0f)]
-    public float freqReqSizeTwo = 0.4f;
+    public float freqReqSizeTwo = 0.0f;
 
     [Range(0.0f, 1.0f)]
-    public float freqReqSizeThree = 0.3f;
+    public float freqReqSizeThree = 0.0f;
 
 
     // requests in sprite sheets
@@ -40,6 +40,7 @@ public class RequestsManager : MonoBehaviour
 
     //public static RequestObject currRequest { get; set; }
     public static List<int> requestArray = new List<int>();
+    public static List<int> requestReference;
 
     private void Awake()
     {
@@ -57,9 +58,13 @@ public class RequestsManager : MonoBehaviour
 
         if (freqReqSizeOne + freqReqSizeTwo + freqReqSizeThree > 1.0f)
         {
-            freqReqSizeOne = 0.3f;
-            freqReqSizeTwo = 0.4f;
-            freqReqSizeThree = 0.3f;
+            freqReqSizeOne = 0.0f;
+            freqReqSizeTwo = 1.0f;
+            freqReqSizeThree = 0.0f;
+
+            //freqReqSizeOne = 0.3f;
+            //freqReqSizeTwo = 0.4f;
+            //freqReqSizeThree = 0.3f;
         }
 
         requestArray.Add(-1);

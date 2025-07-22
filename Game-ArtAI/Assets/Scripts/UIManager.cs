@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor.PackageManager.Requests;
@@ -22,15 +24,19 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private BoxCollider puzzleDoneUI;
     [SerializeField] private SpriteRenderer puzzleDoneColor;
-    private Color gray = new Color(162f / 255f, 181f / 255f, 184f / 255f);
-    private Color green = new Color(157f / 255f, 222f / 255f, 101f / 255f);
+    private UnityEngine.Color gray = new UnityEngine.Color(162f / 255f, 181f / 255f, 184f / 255f);
+    private UnityEngine.Color green = new UnityEngine.Color(157f / 255f, 222f / 255f, 101f / 255f);
 
     [SerializeField] private GameObject puzzlePrefab;
     private GameObject puzzle;
     private GridGenerator puzzleGrid;
 
     private bool incorrectReq = false;
-    
+
+    private List<int> inputMats;
+    public static bool animateTexture = true;
+
+    private Material proceduralTexture; 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -39,6 +45,8 @@ public class UIManager : MonoBehaviour
         progressBarUI.GetComponent<Image>().fillAmount = 0f;
         puzzleDoneColor.color = gray;
         puzzle = null;
+
+        inputMats = new List<int>();
     }
 
     // Update is called once per frame
@@ -51,9 +59,11 @@ public class UIManager : MonoBehaviour
 
         if (RequestsManager.requestArray.Count == 0)
         {
+
+            PuzzleSetup();
+
             ProgressBar();
             RequestsManager.requestArray.Add(-1);
-            CustomerAIControl.deleteReq = true;
 
             // customer feedback
             if (incorrectReq)
@@ -61,6 +71,7 @@ public class UIManager : MonoBehaviour
                 Debug.Log("fulfilled req: wrong");
                 incorrectReq = false;
                 GameManager.instance.currDayReqWrong += 1;
+                ManageIncorrect();
             }
             else
             {
@@ -84,10 +95,7 @@ public class UIManager : MonoBehaviour
                 {
                     Debug.Log("Sprite clicked: " + gameObject.name);
                     RemoveArtInMachineUI();
-                    puzzle = Instantiate(puzzlePrefab);
-                    puzzleGrid = puzzle.GetComponent<GridGenerator>();
-                    puzzleGrid.SetupPuzzle(UnityEngine.Random.Range(2, 4), UnityEngine.Random.Range(2, 5));
-
+                    
                 }
 
                 else if (hit.collider != null && hit.collider == sketchBookUI)
@@ -109,6 +117,23 @@ public class UIManager : MonoBehaviour
                             Destroy(puzzle);
                             puzzle = null;
                             puzzleDoneColor.color = gray;
+
+                            // reset procedural texture color 
+
+                            if (GridGenerator.puzzleMaterial != null)
+                            {
+                                GridGenerator.puzzleMaterial.SetColor("_BaseB", UnityEngine.Color.black);
+                                GridGenerator.puzzleMaterial.SetColor("_BaseW", UnityEngine.Color.white);
+                                GridGenerator.puzzleMaterial.SetInt("_isAnimated", 1);
+                            }
+
+                            //var procMat = new Material(proceduralTexture);
+
+                            //procMat.SetColor("_BaseB", UnityEngine.Color.black);
+                            //procMat.SetColor("_BaseW", UnityEngine.Color.white);
+                            //procMat.SetInt("_isAnimated", 1);
+
+                            CustomerAIControl.deleteReq = true;
                         }
                     }
                 }
@@ -120,56 +145,12 @@ public class UIManager : MonoBehaviour
             if (puzzleGrid.isFinished)
             {
                 puzzleDoneColor.color = green;
+                
             } else
             {
                 puzzleDoneColor.color = gray;
             }
         }
-    }
-
-    /*public bool IsinBottomUI (Vector2 currPos)
-    {
-        Vector3[] corners = new Vector3[4];
-        bottomUI.GetWorldCorners(corners);
-        foreach (var cor in corners) {
-            Debug.Log("corner: " + cor);
-
-        }
-
-        return (currPos.x > corners[0].x && currPos.x < corners[2].x && 
-                currPos.y > corners[0].y && currPos.y < corners[2].y);
-
-    }*/
-
-    /*public bool ClickedGenerateButton(Vector2 currPos)
-    {
-        Vector3[] corners = new Vector3[4];
-        generateButtonUI.GetWorldCorners(corners);
-        foreach (var cor in corners)
-        {
-            Debug.Log("corner: " + cor);
-
-        }
-
-        return (currPos.x > corners[0].x && currPos.x < corners[2].x &&
-                currPos.y > corners[0].y && currPos.y < corners[2].y);
-
-    }*/
-    public bool IsInMachineUI(GameObject dragged)
-    {
-        //Debug.Log("machine ui position: " + machineUI.transform.position + "; machine size: " + machineUI.transform.localScale / 2);
-        
-        Collider[] colliders = Physics.OverlapBox(machineUI.transform.position, machineUI.transform.localScale / 2, Quaternion.identity);
-        //Gizmos.DrawWireCube(transform.position, transform.localScale);
-
-        foreach (Collider c in colliders)
-        {
-            if (c.gameObject == dragged)
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     public void RemoveArtInMachineUI()
@@ -203,9 +184,11 @@ public class UIManager : MonoBehaviour
                     {
                         Debug.Log("wrong art");
 
-                        RequestsManager.requestArray.Remove(0);
+                        RequestsManager.requestArray.RemoveAt(0);
                         incorrectReq = true;
                     }
+
+                    inputMats.Add(int.Parse(c.gameObject.name));
 
                     Debug.Log($"artwork inputted: {c.gameObject.name}");
                     c.gameObject.SetActive(false);
@@ -264,18 +247,134 @@ public class UIManager : MonoBehaviour
 
     }
 
+    public void PuzzleSetup()
+    {
+        puzzle = Instantiate(puzzlePrefab);
+        puzzleGrid = puzzle.GetComponent<GridGenerator>();
 
-    // debug for GUI 
-    //void OnGUI()
-    //{
-    //    Vector3[] corners = new Vector3[4];
-    //    bottomUI.GetWorldCorners(corners);
+        // setting up jigsaw mats 
+        
+        Material jigsawMat = null;
+        Material color1 = null; 
+        Material color2 = null;
 
-    //    Vector2 min = new Vector2(corners[0].x, corners[0].y);
-    //    Vector2 max = new Vector2(corners[2].x, corners[2].y);
+        Material[] mats;
 
-    //    Rect r = new Rect(min.x, Screen.height - max.y, max.x - min.x, max.y - min.y);
-    //    GUI.color = Color.red;
-    //    GUI.DrawTexture(r, Texture2D.whiteTexture);
-    //}
+        foreach (var m in inputMats) {
+            int category = m / RequestsManager.numColors;
+            int index = m % RequestsManager.numColors;
+
+            switch (category)
+            {
+                case 0:
+                    mats = Resources.LoadAll<Material>("Colors");
+                    color1 = mats[index];
+
+                    break;
+
+                case 1:
+                    mats = Resources.LoadAll<Material>("JigsawMats");
+                    jigsawMat = mats[index];
+
+                    break;
+
+                default:
+                    mats = Resources.LoadAll<Material>("Colors");
+                    color2 = mats[index];
+
+                    break;
+            }
+        }
+
+        if (jigsawMat != null)
+        {
+            GridGenerator.puzzleMaterial = jigsawMat;
+            proceduralTexture = jigsawMat;
+
+            GridGenerator.puzzleMaterial.SetColor("_BaseB", color1.color);
+
+            if (color2 != null)
+            {
+                GridGenerator.puzzleMaterial.SetColor("_BaseW", color2.color);
+            }
+            else
+            {
+                GridGenerator.puzzleMaterial.SetColor("_BaseW", UnityEngine.Color.white);
+            }
+
+            if (animateTexture)
+            {
+                GridGenerator.puzzleMaterial.SetInt("_isAnimated", 1);
+            }
+            else
+            {
+                GridGenerator.puzzleMaterial.SetInt("_isAnimated", 0);
+            }
+
+        }
+        else
+        {
+            GridGenerator.puzzleMaterial = color1;
+        }
+        
+        puzzleGrid.SetupPuzzle(UnityEngine.Random.Range(2, 4), UnityEngine.Random.Range(2, 5));
+    }
+
+    public void ManageIncorrect()
+    {
+        List<int> incorrect = new List<int>();
+
+        // cycle through input
+        foreach (var userIn in inputMats)
+        {
+            // check if in request manager 
+            bool inReq = RequestsManager.requestReference.Contains(userIn);
+
+            // sort based on this 
+            if (inReq)
+            {
+                RequestsManager.requestReference.Remove(userIn);
+            }
+            else
+            {
+                incorrect.Add(userIn);
+            }
+        }
+
+        // replace prev correct ones in scene w/ incorrect 
+        for (int i = 0; i < incorrect.Count; i++)
+        {
+            GameObject obj = GameObject.Find($"{RequestsManager.requestReference[i]}");
+            obj.name = incorrect[0].ToString();
+
+            Material[] mats;
+            int category = incorrect[0] / RequestsManager.numColors;
+            int index = incorrect[0] % RequestsManager.numColors;
+            Material mat;
+
+            switch (category)
+            {
+                case 0:
+                    mats = Resources.LoadAll<Material>("Colors");
+                    mat = mats[index];
+                    break;
+
+                case 1:
+                    mats = Resources.LoadAll<Material>("JigsawMats");
+                    mat = mats[index];
+                    break;
+
+                default:
+                    mats = Resources.LoadAll<Material>("Colors");
+                    mat = mats[index];
+                    break;
+            }
+
+            obj.GetComponent<SpriteRenderer>().sharedMaterial = mat;
+            var child = obj.transform.GetChild(0);
+            child.GetComponent<SpriteRenderer>().sharedMaterial = mat;
+        }
+
+    }
+
 }
