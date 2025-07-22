@@ -117,9 +117,19 @@ public class UIManager : MonoBehaviour
                             puzzleDoneColor.color = gray;
 
                             // reset procedural texture color 
-                            proceduralTexture.SetColor("_BaseW", UnityEngine.Color.black);
-                            proceduralTexture.SetColor("_BaseW", UnityEngine.Color.white);
-                            proceduralTexture.SetInt("_isAnimated", 1);
+
+                            if (GridGenerator.puzzleMaterial != null)
+                            {
+                                GridGenerator.puzzleMaterial.SetColor("_BaseB", UnityEngine.Color.black);
+                                GridGenerator.puzzleMaterial.SetColor("_BaseW", UnityEngine.Color.white);
+                                GridGenerator.puzzleMaterial.SetInt("_isAnimated", 1);
+                            }
+
+                            //var procMat = new Material(proceduralTexture);
+
+                            //procMat.SetColor("_BaseB", UnityEngine.Color.black);
+                            //procMat.SetColor("_BaseW", UnityEngine.Color.white);
+                            //procMat.SetInt("_isAnimated", 1);
 
                             CustomerAIControl.deleteReq = true;
                         }
@@ -335,9 +345,6 @@ public class UIManager : MonoBehaviour
             GameObject obj = GameObject.Find($"{RequestsManager.requestReference[i]}");
             obj.name = incorrect[0].ToString();
 
-            Debug.Log($"Replacement obj: {obj.name}");
-            Debug.Log($"Incorrect obj: {incorrect[i]}");
-
             Material[] mats;
             int category = incorrect[0] / RequestsManager.numColors;
             int index = incorrect[0] % RequestsManager.numColors;
@@ -363,7 +370,6 @@ public class UIManager : MonoBehaviour
 
             obj.GetComponent<SpriteRenderer>().sharedMaterial = mat;
             var child = obj.transform.GetChild(0);
-            //child.gameObject.SetActive(true);
             child.GetComponent<SpriteRenderer>().sharedMaterial = mat;
         }
 
