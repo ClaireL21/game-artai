@@ -135,7 +135,7 @@ public class CustomerAIControl : AIControlTarget
         GameManager.instance.allRequestsCnt++;
 
         Vector3 offset = new Vector3(0, this.transform.localScale.y * 0.5f + 2, 0);
-        dialoguePrefab.GetComponent<DialogueText>().requestText = "Thanks!";
+        dialoguePrefab.GetComponent<DialogueText>().requestText = "thanks!";
         GameObject dialogue = Instantiate(dialoguePrefab, this.transform.position + offset, Quaternion.identity);
        
         dialogue.GetComponent<TrackPosition>().InitializeTrack(this.transform, offset);

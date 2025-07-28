@@ -3,6 +3,8 @@ using UnityEngine;
 public class ArtistAIControl : AIControlTarget
 {
     public GameObject artPrefab;
+    public GameObject dialoguePrefab;
+
     private bool isDrawing;
     private GameObject art;
 
@@ -79,6 +81,13 @@ public class ArtistAIControl : AIControlTarget
         {
             isDrawing = false;
             CrowdManager.CM.drawingsCnt--;
+
+            Vector3 offset = new Vector3(0, this.transform.localScale.y * 0.5f + 2, 0);
+            dialoguePrefab.GetComponent<DialogueText>().requestText = "hey!";
+            GameObject dialogue = Instantiate(dialoguePrefab, this.transform.position + offset, Quaternion.identity);
+
+            dialogue.GetComponent<TrackPosition>().InitializeTrack(this.transform, offset);
+            Destroy(dialogue, 2f);
         }
     }
 }
