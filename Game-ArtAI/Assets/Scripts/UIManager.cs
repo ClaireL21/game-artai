@@ -38,7 +38,9 @@ public class UIManager : MonoBehaviour
 
     private static int progBarSegCnt = 5;       // the number of segments in a progress bar
 
-    private Material proceduralTexture; 
+    private Material proceduralTexture;
+
+    public bool incorrectDia = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -74,11 +76,16 @@ public class UIManager : MonoBehaviour
                 incorrectReq = false;
                 GameManager.instance.currDayReqWrong += 1;
                 ManageIncorrect();
+
+                incorrectDia = true;
+
             }
             else
             {
                 Debug.Log("fulfilled req: correct");
                 GameManager.instance.currDayReqRight += 1;
+
+                incorrectDia = false;
             }
 
         }
@@ -136,6 +143,8 @@ public class UIManager : MonoBehaviour
                             //procMat.SetInt("_isAnimated", 1);
 
                             CustomerAIControl.deleteReq = true;
+                            CrowdManager.CM.currCustomer.GetComponent<CustomerAIControl>().SpawnCustomerDialogue(incorrectDia);
+
                         }
                     }
                 }
@@ -190,6 +199,7 @@ public class UIManager : MonoBehaviour
                             RequestsManager.requestArray.RemoveAt(0);
                         }
                         incorrectReq = true;
+                        Debug.Log("UIMan" + UIManage.incorrectReq);
                     }
 
                     inputMats.Add(int.Parse(c.gameObject.name));

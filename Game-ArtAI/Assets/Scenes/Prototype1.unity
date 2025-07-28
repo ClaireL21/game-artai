@@ -1041,6 +1041,7 @@ MonoBehaviour:
   puzzleDoneUI: {fileID: 303733315}
   puzzleDoneColor: {fileID: 303733316}
   puzzlePrefab: {fileID: 2654209219547829598, guid: 9792bfee64278144e94c58285735821f, type: 3}
+  incorrectDia: 0
 --- !u!4 &145804389
 Transform:
   m_ObjectHideFlags: 0
@@ -7129,6 +7130,7 @@ MonoBehaviour:
   maxCustomers: 0
   customerGoal: {fileID: 0}
   requestsCnt: 0
+  currCustomer: {fileID: 0}
 --- !u!4 &1363121842
 Transform:
   m_ObjectHideFlags: 0

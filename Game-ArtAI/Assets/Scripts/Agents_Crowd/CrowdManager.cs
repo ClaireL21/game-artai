@@ -41,6 +41,7 @@ public class CrowdManager : MonoBehaviour
     public int maxCustomers;
     public GameObject customerGoal;
     public int requestsCnt;
+    public GameObject currCustomer;
 
     private void Awake()
     {
