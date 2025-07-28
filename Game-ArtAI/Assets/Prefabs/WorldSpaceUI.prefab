@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02c48ff9e922a694cb02f5a4a5da6e83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelW: 1200
-  panelH: 1200
+  panelW: 1400
+  panelH: 900
   panelScale: 1
   pixelsPerUnit: 500
   visualTreeAsset: {fileID: 9197481963319205126, guid: 59c000768da764849bc437187d11f4b0, type: 3}

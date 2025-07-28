@@ -1041,6 +1041,7 @@ MonoBehaviour:
   puzzleDoneUI: {fileID: 303733315}
   puzzleDoneColor: {fileID: 303733316}
   puzzlePrefab: {fileID: 2654209219547829598, guid: 9792bfee64278144e94c58285735821f, type: 3}
+  incorrectDia: 0
 --- !u!4 &145804389
 Transform:
   m_ObjectHideFlags: 0
@@ -5033,7 +5034,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e6f274ed16423a44910ef7f35776a1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dayLength: 20
+  dayLength: 120
   dayText: {fileID: 639383889}
   clockHand: {fileID: 1920097322}
 --- !u!1001 &822124682
@@ -6387,6 +6388,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dayCounter: 1
+  allRequestsCnt: 0
+  currDayReqRight: 0
+  currDayReqWrong: 0
 --- !u!1 &1195289021
 GameObject:
   m_ObjectHideFlags: 0
@@ -7126,6 +7130,7 @@ MonoBehaviour:
   maxCustomers: 0
   customerGoal: {fileID: 0}
   requestsCnt: 0
+  currCustomer: {fileID: 0}
 --- !u!4 &1363121842
 Transform:
   m_ObjectHideFlags: 0
@@ -9930,6 +9935,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dayCounter: 1
+  allRequestsCnt: 0
+  currDayReqRight: 0
+  currDayReqWrong: 0
 --- !u!4 &1968770793 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2715345314635879103, guid: c2ebb501faee60643b85aa1234dd9f06, type: 3}

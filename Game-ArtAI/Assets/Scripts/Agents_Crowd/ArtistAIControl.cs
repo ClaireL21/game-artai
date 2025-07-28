@@ -3,6 +3,8 @@ using UnityEngine;
 public class ArtistAIControl : AIControlTarget
 {
     public GameObject artPrefab;
+    public GameObject dialoguePrefab;
+
     private bool isDrawing;
     private GameObject art;
 
@@ -79,6 +81,33 @@ public class ArtistAIControl : AIControlTarget
         {
             isDrawing = false;
             CrowdManager.CM.drawingsCnt--;
+
+            Vector3 offset = new Vector3(0, this.transform.localScale.y * 0.5f + 2, 0);
+            int diaChoice = UnityEngine.Random.Range(0, 6);
+            string text = "";
+
+            switch (diaChoice)
+            {
+                case 0: text = "hey!";
+                    break;
+                case 1: text = "you can't take that!";
+                    break;
+                case 2: text = "that's my art";
+                    break;
+                case 3: text = "you're a thief";
+                    break;
+                case 4: text = "hey!";
+                    break;
+                default: text = "hey!";
+                    break;
+            }
+
+
+            dialoguePrefab.GetComponent<DialogueText>().requestText = text;
+            GameObject dialogue = Instantiate(dialoguePrefab, this.transform.position + offset, Quaternion.identity);
+
+            dialogue.GetComponent<TrackPosition>().InitializeTrack(this.transform, offset);
+            Destroy(dialogue, 2f);
         }
     }
 }

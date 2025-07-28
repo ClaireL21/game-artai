@@ -171,6 +171,7 @@ MonoBehaviour:
   protestorCounted: 0
   goal: 
   artPrefab: {fileID: 832529567409184375, guid: ad3cf24515be5494780e23da27baab3f, type: 3}
+  dialoguePrefab: {fileID: 237607072364233582, guid: 9928bc84394236a49bd61a64d24b95e0, type: 3}
 --- !u!1001 &697072414219945512
 PrefabInstance:
   m_ObjectHideFlags: 0

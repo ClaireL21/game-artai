@@ -171,6 +171,7 @@ MonoBehaviour:
   protestorCounted: 0
   goal: 
   requestPrefab: {fileID: 7778941013295098761, guid: f513adf831cfe76449466d8633455de9, type: 3}
+  dialoguePrefab: {fileID: 237607072364233582, guid: 9928bc84394236a49bd61a64d24b95e0, type: 3}
   hasRequest: 0
   madeRequest: 0
   remainingDistance: 0

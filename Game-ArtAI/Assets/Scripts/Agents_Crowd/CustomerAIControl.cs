@@ -5,6 +5,8 @@ using UnityEngine;
 public class CustomerAIControl : AIControlTarget
 {
     public GameObject requestPrefab;
+    public GameObject dialoguePrefab;
+
     private GameObject request;
     public bool hasRequest;
     public bool madeRequest;
@@ -41,7 +43,7 @@ public class CustomerAIControl : AIControlTarget
             SetDestinationNormal();
         } 
         // Check if agent is at its destination
-        else if (!agent.pathPending && agent.hasPath && agent.remainingDistance < 1)
+        else if (!agent.pathPending && agent.hasPath && agent.remainingDistance < 2)
         {
             if (hasRequest && this.goal.Equals("machine")) // current agent is a customer
             {
@@ -89,6 +91,7 @@ public class CustomerAIControl : AIControlTarget
         madeRequest = true;
         CrowdManager.CM.requestsCnt++;
         SendRequest();
+        CrowdManager.CM.currCustomer = this.gameObject;
         //RequestsManager.currRequest = requestDetails;
     }
 
@@ -131,6 +134,28 @@ public class CustomerAIControl : AIControlTarget
         SetDestinationNormal();
 
         GameManager.instance.allRequestsCnt++;
+        //SpawnCustomerDialogue();
+        //dialoguePrefab.transform.position = this.transform.position + offset;
+    }
+
+    public void SpawnCustomerDialogue(bool incorrect)
+    {
+        Debug.Log("Spanwed dialogue??");
+        Vector3 offset = new Vector3(0, this.transform.localScale.y * 0.5f + 2, 0);
+        string text;
+        if (incorrect)
+        {
+            text = "this isn't what I asked for...";
+        }
+        else
+        {
+            text = "thanks!";
+        }
+        dialoguePrefab.GetComponent<DialogueText>().requestText = text;
+        GameObject dialogue = Instantiate(dialoguePrefab, this.transform.position + offset, Quaternion.identity);
+
+        dialogue.GetComponent<TrackPosition>().InitializeTrack(this.transform, offset);
+        Destroy(dialogue, 2f);
     }
 
     private void DeleteRequest()
