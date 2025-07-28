@@ -36,6 +36,8 @@ public class UIManager : MonoBehaviour
     private List<int> inputMats;
     public static bool animateTexture = true;
 
+    private static int progBarSegCnt = 5;       // the number of segments in a progress bar
+
     private Material proceduralTexture; 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -156,7 +158,7 @@ public class UIManager : MonoBehaviour
     public void RemoveArtInMachineUI()
     {
         bool processSprite = false;
-
+        Debug.Log("Count: " + RequestsManager.requestArray.Count);
         if (RequestsManager.requestArray.Count == 0)
         {
             Debug.Log("unable to process");
@@ -183,8 +185,10 @@ public class UIManager : MonoBehaviour
                     else
                     {
                         Debug.Log("wrong art");
-
-                        RequestsManager.requestArray.RemoveAt(0);
+                        if (RequestsManager.requestArray.Count > 0)
+                        {
+                            RequestsManager.requestArray.RemoveAt(0);
+                        }
                         incorrectReq = true;
                     }
 
@@ -193,6 +197,13 @@ public class UIManager : MonoBehaviour
                     Debug.Log($"artwork inputted: {c.gameObject.name}");
                     c.gameObject.SetActive(false);
                 }
+            }
+
+            // If user didn't input enough artwork i.e. only partially fulfilled request
+            if (RequestsManager.requestArray.Count > 0)
+            {
+                incorrectReq = true;
+                RequestsManager.requestArray.Clear();
             }
         }
     }
@@ -221,7 +232,7 @@ public class UIManager : MonoBehaviour
     {
         var progressSprite = progressBarUI.GetComponent<Image>();
 
-        progressSprite.fillAmount += 0.2f;
+        progressSprite.fillAmount += 1.0f / progBarSegCnt;
         if (progressSprite.fillAmount == 1.0f)
         {
             Debug.Log("Progress bar full!");
@@ -258,7 +269,8 @@ public class UIManager : MonoBehaviour
         Material color1 = null; 
         Material color2 = null;
 
-        Material[] mats;
+        Material[] colorMats = Resources.LoadAll<Material>("Colors");
+        Material[] jigsawMats = Resources.LoadAll<Material>("JigsawMats");
 
         foreach (var m in inputMats) {
             int category = m / RequestsManager.numColors;
@@ -267,31 +279,35 @@ public class UIManager : MonoBehaviour
             switch (category)
             {
                 case 0:
-                    mats = Resources.LoadAll<Material>("Colors");
-                    color1 = mats[index];
-
+                    color1 = colorMats[index];
                     break;
 
                 case 1:
-                    mats = Resources.LoadAll<Material>("JigsawMats");
-                    jigsawMat = mats[index];
-
+                    jigsawMat = jigsawMats[index];
                     break;
 
                 default:
-                    mats = Resources.LoadAll<Material>("Colors");
-                    color2 = mats[index];
-
+                    color2 = colorMats[index];
                     break;
             }
         }
 
+        // If user failed to input a jigsaw or color mat
+        /*if (color1 == null)
+        {
+            color1 = jigsawMat.color; // colorMats[0];
+        }*/
+
         if (jigsawMat != null)
         {
-            GridGenerator.puzzleMaterial = jigsawMat;
+            GridGenerator.puzzleMaterial = new Material(jigsawMat);
             proceduralTexture = jigsawMat;
 
-            GridGenerator.puzzleMaterial.SetColor("_BaseB", color1.color);
+            if (color1 != null)
+            {
+                //color1 = colorMats[0];
+                GridGenerator.puzzleMaterial.SetColor("_BaseB", color1.color);
+            }
 
             if (color2 != null)
             {
@@ -328,10 +344,17 @@ public class UIManager : MonoBehaviour
         foreach (var userIn in inputMats)
         {
             // check if in request manager 
-            bool inReq = RequestsManager.requestReference.Contains(userIn);
+            bool inReq;
+            if (RequestsManager.requestReference == null)
+            {
+                inReq = false;
+            } else
+            {
+                inReq = RequestsManager.requestReference.Contains(userIn);
+            }
 
             // sort based on this 
-            if (inReq)
+            if (inReq && RequestsManager.requestReference != null)
             {
                 RequestsManager.requestReference.Remove(userIn);
             }
