@@ -5,6 +5,8 @@ using UnityEngine;
 public class CustomerAIControl : AIControlTarget
 {
     public GameObject requestPrefab;
+    public GameObject dialoguePrefab;
+
     private GameObject request;
     public bool hasRequest;
     public bool madeRequest;
@@ -131,6 +133,15 @@ public class CustomerAIControl : AIControlTarget
         SetDestinationNormal();
 
         GameManager.instance.allRequestsCnt++;
+
+        Vector3 offset = new Vector3(0, this.transform.localScale.y * 0.5f + 2, 0);
+        dialoguePrefab.GetComponent<DialogueText>().requestText = "Thanks!";
+        GameObject dialogue = Instantiate(dialoguePrefab, this.transform.position + offset, Quaternion.identity);
+       
+        dialogue.GetComponent<TrackPosition>().InitializeTrack(this.transform, offset);
+        Destroy(dialogue, 2f);
+
+        //dialoguePrefab.transform.position = this.transform.position + offset;
     }
 
     private void DeleteRequest()

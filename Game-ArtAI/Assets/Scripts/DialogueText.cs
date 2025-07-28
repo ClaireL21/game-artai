@@ -19,6 +19,7 @@ public class DialogueText : MonoBehaviour
     public int debugSize = -1;
     public float debugScale = -1;
     public string debugText = "";
+    public string requestText = "test";
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -58,11 +59,12 @@ public class DialogueText : MonoBehaviour
 
         /*currScale.x = 0.25f * (request.getSize() - 1) + 0.5f;
         debugScale = currScale.x;*/
-        string requestText = "helllllo";
-       /* debugText = "";
+        //string requestText = "helllllo";
+        /* debugText = "";
 
-        Material[] mats;
-        int indx;*/
+         Material[] mats;
+         int indx;*/
+        //Debug.Log("Req" + requestText);
         instance.SetLabelText(k_labelName, requestText);
 
 
