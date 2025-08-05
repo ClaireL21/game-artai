@@ -144,7 +144,7 @@ public class UIManager : MonoBehaviour
                             puzzleDoneColor.color = gray;
 
                             // reset procedural texture color 
-
+                            // double check this
                             if (GridGenerator.puzzleMaterial != null)
                             {
                                 GridGenerator.puzzleMaterial.SetColor("_BaseB", UnityEngine.Color.black);
@@ -301,7 +301,16 @@ public class UIManager : MonoBehaviour
             switch (category)
             {
                 case 0:
-                    color1 = colorMats[index];
+
+                    if (color1  == null)
+                    {
+                        color1 = colorMats[index];
+                    }
+                    else
+                    {
+                        color2 = colorMats[index];
+                    }
+
                     break;
 
                 case 1:
@@ -386,6 +395,15 @@ public class UIManager : MonoBehaviour
         // replace prev correct ones in scene w/ incorrect 
         for (int i = 0; i < incorrect.Count; i++)
         {
+            if (RequestsManager.requestReference == null)
+            {
+                Debug.Log("null for req ref");
+            }
+            else if (RequestsManager.requestReference.Count <= i)
+            {
+                Debug.Log("wrong count");
+            }
+
             GameObject obj = GameObject.Find($"{RequestsManager.requestReference[i]}");
             obj.name = incorrect[0].ToString();
 

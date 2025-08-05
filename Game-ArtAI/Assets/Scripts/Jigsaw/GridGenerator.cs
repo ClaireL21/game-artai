@@ -62,10 +62,11 @@ public class GridGenerator : MonoBehaviour
         /*bool isFinished = CheckPuzzleFinished();
         if (isFinished) UnityEngine.Debug.Log("Finished!");*/
 
-        /*if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C))
         {
-            CheckPuzzleFinished();
+            isFinished = true;
         }
+        /*
         if (Input.GetKeyDown(KeyCode.P))
         {
             toString();

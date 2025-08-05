@@ -116,7 +116,7 @@ Material:
     - _ZWrite: 1
     - _isAnimated: 1
     m_Colors:
-    - _BaseB: {r: 1, g: 0.8736096, b: 0.12893072, a: 1}
+    - _BaseB: {r: 0, g: 0, b: 0, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BaseW: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
