@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] public int currDayReqRight = 0;
     [SerializeField] public int currDayReqWrong = 0;
 
+    public Material grayscaleMaterial;
 
     void Awake()
     {

@@ -38,9 +38,10 @@ public class UIManager : MonoBehaviour
 
     private static int progBarSegCnt = 5;       // the number of segments in a progress bar
 
-    private Material proceduralTexture;
-
     public bool incorrectDia = false;
+
+    private float amount;
+    private Material tempMat; 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -51,6 +52,21 @@ public class UIManager : MonoBehaviour
         puzzle = null;
 
         inputMats = new List<int>();
+
+        amount = 1;
+
+        Material[] mats;
+        mats = Resources.LoadAll<Material>("JigsawMats");
+
+        foreach (var m in mats) {
+
+            tempMat = m; 
+
+            tempMat.SetColor("_BaseW", UnityEngine.Color.white);
+            tempMat.SetColor("_BaseB", UnityEngine.Color.black);
+            tempMat.SetInt("_isAnimated", 1);
+        }
+
     }
 
     // Update is called once per frame
@@ -78,7 +94,6 @@ public class UIManager : MonoBehaviour
                 ManageIncorrect();
 
                 incorrectDia = true;
-
             }
             else
             {
@@ -88,6 +103,7 @@ public class UIManager : MonoBehaviour
                 incorrectDia = false;
             }
 
+            inputMats.Clear();
         }
 
         // check if it hit generate art button
@@ -136,15 +152,11 @@ public class UIManager : MonoBehaviour
                                 GridGenerator.puzzleMaterial.SetInt("_isAnimated", 1);
                             }
 
-                            //var procMat = new Material(proceduralTexture);
-
-                            //procMat.SetColor("_BaseB", UnityEngine.Color.black);
-                            //procMat.SetColor("_BaseW", UnityEngine.Color.white);
-                            //procMat.SetInt("_isAnimated", 1);
-
                             CustomerAIControl.deleteReq = true;
                             CrowdManager.CM.currCustomer.GetComponent<CustomerAIControl>().SpawnCustomerDialogue(incorrectDia);
 
+                            amount = Mathf.Clamp01(amount - 0.1f);
+                            GameManager.instance.grayscaleMaterial.SetFloat("_Amount", amount);
                         }
                     }
                 }
@@ -250,8 +262,8 @@ public class UIManager : MonoBehaviour
         else if (progressSprite.fillAmount >= 0.5f)
         {
             // initiate drawing mode
-            HideUI();
-            SketchbookHelpText.SetActive(true);
+            //HideUI();
+            //SketchbookHelpText.SetActive(true);
         }
 
     }
@@ -302,21 +314,18 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        // If user failed to input a jigsaw or color mat
-        /*if (color1 == null)
-        {
-            color1 = jigsawMat.color; // colorMats[0];
-        }*/
-
         if (jigsawMat != null)
         {
             GridGenerator.puzzleMaterial = new Material(jigsawMat);
-            proceduralTexture = jigsawMat;
 
             if (color1 != null)
             {
                 //color1 = colorMats[0];
                 GridGenerator.puzzleMaterial.SetColor("_BaseB", color1.color);
+            }
+            else
+            {
+                GridGenerator.puzzleMaterial.SetColor("_BaseB", UnityEngine.Color.black);
             }
 
             if (color2 != null)

@@ -11,8 +11,7 @@ public class EndDayScript : MonoBehaviour
     [SerializeField] private TextMeshProUGUI lifeText;
     [SerializeField] private TextMeshProUGUI worldText;
 
-    private string beginDayScene = "Prototype1";
-
+    private string beginDayScene = "Gameplay";
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

@@ -8725,6 +8725,7 @@ MonoBehaviour:
   allRequestsCnt: 0
   currDayReqRight: 0
   currDayReqWrong: 0
+  grayscaleMaterial: {fileID: 2100000, guid: 1f9729184a9005e4c9505093050f4057, type: 2}
 --- !u!1 &1195289021
 GameObject:
   m_ObjectHideFlags: 0
@@ -13445,6 +13446,7 @@ MonoBehaviour:
   allRequestsCnt: 0
   currDayReqRight: 0
   currDayReqWrong: 0
+  grayscaleMaterial: {fileID: 0}
 --- !u!4 &1968770793 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2715345314635879103, guid: c2ebb501faee60643b85aa1234dd9f06, type: 3}
