@@ -20,6 +20,7 @@ public class ArtistAIControl : AIControlTarget
     // Update is called once per frame
     void Update()
     {
+
         // if someone is protesting, other people within a range should also protest
         if (isProtesting)
         {
@@ -46,8 +47,11 @@ public class ArtistAIControl : AIControlTarget
         }
         else if (!agent.pathPending && agent.hasPath && agent.remainingDistance < 2)   // set new random destination
         {
-            // Set destination normal or create drawing
+            // Set destination normal or protest
             SetDestinationNormal();
+            SetIsProtest();
+            // create drawing
+
             if (!isDrawing && CrowdManager.CM.drawingsCnt < CrowdManager.CM.maxArtists)
             {
                 CreateDrawing();
@@ -65,6 +69,32 @@ public class ArtistAIControl : AIControlTarget
         }
     }
 
+    private void SetIsProtest()
+    {
+        int protestChance = 0;
+
+        if (GameManager.instance.currDayReqRight > 1)
+        {
+            protestChance += 5;
+        }
+        if (GameManager.instance.currDayReqRight > 3)
+        {
+            protestChance += 10;
+        }
+        if (GameManager.instance.dayCounter > 2)
+        {
+            protestChance += 30;
+        }
+        if (GameManager.instance.dayCounter > 5)
+        {
+            protestChance += 20;
+        }
+
+        if (UnityEngine.Random.Range(0, 100) <= protestChance)
+        {
+            isProtesting = true;
+        }
+    }
     private void CreateDrawing()
     {
         art = Instantiate(artPrefab, this.transform);
