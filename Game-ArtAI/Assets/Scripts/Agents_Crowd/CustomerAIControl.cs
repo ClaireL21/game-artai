@@ -118,10 +118,6 @@ public class CustomerAIControl : AIControlTarget
 
         reqArr.Remove(-1);
 
-        if (RequestsManager.requestReference != null && RequestsManager.requestReference.Count > 0)
-        {
-            RequestsManager.requestReference.Clear();
-        }
         RequestsManager.requestReference = new List<int>(reqArr);
     }
 

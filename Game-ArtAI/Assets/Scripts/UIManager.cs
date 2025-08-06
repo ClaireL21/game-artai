@@ -371,6 +371,13 @@ public class UIManager : MonoBehaviour
         // cycle through input
         foreach (var userIn in inputMats)
         {
+
+            if (RequestsManager.requestReference.Count == 0)
+            {
+                Debug.Log("the request arr is empty");
+            }
+
+
             // check if in request manager 
             bool inReq;
             if (RequestsManager.requestReference == null)
@@ -405,11 +412,17 @@ public class UIManager : MonoBehaviour
             }
 
             GameObject obj = GameObject.Find($"{RequestsManager.requestReference[i]}");
-            obj.name = incorrect[0].ToString();
+
+            if (obj == null)
+            {
+                Debug.Log("can't find sprite");
+            }
+
+            obj.name = incorrect[i].ToString();
 
             Material[] mats;
-            int category = incorrect[0] / RequestsManager.numColors;
-            int index = incorrect[0] % RequestsManager.numColors;
+            int category = incorrect[i] / RequestsManager.numColors;
+            int index = incorrect[i] % RequestsManager.numColors;
             Material mat;
 
             switch (category)

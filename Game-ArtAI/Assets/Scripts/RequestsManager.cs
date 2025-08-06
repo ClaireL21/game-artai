@@ -58,9 +58,9 @@ public class RequestsManager : MonoBehaviour
 
         if (freqReqSizeOne + freqReqSizeTwo + freqReqSizeThree > 1.0f)
         {
-            freqReqSizeOne = 0.0f;
+            freqReqSizeOne = 0.5f;
             freqReqSizeTwo = 0.0f;
-            freqReqSizeThree = 1.0f;
+            freqReqSizeThree = 0.5f;
 
         }
 
