@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] public int currDayReqRight = 0;
     [SerializeField] public int currDayReqWrong = 0;
 
+    [SerializeField] public int maxRequests = 20;
+
     public Material grayscaleMaterial;
 
     void Awake()
@@ -18,6 +20,7 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject); // Keep between scenes
+            maxRequests = 20;
         }
         /*else
         {

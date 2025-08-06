@@ -69,7 +69,7 @@ public class RequestsManager : MonoBehaviour
             requestArray.Add(-1);
         }
 
-        AddToRequestArtQueues(5);
+        AddToRequestArtQueues(1);
 
         //timer = 5.0f;
     }
@@ -82,6 +82,11 @@ public class RequestsManager : MonoBehaviour
 
     public void AddToRequestArtQueues(int numItems)
     {
+        if (GameManager.instance != null)
+        {
+            UpdateFrequenciesBasedOnProgress();
+        }
+
         for (int i = 0; i < numItems; i++)
         {
             UpdateRequestArt();
@@ -147,7 +152,7 @@ public class RequestsManager : MonoBehaviour
     {
         if (requests.Count == 0)
         {
-            AddToRequestArtQueues(5);
+            AddToRequestArtQueues(1);
         }
         return requests.Dequeue();
     }
@@ -164,6 +169,28 @@ public class RequestsManager : MonoBehaviour
             //Debug.Log("RANDOM ART");
             return UnityEngine.Random.Range(0, numColors + numPatterns + numThird); // numColors + numPatterns + numThird
         }
+    }
+
+    private void UpdateFrequenciesBasedOnProgress()
+    {
+        int completed = GameManager.instance.allRequestsCnt;
+
+        // interp value for frequencies 
+        float t = Mathf.Clamp01((float)completed / GameManager.instance.maxRequests); 
+
+        freqReqSizeOne = Mathf.Lerp(1.0f, 0.2f, t);
+        freqReqSizeTwo = Mathf.Lerp(0.0f, 0.3f, t);
+        freqReqSizeThree = Mathf.Lerp(0.0f, 0.5f, t);
+
+        float total = freqReqSizeOne + freqReqSizeTwo + freqReqSizeThree;
+        freqReqSizeOne /= total;
+        freqReqSizeTwo /= total;
+        freqReqSizeThree /= total;
+
+        Debug.Log($"Freq One: {freqReqSizeOne}");
+        Debug.Log($"Freq Two: {freqReqSizeTwo}");
+        Debug.Log($"Freq Three: {freqReqSizeThree}");
+        Debug.Log($"t: {t}");
     }
 
     /*private void AddRandomArt()
