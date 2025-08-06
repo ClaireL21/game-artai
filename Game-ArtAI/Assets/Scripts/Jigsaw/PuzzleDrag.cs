@@ -117,7 +117,7 @@ public class PuzzleDrag : MonoBehaviour
         }
         else
         {
-            Debug.Log("No mesh renderer");
+            //Debug.Log("No mesh renderer");
         }
         
     }

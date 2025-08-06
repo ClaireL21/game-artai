@@ -94,7 +94,7 @@ public class BezierCurve
         int N = controlPoints.Count - 1;
         if (N > 16)
         {
-            Debug.Log("You have used more than 16 control points. The maximum control points allowed is 16.");
+            //Debug.Log("You have used more than 16 control points. The maximum control points allowed is 16.");
             controlPoints.RemoveRange(16, controlPoints.Count - 16);
         }
 
@@ -117,8 +117,8 @@ public class BezierCurve
         int N = controlPoints.Count - 1;
         if (N > 16)
         {
-            Debug.Log("You have used more than 16 control points. " +
-              "The maximum control points allowed is 16.");
+            //Debug.Log("You have used more than 16 control points. " +
+            //  "The maximum control points allowed is 16.");
             controlPoints.RemoveRange(16, controlPoints.Count - 16);
         }
 

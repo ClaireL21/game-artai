@@ -64,7 +64,10 @@ public class RequestsManager : MonoBehaviour
 
         }
 
-        requestArray.Add(-1);
+        if (requestArray.Count == 0)
+        {
+            requestArray.Add(-1);
+        }
 
         AddToRequestArtQueues(5);
 
@@ -158,7 +161,7 @@ public class RequestsManager : MonoBehaviour
             return elt;
         } else
         {
-            Debug.Log("RANDOM ART");
+            //Debug.Log("RANDOM ART");
             return UnityEngine.Random.Range(0, numColors + numPatterns + numThird); // numColors + numPatterns + numThird
         }
     }

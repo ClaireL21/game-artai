@@ -50,7 +50,7 @@ public class CustomerAIControl : AIControlTarget
                 // Make request if request hasn't been made it yet
                 if (!madeRequest && CrowdManager.CM.requestsCnt < CrowdManager.CM.maxCustomers)   // max requests at a time
                 {
-                    Debug.Log("Made Request!");
+                    //Debug.Log("Made Request!");
                     MakeRequest();
                 }
             }
@@ -116,9 +116,15 @@ public class CustomerAIControl : AIControlTarget
             reqArr.Add(requestDetails.getThirdIndex() + requestDetails.getMats() + requestDetails.getMats());
         }
 
-        reqArr.Remove(-1);
+        reqArr.RemoveAll(item => item  == -1);
 
         RequestsManager.requestReference = new List<int>(reqArr);
+
+        foreach (var item in reqArr)
+        {
+            Debug.Log($"reqArr: {item}");
+        }
+
     }
 
     public void CompletedRequest()
@@ -136,7 +142,7 @@ public class CustomerAIControl : AIControlTarget
 
     public void SpawnCustomerDialogue(bool incorrect)
     {
-        Debug.Log("Spanwed dialogue??");
+        //Debug.Log("Spanwed dialogue??");
         Vector3 offset = new Vector3(0, this.transform.localScale.y * 0.5f + 2, 0);
         string text;
         if (incorrect)

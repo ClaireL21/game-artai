@@ -159,7 +159,7 @@ public class EndDayScript : MonoBehaviour
     {
         SceneManager.LoadScene(beginDayScene);
 
-        Debug.Log("Button was clicked!");
+        //Debug.Log("Button was clicked!");
         // your logic here
     }
 }

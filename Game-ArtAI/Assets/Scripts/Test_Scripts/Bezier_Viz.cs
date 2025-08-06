@@ -121,7 +121,7 @@ public class Bezier_Viz : MonoBehaviour
     {
         if (pointGameObjs.Count >= 18)
         {
-            Debug.Log("Cannot create any new control points. Max number is 18");
+            //Debug.Log("Cannot create any new control points. Max number is 18");
             return;
         }
         GameObject obj = Instantiate(PointPrefab, p, Quaternion.identity);

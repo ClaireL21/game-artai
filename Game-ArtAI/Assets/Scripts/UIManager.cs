@@ -88,7 +88,7 @@ public class UIManager : MonoBehaviour
             // customer feedback
             if (incorrectReq)
             {
-                Debug.Log("fulfilled req: wrong");
+                //Debug.Log("fulfilled req: wrong");
                 incorrectReq = false;
                 GameManager.instance.currDayReqWrong += 1;
                 ManageIncorrect();
@@ -97,7 +97,7 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("fulfilled req: correct");
+                //Debug.Log("fulfilled req: correct");
                 GameManager.instance.currDayReqRight += 1;
 
                 incorrectDia = false;
@@ -118,7 +118,7 @@ public class UIManager : MonoBehaviour
 
                 if (hit.collider != null && hit.collider == generateButtonUI && puzzle == null)
                 {
-                    Debug.Log("Sprite clicked: " + gameObject.name);
+                    //Debug.Log("Sprite clicked: " + gameObject.name);
                     RemoveArtInMachineUI();
                     
                 }
@@ -179,10 +179,10 @@ public class UIManager : MonoBehaviour
     public void RemoveArtInMachineUI()
     {
         bool processSprite = false;
-        Debug.Log("Count: " + RequestsManager.requestArray.Count);
+        //Debug.Log("Count: " + RequestsManager.requestArray.Count);
         if (RequestsManager.requestArray.Count == 0)
         {
-            Debug.Log("unable to process");
+            //Debug.Log("unable to process");
         }
         else
         {
@@ -195,28 +195,28 @@ public class UIManager : MonoBehaviour
 
             foreach (Collider c in colliders)
             {
-                Debug.Log("c name" + c.gameObject.name);
+                //Debug.Log("c name" + c.gameObject.name);
                 if (c.gameObject.CompareTag("Art"))
                 {
                     if (RequestsManager.requestArray.Contains(int.Parse(c.gameObject.name)))
                     {
-                        Debug.Log("correct art");
+                        //Debug.Log("correct art");
                         RequestsManager.requestArray.Remove(int.Parse(c.gameObject.name));
                     }
                     else
                     {
-                        Debug.Log("wrong art");
+                        //Debug.Log("wrong art");
                         if (RequestsManager.requestArray.Count > 0)
                         {
                             RequestsManager.requestArray.RemoveAt(0);
                         }
                         incorrectReq = true;
-                        Debug.Log("UIMan" + UIManage.incorrectReq);
+                        //Debug.Log("UIMan" + UIManage.incorrectReq);
                     }
 
                     inputMats.Add(int.Parse(c.gameObject.name));
 
-                    Debug.Log($"artwork inputted: {c.gameObject.name}");
+                    //Debug.Log($"artwork inputted: {c.gameObject.name}");
                     c.gameObject.SetActive(false);
                 }
             }
@@ -257,7 +257,7 @@ public class UIManager : MonoBehaviour
         progressSprite.fillAmount += 1.0f / progBarSegCnt;
         if (progressSprite.fillAmount == 1.0f)
         {
-            Debug.Log("Progress bar full!");
+            //Debug.Log("Progress bar full!");
         }
         else if (progressSprite.fillAmount >= 0.5f)
         {

@@ -29,7 +29,7 @@ public class PuzzlePiece : MonoBehaviour
     {
         if (this.puzzleObj == null)
         {
-            Debug.Log("null object");
+            //Debug.Log("null object");
             return Vector3.zero;
         }
         //return this.puzzleObj.transform.localPosition;
