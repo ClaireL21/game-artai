@@ -145,7 +145,29 @@ public class CustomerAIControl : AIControlTarget
         }
         else
         {
-            text = "thanks!";
+            int diaChoice = UnityEngine.Random.Range(0, 6);
+
+            switch (diaChoice)
+            {
+                case 0:
+                    text = "thanks!";
+                    break;
+                case 1:
+                    text = "looks just like the real thing";
+                    break;
+                case 2:
+                    text = "wow that was fast";
+                    break;
+                case 3:
+                    text = "looks a little funny...but thanks";
+                    break;
+                case 4:
+                    text = "this looks nice";
+                    break;
+                default:
+                    text = "thanks, this isn't bad";
+                    break;
+            }
         }
         dialoguePrefab.GetComponent<DialogueText>().requestText = text;
         GameObject dialogue = Instantiate(dialoguePrefab, this.transform.position + offset, Quaternion.identity);

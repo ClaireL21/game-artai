@@ -90,7 +90,7 @@ public class ArtistAIControl : AIControlTarget
             protestChance += 20;
         }
 
-        if (UnityEngine.Random.Range(0, 100) <= protestChance)
+        if (UnityEngine.Random.Range(0, 100) < protestChance)
         {
             isProtesting = true;
         }
@@ -126,9 +126,9 @@ public class ArtistAIControl : AIControlTarget
                     break;
                 case 3: text = "you're a thief";
                     break;
-                case 4: text = "hey!";
+                case 4: text = "that's mine!";
                     break;
-                default: text = "hey!";
+                default: text = "please stop";
                     break;
             }
 
