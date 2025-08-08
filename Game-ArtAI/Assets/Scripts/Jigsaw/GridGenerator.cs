@@ -56,21 +56,24 @@ public class GridGenerator : MonoBehaviour
 
     void Update()
     {
-        SnapNearbyPiecesIfCorrect();
-        this.isFinished = CheckPuzzleFinished();
-
-        /*bool isFinished = CheckPuzzleFinished();
-        if (isFinished) UnityEngine.Debug.Log("Finished!");*/
-
-        if (Input.GetKeyDown(KeyCode.C))
+        if (isInitialized)
         {
-            isFinished = true;
+            SnapNearbyPiecesIfCorrect();
+            this.isFinished = CheckPuzzleFinished();
+
+            /*bool isFinished = CheckPuzzleFinished();
+            if (isFinished) UnityEngine.Debug.Log("Finished!");*/
+
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                isFinished = true;
+            }
+            /*
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                toString();
+            }*/
         }
-        /*
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            toString();
-        }*/
     }
 
     // Unit column widths, where each column by default is 1 unit wide

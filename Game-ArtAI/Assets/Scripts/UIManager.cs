@@ -294,6 +294,12 @@ public class UIManager : MonoBehaviour
         Material[] colorMats = Resources.LoadAll<Material>("Colors");
         Material[] jigsawMats = Resources.LoadAll<Material>("JigsawMats");
 
+        if (inputMats.Count == 0)
+        {
+            Debug.Log("something wrong w/ processing");
+        }
+
+
         foreach (var m in inputMats) {
             int category = m / RequestsManager.numColors;
             int index = m % RequestsManager.numColors;
@@ -361,7 +367,14 @@ public class UIManager : MonoBehaviour
             GridGenerator.puzzleMaterial = color1;
         }
         
-        puzzleGrid.SetupPuzzle(UnityEngine.Random.Range(2, 4), UnityEngine.Random.Range(2, 5));
+        if (GridGenerator.puzzleMaterial != null)
+        {
+            puzzleGrid.SetupPuzzle(UnityEngine.Random.Range(2, 4), UnityEngine.Random.Range(2, 5));
+        }
+        else
+        {
+            Debug.Log("something is wrong here");
+        }
     }
 
     public void ManageIncorrect()
@@ -415,7 +428,7 @@ public class UIManager : MonoBehaviour
 
             if (obj == null)
             {
-                Debug.Log("can't find sprite");
+                Debug.Log($"can't find sprite: {RequestsManager.requestReference[i]} for {incorrect[i]}");
             }
 
             obj.name = incorrect[i].ToString();
