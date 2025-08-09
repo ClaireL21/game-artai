@@ -37,12 +37,6 @@ In this game, you play as an employee of Arthur's Intelligence Agency, a company
 ## Significant Difficulties
 **1. Creating "uneven" jigsaw pieces**
 
-The jigsaw puzzle is a core mechanic of the game. Whenever the player fulfills a request, they must create new art by using the machine to generate the pieces of the art and then arrange it. This is the jigsaw puzzle. Because it is repeated many times throughout the game, we wanted our implementation for jigsaw puzzles to be able to generate uneven shaped puzzle pieces. This would help introduce variation to the kinds of puzzle the player would encounter. By uneven, we mean that puzzle pieces are not necessarily square, their widths and heights can be different from each other, and the horizontal edges can be diagonal. We also visually wanted the horizontal edges of adjacent puzzle pieces to flow from one to the other, avoiding jutting corners that stick out.
-
-Here's a reference image from the game Florence. 
-
-<img width="200" height="591" alt="image" src="https://github.com/user-attachments/assets/6e3c699b-1cb1-40a5-b62c-7741fbe92fdb" />
-
 Many of the online resources we found on creating jigsaw puzzles focused on square, very gridlike puzzles. The main two resources we looked at are [here](https://youtu.be/9mSwbMiV3lU?si=hLj-cyWk0WKXMJFg) and [here](https://youtu.be/rgm3nityU-M?si=U9nsOdXCqtZmj7hu). The first one implements Bezier curves to create the shape of the puzzle piece's edges. However, the implementation for creating the jigsaw board relies on all edges having the same shape, as it simply uses rotations & reflections of the single Bezier curve. The second resource also creates square pieces and does not cover creating the tabs and indents of a puzzle piece.
 
 These two resources had very different implementations and we didn't anticipate that creating a jigsaw puzzle would be a major time sink for our project. However, after testing the first implementation (and finding the Bezier curves overly complicated for our purposes) we ended up following the second resource as a foundation, and subsequently spending a lot of time figuring out how to implement all the other visual elements we wanted our puzzle to have.
@@ -58,16 +52,34 @@ Some challenges along the way:
 
    <img width="500" height="569" alt="Screenshot 2025-06-28 151614" src="https://github.com/user-attachments/assets/937d9f3e-0973-4315-8a68-882792670330" />
 
-**2. Making the jigsaw pattern procedural**
 
 ## Features & How They Work
 1. Crowd Simulation
    a. Path Finding
    b. Protesting & Dragging
-   b. Customers
-3. Procedural Artwork/Jigsaw Materials
-4. Procedural Jigsaw
-5. Day Cycle & End of Day Performance Review
+   c. Customers
+
+   The crowd simulation involves agents that move towards a destination, defined by (invisible) targets placed in front of shop entrances. There are two types of agents: Artists and Customers. The Customers will approach the machine/player and request a type of art. The Artists will move around the map and periodically create art. Artists have the ability to protest. This means that they will huddle around the machine which makes it more difficult for the player to fulfill requests. An Artist has a higher chance of protesting if the player is further in the game and if they have completed more requests. Artists nearby protesting artists have a chance of joining in on the protest. In order for the player to disperse the protestors, they can simply click and drag a group of protesters away from the machine.
+   
+2. Procedural Artwork/Jigsaw Materials
+
+The artwork created by artists gets inputted into the machine. The output is a combination of the inputs. Customers may request a combination of 1, 2, or 3 art styles. The player searches for art of this style among the artists' drawings. The outputted art will be a combination of the inputs, so that the output may utilize the pattern of the first artwork with the color of the second, for example.
+
+3. Procedural Jigsaw
+
+The jigsaw puzzle is a core mechanic of the game. Whenever the player fulfills a request, they must create new art by using the machine to generate the pieces of the art and then arrange it. This is the jigsaw puzzle. Because it is repeated many times throughout the game, we wanted our implementation for jigsaw puzzles to be parameterized and able to generate uneven shaped puzzle pieces. This would help introduce variation to the kinds of puzzle the player would encounter. By uneven, we mean that puzzle pieces are not necessarily square, their widths and heights can be different from each other, and the horizontal edges can be diagonal. We also visually wanted the horizontal edges of adjacent puzzle pieces to flow from one to the other, avoiding jutting corners that stick out.
+
+Here's a reference image from the game Florence. 
+
+<img width="200" height="591" alt="image" src="https://github.com/user-attachments/assets/6e3c699b-1cb1-40a5-b62c-7741fbe92fdb" />
+
+4. Day Cycle & End of Day Performance Review
+
+In order to include more feedback into the game and have the player develop a more emotional reaction from their actions (stealing art from artists) we added the day cycle/end of day performance review. Each day lasts a certain length of time, as indicated by the clock in the upper right hand corner of the game. The player can see how many days have passed by looking at the calendar. At the end of every day, the player is given a performance review, which tells them how well they did that day and whether their manager is pleased with them or not. This is dependent on the number of correct requests they completed. They are also given a "life update". For example, they can be told that they just bought a car or if they're tight on money and can barely afford rent. Lastly, the player is given a "world update". This update hints to the player the state of the world. It can tell the player that artists are angry or might speak to the increasing grayness of the world. This day cycle feedback is meant to communicate to the player how their choices are affecting them and the world around them.
 
 # Original Assets
 We created our models with Blender.
+
+The bird asset is also animated in Blender.
+<img width="1271" height="828" alt="image" src="https://github.com/user-attachments/assets/8844eb4d-a981-4432-b18a-f63fdf1c1663" />
+
