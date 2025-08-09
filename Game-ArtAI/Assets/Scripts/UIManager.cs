@@ -67,6 +67,8 @@ public class UIManager : MonoBehaviour
             tempMat.SetInt("_isAnimated", 1);
         }
 
+        GameManager.spriteDict.Clear();
+
     }
 
     // Update is called once per frame
@@ -220,13 +222,33 @@ public class UIManager : MonoBehaviour
                     }
                     else
                     {
-                        //Debug.Log("wrong art");
-                        if (RequestsManager.requestArray.Count > 0)
+                        int nameConverted = int.Parse(c.gameObject.name);
+                        int idx = -1;
+                        bool catchCategory = false;
+                        if (nameConverted > 23)
                         {
-                            RequestsManager.requestArray.RemoveAt(0);
+                            idx = nameConverted - 24;
+                            catchCategory = RequestsManager.requestArray.Contains(idx);
                         }
-                        incorrectReq = true;
-                        //Debug.Log("UIMan" + UIManage.incorrectReq);
+                        else if (nameConverted < 12)
+                        {
+                            idx = nameConverted + 24;
+                            catchCategory = RequestsManager.requestArray.Contains(idx);
+                        }
+
+                        if (catchCategory)
+                        {
+                            RequestsManager.requestArray.Remove(idx);
+                        }
+                        else
+                        {
+                            if (RequestsManager.requestArray.Count > 0)
+                            {
+                                RequestsManager.requestArray.RemoveAt(0);
+                            }
+                            incorrectReq = true;
+                        }
+                        
                     }
 
                     inputMats.Add(int.Parse(c.gameObject.name));
@@ -418,7 +440,6 @@ public class UIManager : MonoBehaviour
                 Debug.Log("the request arr is empty");
             }
 
-
             // check if in request manager 
             bool inReq;
             if (RequestsManager.requestReference == null)
@@ -435,31 +456,6 @@ public class UIManager : MonoBehaviour
 
                 removeSpriteDict(userIn);
 
-                //if (GameManager.spriteDict[userIn].Count > 1)
-                //{
-                //    int indx = -1;
-                //    foreach (var m in GameManager.spriteDict[userIn])
-                //    {
-                //        indx++;
-                //        if (m.name == userIn.ToString())
-                //        {
-                //            break;
-                //        }
-                //    }
-
-                //    if (indx == -1)
-                //    {
-                //        Debug.Log("something wrong");
-                //    }
-
-                //    GameManager.spriteDict[userIn].RemoveAt(indx);
-                //}
-                //else
-                //{
-                //    GameManager.spriteDict.Remove(userIn);
-                //}
-
-
                 RequestsManager.requestReference.Remove(userIn);
             }
             else
@@ -471,16 +467,7 @@ public class UIManager : MonoBehaviour
         // replace prev correct ones in scene w/ incorrect 
         for (int i = 0; i < incorrect.Count; i++)
         {
-            if (RequestsManager.requestReference == null)
-            {
-                Debug.Log("null for req ref");
-            }
-            else if (RequestsManager.requestReference.Count <= i)
-            {
-                Debug.Log("wrong count");
-            }
-
-            //GameObject obj = GameObject.Find($"{RequestsManager.requestReference[i]}");
+            
             GameObject obj = GameManager.spriteDict[RequestsManager.requestReference[i]][0];
 
             if (obj == null)
@@ -490,34 +477,9 @@ public class UIManager : MonoBehaviour
 
             removeSpriteDict(RequestsManager.requestReference[i]);
             obj.name = incorrect[i].ToString();
-            //// is this right?
             GameManager.spriteDict[incorrect[i]][0] = obj;
 
-            //if (GameManager.spriteDict[RequestsManager.requestReference[i]].Count > 1)
-            //{
-            //    int indx = -1; 
-            //    foreach (var m in GameManager.spriteDict[RequestsManager.requestReference[i]])
-            //    {
-            //        indx++; 
-            //        if (m.name == RequestsManager.requestReference[i].ToString())
-            //        {
-            //            break;
-            //        }
-            //    }
-
-            //    if (indx == -1)
-            //    {
-            //        Debug.Log("something wrong");
-            //    }
-
-            //    GameManager.spriteDict[RequestsManager.requestReference[i]].RemoveAt(indx);
-            //}
-            //else
-            //{
-            //    GameManager.spriteDict.Remove(RequestsManager.requestReference[i]);
-            //}
-
-
+            
             Material[] mats;
             int category = incorrect[i] / RequestsManager.numColors;
             int index = incorrect[i] % RequestsManager.numColors;

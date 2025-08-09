@@ -69,7 +69,7 @@ public class RequestsManager : MonoBehaviour
             requestArray.Add(-1);
         }
 
-        AddToRequestArtQueues(1);
+        AddToRequestArtQueues(20);
 
         //timer = 5.0f;
     }
@@ -152,7 +152,7 @@ public class RequestsManager : MonoBehaviour
     {
         if (requests.Count == 0)
         {
-            AddToRequestArtQueues(1);
+            AddToRequestArtQueues(5);
         }
         return requests.Dequeue();
     }
@@ -162,11 +162,11 @@ public class RequestsManager : MonoBehaviour
         if (artInfo.Count > 0)
         {
             int elt = artInfo.Dequeue();
-            //Debug.Log("Art from queue: " + elt);
+            Debug.Log("Art from queue: " + elt);
             return elt;
         } else
         {
-            //Debug.Log("RANDOM ART");
+            Debug.Log("RANDOM ART");
             return UnityEngine.Random.Range(0, numColors + numPatterns + numThird); // numColors + numPatterns + numThird
         }
     }

@@ -148,6 +148,13 @@ public class EndDayScript : MonoBehaviour
                     break;
             }
         }
+
+        // load in end screen 
+        //if (GameManager.instance.allRequestsCnt == 20)
+        //{
+
+        //}
+
     }
 
     // Update is called once per frame
