@@ -2,12 +2,14 @@
 
 Neha Thumu, Claire Lu
 
+<img width="1181" height="657" alt="image" src="https://github.com/user-attachments/assets/a5226779-6b5e-4b65-8a4e-e86c88e65acb" />
+
 ## Game Overview
 In this game, you play as an employee of Arthur's Intelligence Agency, a company that creates artworks for various customers. You operate a special machine that absorbs existing art and spits out pieces for you to arrange into new art.
 
 ## Major Milestones
-1. Alpha -- Setup, Crowd Sim, Request System
-   
+**1. Alpha -- Setup, Crowd Sim, Request System**   
+
    For the alpha version of our game, we created a basic crowd simulation where agents move towards targets. These targets were represented by cubes that were placed at shop entrances. The crowd simulation involved basic seeking and         avoidance behavior, moving towards the specified targets and moving away from other agents in the crowd.
 
    For the request system, we created reusable dialogue containers to hold the requests of customers and the art that artists created. Our implementation for request system ensures that, during gameplay, artwork that a customer requests     is always able to be created by stealing art from artists -- in other words, artists will always create art that the player would need to use as inputs for the machine.
@@ -18,8 +20,8 @@ In this game, you play as an employee of Arthur's Intelligence Agency, a company
 
    <img width="643" height="293" alt="Screenshot 2025-06-16 213654" src="https://github.com/user-attachments/assets/a15c3c24-03df-4701-ad0f-ea83b1b877e4" />
 
-2. Beta -- Jigsaw mechanic, Jigsaw materials, Requests + Jigsaw Integration
-
+**2. Beta -- Jigsaw mechanic, Jigsaw materials, Requests + Jigsaw Integration**
+   
    For the beta version of our game, we created a jigsaw puzzle mechanic for the machine operating part of our game loop. We implemented our own puzzle generator that outputted a variety of different puzzle pieces. We wanted each of the     puzzles generated to look visually distinct from each other, so that the game wouldn't feel repetitive.
 
    Another large part of beta was creating the procedural jigsaw materials. This was an important for creating the outputs of the machine, and helping make the AI metaphor in the game more explicit. For the procedural materials, we          wanted to have basic versions of the materials, which would be used for artists' artwork. On top of this, we wanted to have animated materials that visually looked like a combination of two basic materials. We did this by editing the     Shadergraphs of some Unity provided materials, adding nodes for movement and exposing parameters, like color.
@@ -28,7 +30,10 @@ In this game, you play as an employee of Arthur's Intelligence Agency, a company
 
    We then began integrating the jigsaw logic with our requests logic. This involved some reworking of our code because we originally had dummy sprites to represent the requests. We had assumed we would use sprites rather than materials     for the artwork created by artists and originally structured our code to follow this.
 
-3. Final -- Machine Progression, Sketchbook Event, Day Cycle, Game Logic Polishing
+   <img width="1165" height="657" alt="image" src="https://github.com/user-attachments/assets/0121f185-d7d9-4447-a3da-b0ae163e745d" />
+
+
+**3. Final -- Machine Progression, Sketchbook Event, Day Cycle, Game Logic Polishing**
 
    At this point, we needed to put all of the parts together, making it feel cohesive with our game logic. We wanted there to be a progression that the machine followed, starting with static images and eventually creating animated images. This was meant to motivate the player to continue creating drawings, having a more expanded skillset as they progressed in the game.
 
@@ -54,18 +59,32 @@ Some challenges along the way:
 
 
 ## Features & How They Work
-1. Crowd Simulation
+**1. Crowd Simulation**
    a. Path Finding
    b. Protesting & Dragging
    c. Customers
 
    The crowd simulation involves agents that move towards a destination, defined by (invisible) targets placed in front of shop entrances. There are two types of agents: Artists and Customers. The Customers will approach the machine/player and request a type of art. The Artists will move around the map and periodically create art. Artists have the ability to protest. This means that they will huddle around the machine which makes it more difficult for the player to fulfill requests. An Artist has a higher chance of protesting if the player is further in the game and if they have completed more requests. Artists nearby protesting artists have a chance of joining in on the protest. In order for the player to disperse the protestors, they can simply click and drag a group of protesters away from the machine.
    
-2. Procedural Artwork/Jigsaw Materials
+**2. Request System**
+
+The request system includes the dialogue bubbles that appear when a customer requests an art piece from the player and the corresponding art that the player would need to take from artists walking around in the scene. The system is implemented so that any art the player would need for a certain request is visible in the scene and is possible to make.
+
+<img width="408" height="252" alt="image" src="https://github.com/user-attachments/assets/bab108cd-84a2-4f96-b4b2-7e62d69ce5d9" />
+
+<img width="415" height="237" alt="image" src="https://github.com/user-attachments/assets/a21ec5a6-4fa8-41a1-893f-f837d38968c4" />
+
+When the player steals from an artist, the artist will react with a negative response.
+
+<img width="1170" height="646" alt="image" src="https://github.com/user-attachments/assets/ce03347f-d048-4715-bcb5-726569662fef" />
+
+
+
+**3. Procedural Artwork/Jigsaw Materials**
 
 The artwork created by artists gets inputted into the machine. The output is a combination of the inputs. Customers may request a combination of 1, 2, or 3 art styles. The player searches for art of this style among the artists' drawings. The outputted art will be a combination of the inputs, so that the output may utilize the pattern of the first artwork with the color of the second, for example.
 
-3. Procedural Jigsaw
+**4. Procedural Jigsaw**
 
 The jigsaw puzzle is a core mechanic of the game. Whenever the player fulfills a request, they must create new art by using the machine to generate the pieces of the art and then arrange it. This is the jigsaw puzzle. Because it is repeated many times throughout the game, we wanted our implementation for jigsaw puzzles to be parameterized and able to generate uneven shaped puzzle pieces. This would help introduce variation to the kinds of puzzle the player would encounter. By uneven, we mean that puzzle pieces are not necessarily square, their widths and heights can be different from each other, and the horizontal edges can be diagonal. We also visually wanted the horizontal edges of adjacent puzzle pieces to flow from one to the other, avoiding jutting corners that stick out.
 
@@ -73,9 +92,42 @@ Here's a reference image from the game Florence.
 
 <img width="200" height="591" alt="image" src="https://github.com/user-attachments/assets/6e3c699b-1cb1-40a5-b62c-7741fbe92fdb" />
 
-4. Day Cycle & End of Day Performance Review
+Our implementation for the jigsaw puzzles allows for trapezoidal pieces with variable widths and heights. There are no jutting corners, ensured by adjacent sides of two pieces being the same height. The pieces are populated in a pile next to the puzzle board. When the player drags a piece to the correct location on the board, it snaps in place. Z sorting is also implemented so that the most recently clicked pieces are rendered in front. Throughout gameplay, puzzles of different dimensions (rows and columns of the jigsaw) can appear. Tabs and indents appear on every non border edge and are different from puzzle to puzzle (assigned randomly during puzzle initialization). Widths and heights of each piece are also variable for each puzzle.
 
-In order to include more feedback into the game and have the player develop a more emotional reaction from their actions (stealing art from artists) we added the day cycle/end of day performance review. Each day lasts a certain length of time, as indicated by the clock in the upper right hand corner of the game. The player can see how many days have passed by looking at the calendar. At the end of every day, the player is given a performance review, which tells them how well they did that day and whether their manager is pleased with them or not. This is dependent on the number of correct requests they completed. They are also given a "life update". For example, they can be told that they just bought a car or if they're tight on money and can barely afford rent. Lastly, the player is given a "world update". This update hints to the player the state of the world. It can tell the player that artists are angry or might speak to the increasing grayness of the world. This day cycle feedback is meant to communicate to the player how their choices are affecting them and the world around them.
+
+<img width="500" height="653" alt="image" src="https://github.com/user-attachments/assets/a54b6544-e7dc-424e-84db-a26873c9a675" />
+
+<img width="498" height="235" alt="image" src="https://github.com/user-attachments/assets/11641fec-404f-4aaa-8190-904dcc188229" />
+
+**More examples:**
+
+<img width="500" height="222" alt="image" src="https://github.com/user-attachments/assets/c4acc847-bc67-46bb-85d4-1e177a1787d5" />
+
+<img width="500" height="242" alt="image" src="https://github.com/user-attachments/assets/897f290d-0cff-4f3f-9baf-658aa9602fc8" />
+
+<img width="500" height="241" alt="image" src="https://github.com/user-attachments/assets/96c5b193-038d-43b1-96b3-0101f3a8d7a6" />
+
+<img width="500" height="213" alt="image" src="https://github.com/user-attachments/assets/585d171b-f081-4618-ac92-6a4706e77f24" />
+
+<img width="500" height="240" alt="image" src="https://github.com/user-attachments/assets/0eb5868a-3790-4e64-a404-9eae79b74f9d" />
+
+<img width="500" height="238" alt="image" src="https://github.com/user-attachments/assets/37ffcd49-50f8-4da7-bb8f-dbbf17861d09" />
+
+
+**5. Day Cycle & End of Day Performance Review**
+
+In order to include more feedback into the game and have the player develop a more emotional reaction from their actions (stealing art from artists) we added the day cycle/end of day performance review. Each day lasts a certain length of time, as indicated by the clock in the upper right hand corner of the game. 
+
+<img width="186" height="87" alt="image" src="https://github.com/user-attachments/assets/0858b2c4-11a2-468e-ab98-b846b2ae3db6" />
+
+The player can see how many days have passed by looking at the calendar. At the end of every day, the player is given a performance review, which tells them how well they did that day and whether their manager is pleased with them or not. This is dependent on the number of correct requests they completed. They are also given a "life update". For example, they can be told that they just bought a car or if they're tight on money and can barely afford rent. Lastly, the player is given a "world update". This update hints to the player the state of the world. It can tell the player that artists are angry or might speak to the increasing grayness of the world. This day cycle feedback is meant to communicate to the player how their choices are affecting them and the world around them.
+
+<img width="500" height="652" alt="image" src="https://github.com/user-attachments/assets/f0e9dbf4-7ed0-414d-b0b2-6a7bb85bdaa2" />
+
+<img width="500" height="647" alt="image" src="https://github.com/user-attachments/assets/a2cc2d6f-2547-435e-bf5a-2034d616e668" />
+
+<img width="1170" height="657" alt="image" src="https://github.com/user-attachments/assets/3b2493f6-9ee4-4f52-83ef-6f6c9e487d74" />
+
 
 # Original Assets
 We created our models with Blender.
