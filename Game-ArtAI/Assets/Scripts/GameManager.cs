@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -13,6 +14,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] public int maxRequests = 20;
 
     public Material grayscaleMaterial;
+
+    public static Dictionary<int, List<GameObject>> spriteDict = new Dictionary<int, List<GameObject>>();
 
     void Awake()
     {

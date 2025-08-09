@@ -100,6 +100,21 @@ public class UIManager : MonoBehaviour
                 //Debug.Log("fulfilled req: correct");
                 GameManager.instance.currDayReqRight += 1;
 
+                foreach (var m in inputMats)
+                {
+
+                    removeSpriteDict(m);
+
+                    //if (GameManager.spriteDict[m].Count > 1)
+                    //{
+                    //    GameManager.spriteDict[m].RemoveAt(0);
+                    //}
+                    //else
+                    //{
+                    //    GameManager.spriteDict.Remove(m);
+                    //}
+                }
+
                 incorrectDia = false;
             }
 
@@ -323,6 +338,19 @@ public class UIManager : MonoBehaviour
                     jigsawMat = jigsawMats[index];
                     break;
 
+                case 2:
+
+                    if (color1 == null)
+                    {
+                        color1 = colorMats[index];
+                    }
+                    else
+                    {
+                        color2 = colorMats[index];
+                    }
+
+                    break;
+
                 default:
                     color2 = colorMats[index];
                     break;
@@ -404,6 +432,34 @@ public class UIManager : MonoBehaviour
             // sort based on this 
             if (inReq && RequestsManager.requestReference != null)
             {
+
+                removeSpriteDict(userIn);
+
+                //if (GameManager.spriteDict[userIn].Count > 1)
+                //{
+                //    int indx = -1;
+                //    foreach (var m in GameManager.spriteDict[userIn])
+                //    {
+                //        indx++;
+                //        if (m.name == userIn.ToString())
+                //        {
+                //            break;
+                //        }
+                //    }
+
+                //    if (indx == -1)
+                //    {
+                //        Debug.Log("something wrong");
+                //    }
+
+                //    GameManager.spriteDict[userIn].RemoveAt(indx);
+                //}
+                //else
+                //{
+                //    GameManager.spriteDict.Remove(userIn);
+                //}
+
+
                 RequestsManager.requestReference.Remove(userIn);
             }
             else
@@ -424,14 +480,43 @@ public class UIManager : MonoBehaviour
                 Debug.Log("wrong count");
             }
 
-            GameObject obj = GameObject.Find($"{RequestsManager.requestReference[i]}");
+            //GameObject obj = GameObject.Find($"{RequestsManager.requestReference[i]}");
+            GameObject obj = GameManager.spriteDict[RequestsManager.requestReference[i]][0];
 
             if (obj == null)
             {
                 Debug.Log($"can't find sprite: {RequestsManager.requestReference[i]} for {incorrect[i]}");
             }
 
+            removeSpriteDict(RequestsManager.requestReference[i]);
             obj.name = incorrect[i].ToString();
+            //// is this right?
+            GameManager.spriteDict[incorrect[i]][0] = obj;
+
+            //if (GameManager.spriteDict[RequestsManager.requestReference[i]].Count > 1)
+            //{
+            //    int indx = -1; 
+            //    foreach (var m in GameManager.spriteDict[RequestsManager.requestReference[i]])
+            //    {
+            //        indx++; 
+            //        if (m.name == RequestsManager.requestReference[i].ToString())
+            //        {
+            //            break;
+            //        }
+            //    }
+
+            //    if (indx == -1)
+            //    {
+            //        Debug.Log("something wrong");
+            //    }
+
+            //    GameManager.spriteDict[RequestsManager.requestReference[i]].RemoveAt(indx);
+            //}
+            //else
+            //{
+            //    GameManager.spriteDict.Remove(RequestsManager.requestReference[i]);
+            //}
+
 
             Material[] mats;
             int category = incorrect[i] / RequestsManager.numColors;
@@ -461,6 +546,33 @@ public class UIManager : MonoBehaviour
             child.GetComponent<SpriteRenderer>().sharedMaterial = mat;
         }
 
+    }
+
+    public void removeSpriteDict(int spriteIdx)
+    {
+        if (GameManager.spriteDict[spriteIdx].Count > 1)
+        {
+            int indx = -1;
+            foreach (var m in GameManager.spriteDict[spriteIdx])
+            {
+                indx++;
+                if (m.name == spriteIdx.ToString())
+                {
+                    break;
+                }
+            }
+
+            if (indx == -1)
+            {
+                Debug.Log("something wrong");
+            }
+
+            GameManager.spriteDict[spriteIdx].RemoveAt(indx);
+        }
+        else
+        {
+            GameManager.spriteDict.Remove(spriteIdx);
+        }
     }
 
 }

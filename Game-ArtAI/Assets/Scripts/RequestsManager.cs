@@ -193,12 +193,5 @@ public class RequestsManager : MonoBehaviour
         Debug.Log($"t: {t}");
     }
 
-    /*private void AddRandomArt()
-    {
-        while (artInfo.Count < currNumArt)
-        {
-            artInfo.Enqueue(UnityEngine.Random.Range(0, numColors + numPatterns + numThird));
-        }
-    }*/
 
 }

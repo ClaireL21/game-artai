@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using Unity.VisualScripting;
 using UnityEditor;
@@ -81,9 +82,9 @@ public class Artwork : MonoBehaviour
 
     public void Setup(int spriteInfo)
     {
-       /* int artIndex = RequestsManager.RM.GetArt();
-        debugLogArtIndex = artIndex;*/
-
+        /* int artIndex = RequestsManager.RM.GetArt();
+         debugLogArtIndex = artIndex;*/
+        
         int category = spriteInfo / RequestsManager.numColors;
         int index = spriteInfo % RequestsManager.numColors;
         debugLogArtIndex = index;
@@ -94,29 +95,29 @@ public class Artwork : MonoBehaviour
         switch (category)
         {
             case 0:
-                spriteSheet = "emoji";
+                //spriteSheet = "emoji";
                 spriteType = "color1";
                 break;
             case 1:
-                spriteSheet = "animals";
+                //spriteSheet = "animals";
                 spriteType = "texture";
                 break;
             default:
-                spriteSheet = "shapes";
+                //spriteSheet = "shapes";
                 spriteType = "color2";
                 break;
         }
 
-        Sprite[] all = Resources.LoadAll<Sprite>(spriteSheet);
+        //Sprite[] all = Resources.LoadAll<Sprite>(spriteSheet);
 
-        foreach (var s in all)
-        {
-            if (s.name == $"{spriteSheet}_{index}")
-            {
-                spriteImg = s;
-                break;
-            }
-        }
+        //foreach (var s in all)
+        //{
+        //    if (s.name == $"{spriteSheet}_{index}")
+        //    {
+        //        spriteImg = s;
+        //        break;
+        //    }
+        //}
 
         Material[] mats;
 
@@ -144,6 +145,15 @@ public class Artwork : MonoBehaviour
         this.GetComponent<SpriteRenderer>().sprite = process;
 
         this.gameObject.name = $"{spriteInfo}";
+        if (GameManager.spriteDict.ContainsKey(spriteInfo))
+        {
+            GameManager.spriteDict[spriteInfo].Add(this.gameObject);
+        }
+        else
+        {
+            GameManager.spriteDict.Add(spriteInfo, new List<GameObject>() { this.gameObject });
+        }
+
 
         // picking a random time for how long it takes the artist to create art 
         timer = Random.Range(0.0f, 7.0f);
