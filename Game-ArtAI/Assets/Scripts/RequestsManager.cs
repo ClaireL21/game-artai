@@ -82,13 +82,13 @@ public class RequestsManager : MonoBehaviour
 
     public void AddToRequestArtQueues(int numItems)
     {
-        if (GameManager.instance != null)
-        {
-            UpdateFrequenciesBasedOnProgress();
-        }
-
         for (int i = 0; i < numItems; i++)
         {
+            if (GameManager.instance != null)
+            {
+                UpdateFrequenciesBasedOnProgress(i);
+            }
+
             UpdateRequestArt();
         }
     }
@@ -171,9 +171,15 @@ public class RequestsManager : MonoBehaviour
         }
     }
 
-    private void UpdateFrequenciesBasedOnProgress()
+    private void UpdateFrequenciesBasedOnProgress(int reqNum)
     {
         int completed = GameManager.instance.allRequestsCnt;
+
+        completed = completed + reqNum;
+        if (completed >= GameManager.instance.maxRequests)
+        {
+            completed = GameManager.instance.maxRequests;
+        }
 
         // interp value for frequencies 
         float t = Mathf.Clamp01((float)completed / GameManager.instance.maxRequests); 
@@ -186,12 +192,6 @@ public class RequestsManager : MonoBehaviour
         freqReqSizeOne /= total;
         freqReqSizeTwo /= total;
         freqReqSizeThree /= total;
-
-        Debug.Log($"Freq One: {freqReqSizeOne}");
-        Debug.Log($"Freq Two: {freqReqSizeTwo}");
-        Debug.Log($"Freq Three: {freqReqSizeThree}");
-        Debug.Log($"t: {t}");
     }
-
 
 }
