@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
 
     public static bool goodEnding = false;
 
+    public static bool sketchBookSubmission = false; 
+
     void Awake()
     {
         if (instance == null)

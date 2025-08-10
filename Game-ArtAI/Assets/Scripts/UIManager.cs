@@ -49,6 +49,9 @@ public class UIManager : MonoBehaviour
     public Button wrenchButton;
     public Button sketchButton;
 
+    [SerializeField]
+    GameObject doneBtn;
+
     private float amount;
     private Material tempMat; 
     private bool sketchbookEvent = false;
@@ -156,6 +159,19 @@ public class UIManager : MonoBehaviour
                     CloseBook();
                 }
 
+                else if (hit.collider != null && hit.collider == doneBtn.GetComponent<BoxCollider>())
+                {
+                    // add to request 
+                    GameManager.sketchBookSubmission = true;
+
+                    CustomerAIControl.deleteReq = true;
+                    CrowdManager.CM.currCustomer.GetComponent<CustomerAIControl>().SpawnCustomerDialogue(true);
+
+                    // close sketchbook & disable button 
+                    doneBtn.SetActive(false);
+                    CloseBook();
+                }
+
                 else if (hit.collider != null && hit.collider == puzzleDoneUI)
                 {
                     if (puzzle != null && puzzleGrid.puzzleInitialized())
@@ -184,41 +200,6 @@ public class UIManager : MonoBehaviour
                     }
                 }
 
-                /*
-                else if (hit.collider != null && sketchbookEvent)
-                {
-                    if (hit.collider.gameObject.CompareTag("Toolbox"))
-                    {
-                        if (hit.collider.gameObject.name == "Wrench")
-                        {
-                            // wrench selected
-                            managerButton.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = "Continue";
-                            managerText.GetComponent<TextMeshProUGUI>().text = "Alright! Back to work you go. Keep up the hard work!";
-
-                            toolbox.SetActive(false);
-                            manager.SetActive(true);
-
-                        }
-                        else if (hit.collider.gameObject.name == "Sketchbook")
-                        {
-                            // sketchbook selected 
-                            // angry manager text 
-                            managerButton.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = "Ignore.";
-                            managerText.GetComponent<TextMeshProUGUI>().text = "wait no-what are you doing? I'm going to report this!!";
-                            // enable sketchbook UI 
-                            sketchBookUI.gameObject.SetActive(true);
-                            // reverse grey scale 
-                            GameManager.goodEnding = true;
-
-                            toolbox.SetActive(false);
-                            manager.SetActive(true);
-
-                        }
-
-                    }
-                }
-                */
-
             }
         }
 
@@ -242,6 +223,7 @@ public class UIManager : MonoBehaviour
                 SketchbookEvent();
             }
         }
+
     }
 
     public void RemoveArtInMachineUI()

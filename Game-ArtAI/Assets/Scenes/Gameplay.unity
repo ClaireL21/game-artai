@@ -1542,6 +1542,7 @@ MonoBehaviour:
   managerButton: {fileID: 1503817402}
   wrenchButton: {fileID: 18916984}
   sketchButton: {fileID: 330563016}
+  doneBtn: {fileID: 1066606318}
 --- !u!4 &145804389
 Transform:
   m_ObjectHideFlags: 0
@@ -2641,7 +2642,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &245048412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2658,6 +2659,7 @@ MonoBehaviour:
   sizes: {fileID: 122996722}
   palette: {fileID: 1498802625}
   canvas: {fileID: 21300000, guid: 6020a66b7c03138419e97d0a7271bbeb, type: 3}
+  doneBtn: {fileID: 1066606318}
 --- !u!4 &245048413
 Transform:
   m_ObjectHideFlags: 0
@@ -2690,7 +2692,6 @@ GameObject:
   m_Component:
   - component: {fileID: 255935964}
   - component: {fileID: 255935966}
-  - component: {fileID: 255935965}
   m_Layer: 8
   m_Name: DoneBtn (1)
   m_TagString: Options
@@ -2713,27 +2714,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1066606319}
   m_LocalEulerAnglesHint: {x: 66.899, y: 0, z: 0}
---- !u!65 &255935965
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 255935963}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.1523371, y: 1.2381917, z: 0.20000005}
-  m_Center: {x: -0.012714543, y: 0.008764716, z: -0.00000006616586}
 --- !u!212 &255935966
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5343,7 +5323,7 @@ GameObject:
   - component: {fileID: 593294667}
   - component: {fileID: 593294669}
   - component: {fileID: 593294668}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: SketchbookSprite
   m_TagString: Sketchbook
   m_Icon: {fileID: 0}

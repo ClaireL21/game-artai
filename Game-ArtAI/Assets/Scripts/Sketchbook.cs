@@ -26,6 +26,9 @@ public class Sketchbook : MonoBehaviour
     [SerializeField]
     Sprite canvas;
 
+    [SerializeField]
+    GameObject doneBtn;
+
     private bool eraserMode;
     private UnityEngine.Color lineColor;
     private float lineWidth;
@@ -161,6 +164,8 @@ public class Sketchbook : MonoBehaviour
 
                 else if (clickedObj.tag == "Sketchbook")
                 {
+                    doneBtn.gameObject.SetActive(true);
+
                     SpriteRenderer sr = clickedObj.GetComponent<SpriteRenderer>();
 
                     // Clone the texture if we haven't already
@@ -175,17 +180,33 @@ public class Sketchbook : MonoBehaviour
                         clonedTexture = GetOrCreateTextureClone(sr);
                     }
 
-                    Vector2 localPos = sr.transform.InverseTransformPoint(hit.point);
-                    Rect spriteRect = sr.sprite.rect;
-                    Vector2 pixelPos = new Vector2(
-                        (localPos.x + sr.sprite.bounds.extents.x) / sr.sprite.bounds.size.x * spriteRect.width,
-                        (localPos.y + sr.sprite.bounds.extents.y) / sr.sprite.bounds.size.y * spriteRect.height
-                    );
+                    //Vector2 localPos = sr.transform.InverseTransformPoint(hit.point);
+                    //Rect spriteRect = sr.sprite.rect;
+                    //Vector2 pixelPos = new Vector2(
+                    //    (localPos.x + sr.sprite.bounds.extents.x) / sr.sprite.bounds.size.x * spriteRect.width,
+                    //    (localPos.y + sr.sprite.bounds.extents.y) / sr.sprite.bounds.size.y * spriteRect.height
+                    //);
 
-                    Vector2 currentPos = new Vector2(
-                        Mathf.Clamp(pixelPos.x + spriteRect.x, 0, clonedTexture.width - 1),
-                        Mathf.Clamp(pixelPos.y + spriteRect.y, 0, clonedTexture.height - 1)
-                    );
+                    //Vector2 currentPos = new Vector2(
+                    //    Mathf.Clamp(pixelPos.x /*+ spriteRect.x*/, 0, clonedTexture.width - 1),
+                    //    Mathf.Clamp(pixelPos.y /*+ spriteRect.y*/, 0, clonedTexture.height - 1)
+                    //);
+
+
+                    Vector2 localPos = sr.transform.InverseTransformPoint(hit.point);
+
+                    // Convert local position (in world units) to sprite pixel coords
+                    float pixelsPerUnit = sr.sprite.pixelsPerUnit;
+
+                    float pixelX = (localPos.x * pixelsPerUnit) + sr.sprite.pivot.x;
+                    float pixelY = (localPos.y * pixelsPerUnit) + sr.sprite.pivot.y;
+
+                    // Clamp to texture size
+                    pixelX = Mathf.Clamp(pixelX, 0, clonedTexture.width - 1);
+                    pixelY = Mathf.Clamp(pixelY, 0, clonedTexture.height - 1);
+
+                    Vector2 currentPos = new Vector2(pixelX, pixelY);
+
 
                     Debug.Log($"Drawing at: {currentPos} (Texture: {clonedTexture.width}x{clonedTexture.height})");
 
