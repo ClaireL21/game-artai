@@ -179,6 +179,9 @@ public class UIManager : MonoBehaviour
                     // close sketchbook & disable button 
                     doneBtn.SetActive(false);
                     CloseBook();
+
+                    GameManager.greyAmount = Mathf.Clamp01(GameManager.greyAmount + 0.2f);
+                    GameManager.instance.grayscaleMaterial.SetFloat("_Amount", GameManager.greyAmount);
                 }
 
                 else if (hit.collider != null && hit.collider == puzzleDoneUI)
@@ -203,16 +206,9 @@ public class UIManager : MonoBehaviour
                             CustomerAIControl.deleteReq = true;
                             CrowdManager.CM.currCustomer.GetComponent<CustomerAIControl>().SpawnCustomerDialogue(incorrectDia);
 
-                            if (GameManager.goodEnding)
-                            {
-                                GameManager.greyAmount = Mathf.Clamp01(GameManager.greyAmount + 0.2f);
-                                GameManager.instance.grayscaleMaterial.SetFloat("_Amount", GameManager.greyAmount);
-                            }
-                            else
-                            {
-                                GameManager.greyAmount = Mathf.Clamp01(GameManager.greyAmount - 0.2f);
-                                GameManager.instance.grayscaleMaterial.SetFloat("_Amount", GameManager.greyAmount);
-                            }
+                            GameManager.greyAmount = Mathf.Clamp01(GameManager.greyAmount - 0.2f);
+                            GameManager.instance.grayscaleMaterial.SetFloat("_Amount", GameManager.greyAmount);
+                            
 
                             Debug.Log($"greyscale: {GameManager.greyAmount}");
                         }
@@ -234,7 +230,7 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        if (GameManager.instance.allRequestsCnt == 10)
+        if (GameManager.instance.allRequestsCnt == 3)
         {
             // do sketchbook event 
             if (!sketchbookEvent)

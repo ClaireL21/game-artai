@@ -208,7 +208,7 @@ public class Sketchbook : MonoBehaviour
                     Vector2 currentPos = new Vector2(pixelX, pixelY);
 
 
-                    Debug.Log($"Drawing at: {currentPos} (Texture: {clonedTexture.width}x{clonedTexture.height})");
+                    //Debug.Log($"Drawing at: {currentPos} (Texture: {clonedTexture.width}x{clonedTexture.height})");
 
                     int baseCellWidth = 50;
 
