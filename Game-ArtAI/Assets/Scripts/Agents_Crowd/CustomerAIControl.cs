@@ -120,10 +120,10 @@ public class CustomerAIControl : AIControlTarget
 
         RequestsManager.requestReference = new List<int>(reqArr);
 
-        foreach (var item in reqArr)
-        {
-            Debug.Log($"reqArr: {item}");
-        }
+        //foreach (var item in reqArr)
+        //{
+        //    Debug.Log($"reqArr: {item}");
+        //}
 
     }
 

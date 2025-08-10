@@ -22,14 +22,35 @@ public class DayNightCycle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        timer += Time.deltaTime;
-        float degree = 360 - (timer / dayLength) * 360;
-        clockHand.transform.rotation = Quaternion.Euler(0, 0, degree);
-
-        if (timer >= dayLength)
+        if (GameManager.pauseTimer)
         {
-            SceneManager.LoadScene(endDayScene);
-            GameManager.instance.dayCounter += 1;
+
         }
+        else
+        {
+            timer += Time.deltaTime;
+            float degree = 360 - (timer / dayLength) * 360;
+            clockHand.transform.rotation = Quaternion.Euler(0, 0, degree);
+
+            if (timer >= dayLength)
+            {
+
+                // load in end screen 
+                // change to maxRequests
+                if (GameManager.instance.allRequestsCnt >= 20)
+                {
+                    SceneManager.LoadScene("GameEndScreen");
+                }
+                else
+                {
+
+                    SceneManager.LoadScene(endDayScene);
+                    GameManager.instance.dayCounter += 1;
+                }
+            }
+        }
+
+
+        
     }
 }

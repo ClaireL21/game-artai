@@ -14,12 +14,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] public int maxRequests = 20;
 
     public Material grayscaleMaterial;
+    public static float greyAmount = 1.0f;
+
+    public static bool firstPlay = true;
 
     public static Dictionary<int, List<GameObject>> spriteDict = new Dictionary<int, List<GameObject>>();
 
     public static bool goodEnding = false;
 
-    public static bool sketchBookSubmission = false; 
+    public static bool sketchBookSubmission = false;
+
+    public static bool pauseTimer = false;
 
     void Awake()
     {
@@ -29,10 +34,22 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject); // Keep between scenes
             maxRequests = 20;
         }
+
+    
+
         /*else
         {
             Destroy(gameObject); // Prevent duplicates
         }*/
+    }
+
+    private void Start()
+    {
+        if (firstPlay)
+        {
+            GameManager.instance.grayscaleMaterial.SetFloat("_Amount", 1.0f);
+            firstPlay = false;
+        }
     }
 
 }

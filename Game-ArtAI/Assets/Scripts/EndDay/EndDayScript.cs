@@ -16,12 +16,12 @@ public class EndDayScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // load in end screen 
-        // change to maxRequests
-        if (GameManager.instance.allRequestsCnt >= 1)
-        {
-            SceneManager.LoadScene("GameEndScreen");
-        }
+        //// load in end screen 
+        //// change to maxRequests
+        //if (GameManager.instance.allRequestsCnt >= 1)
+        //{
+        //    SceneManager.LoadScene("GameEndScreen");
+        //}
 
         nextButton.onClick.AddListener(OnButtonClicked);
 

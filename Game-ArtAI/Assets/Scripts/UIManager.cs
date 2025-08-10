@@ -91,6 +91,15 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (GameManager.goodEnding)
+        {
+            // no more machine 
+            BottomUISprites.gameObject.SetActive(false);
+            // enable sketchbook sprite 
+            sketchBookUI.gameObject.SetActive(true);
+        }
+
         if (Input.GetKeyDown(KeyCode.P))
         {
             ProgressBar();
@@ -165,7 +174,7 @@ public class UIManager : MonoBehaviour
                     GameManager.sketchBookSubmission = true;
 
                     CustomerAIControl.deleteReq = true;
-                    CrowdManager.CM.currCustomer.GetComponent<CustomerAIControl>().SpawnCustomerDialogue(true);
+                    CrowdManager.CM.currCustomer.GetComponent<CustomerAIControl>().SpawnCustomerDialogue(false);
 
                     // close sketchbook & disable button 
                     doneBtn.SetActive(false);
@@ -194,8 +203,18 @@ public class UIManager : MonoBehaviour
                             CustomerAIControl.deleteReq = true;
                             CrowdManager.CM.currCustomer.GetComponent<CustomerAIControl>().SpawnCustomerDialogue(incorrectDia);
 
-                            amount = Mathf.Clamp01(amount - 0.1f);
-                            GameManager.instance.grayscaleMaterial.SetFloat("_Amount", amount);
+                            if (GameManager.goodEnding)
+                            {
+                                GameManager.greyAmount = Mathf.Clamp01(GameManager.greyAmount + 0.2f);
+                                GameManager.instance.grayscaleMaterial.SetFloat("_Amount", GameManager.greyAmount);
+                            }
+                            else
+                            {
+                                GameManager.greyAmount = Mathf.Clamp01(GameManager.greyAmount - 0.2f);
+                                GameManager.instance.grayscaleMaterial.SetFloat("_Amount", GameManager.greyAmount);
+                            }
+
+                            Debug.Log($"greyscale: {GameManager.greyAmount}");
                         }
                     }
                 }
@@ -215,7 +234,7 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        if (GameManager.instance.allRequestsCnt == 1)
+        if (GameManager.instance.allRequestsCnt == 10)
         {
             // do sketchbook event 
             if (!sketchbookEvent)
@@ -306,6 +325,8 @@ public class UIManager : MonoBehaviour
         sketchBook.SetActive(true);
 
         SketchbookHelpText.gameObject.SetActive(false);
+
+        GameManager.pauseTimer = true;
     }
 
     public void CloseBook()
@@ -318,6 +339,8 @@ public class UIManager : MonoBehaviour
 
         // nice to have helper text maybe?
         SketchbookHelpText.gameObject.SetActive(true);
+
+        GameManager.pauseTimer = false;
     }
 
     public void ProgressBar()
@@ -572,6 +595,8 @@ public class UIManager : MonoBehaviour
 
     public void SketchbookEvent()
     {
+        GameManager.pauseTimer = true;
+
         // hide bottom sprites 
         BottomUISprites.gameObject.SetActive(false);
 
@@ -611,17 +636,20 @@ public class UIManager : MonoBehaviour
 
     void clickWrench()
     {
-        Debug.Log("clicked wrench");
+        //Debug.Log("clicked wrench");
         managerButton.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = "Continue";
         managerText.GetComponent<TextMeshProUGUI>().text = "Alright! Back to work you go. Keep up the hard work!";
 
         toolbox.SetActive(false);
         manager.SetActive(true);
+
+        GameManager.pauseTimer = false;
+
     }
 
     void clickBook()
     {
-        Debug.Log("clicked book");
+        //Debug.Log("clicked book");
         // sketchbook selected 
         // angry manager text 
         managerButton.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = "Ignore.";
@@ -633,6 +661,9 @@ public class UIManager : MonoBehaviour
 
         toolbox.SetActive(false);
         manager.SetActive(true);
+
+        GameManager.pauseTimer = false;
+
     }
 
 }

@@ -162,11 +162,11 @@ public class RequestsManager : MonoBehaviour
         if (artInfo.Count > 0)
         {
             int elt = artInfo.Dequeue();
-            Debug.Log("Art from queue: " + elt);
+            //Debug.Log("Art from queue: " + elt);
             return elt;
         } else
         {
-            Debug.Log("RANDOM ART");
+            //Debug.Log("RANDOM ART");
             return UnityEngine.Random.Range(0, numColors + numPatterns + numThird); // numColors + numPatterns + numThird
         }
     }
@@ -193,10 +193,10 @@ public class RequestsManager : MonoBehaviour
         freqReqSizeTwo /= total;
         freqReqSizeThree /= total;
 
-        Debug.Log($"reqNum: {reqNum}");
-        Debug.Log($"freq1: {freqReqSizeOne}");
-        Debug.Log($"freq2: {freqReqSizeTwo}");
-        Debug.Log($"freq3: {freqReqSizeThree}");
+        //Debug.Log($"reqNum: {reqNum}");
+        //Debug.Log($"freq1: {freqReqSizeOne}");
+        //Debug.Log($"freq2: {freqReqSizeTwo}");
+        //Debug.Log($"freq3: {freqReqSizeThree}");
 
     }
 
