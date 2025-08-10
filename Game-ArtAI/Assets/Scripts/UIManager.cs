@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEditor.PackageManager.Requests;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -40,8 +42,17 @@ public class UIManager : MonoBehaviour
 
     public bool incorrectDia = false;
 
+    public GameObject manager;
+    public GameObject toolbox;
+    public GameObject managerText;
+    public Button managerButton;
+    public Button wrenchButton;
+    public Button sketchButton;
+
     private float amount;
     private Material tempMat; 
+    private bool sketchbookEvent = false;
+    private int btnClickNum = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -69,6 +80,9 @@ public class UIManager : MonoBehaviour
 
         GameManager.spriteDict.Clear();
 
+        managerButton.onClick.AddListener(OnButtonClicked);
+        wrenchButton.onClick.AddListener(clickWrench);
+        sketchButton.onClick.AddListener(clickBook);
     }
 
     // Update is called once per frame
@@ -107,14 +121,6 @@ public class UIManager : MonoBehaviour
 
                     removeSpriteDict(m);
 
-                    //if (GameManager.spriteDict[m].Count > 1)
-                    //{
-                    //    GameManager.spriteDict[m].RemoveAt(0);
-                    //}
-                    //else
-                    //{
-                    //    GameManager.spriteDict.Remove(m);
-                    //}
                 }
 
                 incorrectDia = false;
@@ -137,7 +143,7 @@ public class UIManager : MonoBehaviour
                 {
                     //Debug.Log("Sprite clicked: " + gameObject.name);
                     RemoveArtInMachineUI();
-                    
+
                 }
 
                 else if (hit.collider != null && hit.collider == sketchBookUI)
@@ -177,6 +183,42 @@ public class UIManager : MonoBehaviour
                         }
                     }
                 }
+
+                /*
+                else if (hit.collider != null && sketchbookEvent)
+                {
+                    if (hit.collider.gameObject.CompareTag("Toolbox"))
+                    {
+                        if (hit.collider.gameObject.name == "Wrench")
+                        {
+                            // wrench selected
+                            managerButton.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = "Continue";
+                            managerText.GetComponent<TextMeshProUGUI>().text = "Alright! Back to work you go. Keep up the hard work!";
+
+                            toolbox.SetActive(false);
+                            manager.SetActive(true);
+
+                        }
+                        else if (hit.collider.gameObject.name == "Sketchbook")
+                        {
+                            // sketchbook selected 
+                            // angry manager text 
+                            managerButton.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = "Ignore.";
+                            managerText.GetComponent<TextMeshProUGUI>().text = "wait no-what are you doing? I'm going to report this!!";
+                            // enable sketchbook UI 
+                            sketchBookUI.gameObject.SetActive(true);
+                            // reverse grey scale 
+                            GameManager.goodEnding = true;
+
+                            toolbox.SetActive(false);
+                            manager.SetActive(true);
+
+                        }
+
+                    }
+                }
+                */
+
             }
         }
 
@@ -189,6 +231,15 @@ public class UIManager : MonoBehaviour
             } else
             {
                 puzzleDoneColor.color = gray;
+            }
+        }
+
+        if (GameManager.instance.allRequestsCnt == 1)
+        {
+            // do sketchbook event 
+            if (!sketchbookEvent)
+            {
+                SketchbookEvent();
             }
         }
     }
@@ -535,6 +586,71 @@ public class UIManager : MonoBehaviour
         {
             GameManager.spriteDict.Remove(spriteIdx);
         }
+    }
+
+    public void SketchbookEvent()
+    {
+        // hide bottom sprites 
+        BottomUISprites.gameObject.SetActive(false);
+
+        // unhide manager dialog 
+        //toolbox.SetActive(true);
+
+        manager.SetActive(true);
+
+    }
+
+    void OnButtonClicked()
+    {
+        if (btnClickNum == 0)
+        {
+            // first time: when button pressed, show options 
+            sketchbookEvent = true;
+            manager.SetActive(false);
+            toolbox.SetActive(true);
+            btnClickNum++;
+        }
+        else
+        {
+            // second time: 
+            manager.SetActive(false);
+            if (!GameManager.goodEnding)
+            {
+                BottomUISprites.gameObject.SetActive(true);
+            }
+            else
+            {
+                SketchbookHelpText.gameObject.SetActive(true);
+            }
+
+
+        }
+    }
+
+    void clickWrench()
+    {
+        Debug.Log("clicked wrench");
+        managerButton.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = "Continue";
+        managerText.GetComponent<TextMeshProUGUI>().text = "Alright! Back to work you go. Keep up the hard work!";
+
+        toolbox.SetActive(false);
+        manager.SetActive(true);
+    }
+
+    void clickBook()
+    {
+        Debug.Log("clicked book");
+        // sketchbook selected 
+        // angry manager text 
+        managerButton.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = "Ignore.";
+        managerText.GetComponent<TextMeshProUGUI>().text = "wait no-what are you doing? I'm going to report this!!";
+        // enable sketchbook UI 
+        sketchBookUI.gameObject.SetActive(true);
+        // reverse grey scale 
+        GameManager.goodEnding = true;
+
+        toolbox.SetActive(false);
+        manager.SetActive(true);
     }
 
 }

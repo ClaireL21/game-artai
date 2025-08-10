@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
 
     public static Dictionary<int, List<GameObject>> spriteDict = new Dictionary<int, List<GameObject>>();
 
+    public static bool goodEnding = false;
+
     void Awake()
     {
         if (instance == null)

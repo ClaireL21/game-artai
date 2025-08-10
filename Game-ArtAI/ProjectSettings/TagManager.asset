@@ -17,6 +17,7 @@ TagManager:
   - Size
   - Options
   - Sketchbook
+  - Toolbox
   layers:
   - Default
   - TransparentFX
@@ -28,7 +29,6 @@ TagManager:
   - Navigation
   - Puzzle
   - Sketchbook
-  - 
   - 
   - 
   - 
