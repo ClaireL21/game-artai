@@ -193,10 +193,6 @@ public class RequestsManager : MonoBehaviour
         freqReqSizeTwo /= total;
         freqReqSizeThree /= total;
 
-        //Debug.Log($"reqNum: {reqNum}");
-        //Debug.Log($"freq1: {freqReqSizeOne}");
-        //Debug.Log($"freq2: {freqReqSizeTwo}");
-        //Debug.Log($"freq3: {freqReqSizeThree}");
 
     }
 
