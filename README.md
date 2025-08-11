@@ -82,7 +82,7 @@ When the player steals from an artist, the artist will react with a negative res
 
 **3. Procedural Artwork/Jigsaw Materials**
 
-The artwork created by artists gets inputted into the machine. The output is a combination of the inputs. Customers may request a combination of 1, 2, or 3 art styles. The player searches for art of this style among the artists' drawings. The outputted art will be a combination of the inputs, so that the output may utilize the pattern of the first artwork with the color of the second, for example.
+The artwork created by artists gets inputted into the machine. The output is a combination of the inputs. Customers may request a combination of 1, 2, or 3 art styles. The player searches for art of this style among the artists' drawings. The outputted art will be a combination of the inputs, so that the output may utilize the pattern of the first artwork with the color of the second, for example. This procedural artwork is also animated for an added layer of difficulty. 
 
 **4. Procedural Jigsaw**
 
@@ -129,12 +129,28 @@ The player can see how many days have passed by looking at the calendar. At the 
 <img width="1170" height="657" alt="image" src="https://github.com/user-attachments/assets/3b2493f6-9ee4-4f52-83ef-6f6c9e487d74" />
 
 **6. Sketchbook**
+
 If the player chooses to go this route, they can fulfill requests with the sketchbook rather than by fulfilling requests. This option appears midway through the game where the machine breaks and the player is forced to choose between fixing it or not. The sketchbook has several choices for sizes of the brushstroke, the mode (pencil or eraser), and colors. 
+
 (We also have a save/load feature however that did not end up being utilized in the game.)
 
 <img width="1327" height="759" alt="Screenshot 2025-08-10 214047" src="https://github.com/user-attachments/assets/035e9675-52ed-4b34-b2d1-021d049abc1f" />
 
 After the player is done drawing, they can click the green checkmark to submit their drawing to the customer. 
+
+# Future Work 
+
+**1. Gallery of Artwork**
+
+Due to time constraints and a bit of uncertainity about the features we did not utilize our save/load abilities for the artwork created in the Sketchbook. We potentially envisioned saving the user's artworks and having them on display-either as an option within the title screen or potentially within the game itself. This would be interesting to incorporate in our game. 
+
+**2. NPC Immersion**
+
+We really liked Adam's idea of having a chance to chat with the artists that you are impacting with your actions (as the player). As we initially wanted the game to be relatively fast paced, we were not sure where to throw this in but we think it may be an interesting addiion between the days. Given time, we would love to create dialogue for the NPC's and make the action of stealing art be more impactful on the player. 
+
+**3. Beautifying**
+
+Some things we wanted to add to our prototype given time are: making the title screen look more appealing (we were potentially thinking about making it look like the screen of a CRT), adding an explicit counter for the number of requests it takes until the game is over (we had a progress bar but removed this as it was distracting), creating a prettier road, and making the dialog boxes look nicer.
 
 # Original Assets
 We created our models with Blender.
