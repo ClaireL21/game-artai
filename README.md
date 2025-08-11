@@ -128,6 +128,13 @@ The player can see how many days have passed by looking at the calendar. At the 
 
 <img width="1170" height="657" alt="image" src="https://github.com/user-attachments/assets/3b2493f6-9ee4-4f52-83ef-6f6c9e487d74" />
 
+**6. Sketchbook**
+If the player chooses to go this route, they can fulfill requests with the sketchbook rather than by fulfilling requests. This option appears midway through the game where the machine breaks and the player is forced to choose between fixing it or not. The sketchbook has several choices for sizes of the brushstroke, the mode (pencil or eraser), and colors. 
+(We also have a save/load feature however that did not end up being utilized in the game.)
+
+<img width="1327" height="759" alt="Screenshot 2025-08-10 214047" src="https://github.com/user-attachments/assets/035e9675-52ed-4b34-b2d1-021d049abc1f" />
+
+After the player is done drawing, they can click the green checkmark to submit their drawing to the customer. 
 
 # Original Assets
 We created our models with Blender.
