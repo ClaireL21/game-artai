@@ -57,6 +57,17 @@ Some challenges along the way:
 
    <img width="500" height="569" alt="Screenshot 2025-06-28 151614" src="https://github.com/user-attachments/assets/937d9f3e-0973-4315-8a68-882792670330" />
 
+**UI in a 3D world**
+
+Something that came up quite often for us is trying to wrangle with the UI without messing up our core game mechanic: the ability to drag the artwork. We found that canvas was a bit clunky to work with in this regard so we changed to having most of our UI be game objects with sprite renderer components and box colliders to facilitate raycasts. However, this led to spending quite a bit of time on finding the proper place to put these attributes on the screen. In order to make sure our UI was properly visible, we also had to edit the sprite order of everything. In the end, we did use the canvas for a few aspects: namely the not interactable components, the sketchbook (which required a bit of finagling to ensure one can not alter the game while sketching), and the event where the user needs to pick between the sketchbook and the wrench. Interestingly enough, the event had some complications with our typical game objects with sprites method for some unknown reason so we ended up using buttons. 
+
+**Missing Sprite Resolution**
+
+We decided to allow the user to submit incorrect inputs for customer requests and treat them as a completed request. However, due to how we created the system of requests and artworks that go along with the requests, we needed to place the incorrect input back in the scene in case a future request may require it. So, we swapped out the incorrect sprite with the correct one. This led to a lot of frankly odd code. 
+
+For example, our artwork has three categories that the sprites can be: color1, procedural, color2. Although color1 and color2 take their colors from the same set, they have different ID's associated with them. From the system side, they are different colors. However, from the user side they look exactly the same. So we had to make sure they are treated the same way. 
+
+The biggest issue was we initially used GameObject.Find to get our correct sprite for the swap which was all good except when you try to find the same object twice in a row. When we replace the sprite we also rename it to have the correct ID. Although visually, it looked like the correct ID, we believe there may have been an issue with the naming-there may have been a hidden character or something of the sort. In order to truly fix this, we had to completely change the way we were finding sprites. We ended up creating a sprite dictionary that kept track of all active sprites and that facilitated the look up and changing of sprites. 
 
 ## Features & How They Work
 **1. Crowd Simulation**
