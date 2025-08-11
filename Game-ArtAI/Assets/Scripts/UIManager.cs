@@ -230,7 +230,7 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        if (GameManager.instance.allRequestsCnt == 3)
+        if (GameManager.instance.allRequestsCnt == 10)
         {
             // do sketchbook event 
             if (!sketchbookEvent)
