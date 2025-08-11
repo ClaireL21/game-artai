@@ -169,3 +169,11 @@ We created our models with Blender.
 The bird asset is also animated in Blender.
 <img width="1271" height="828" alt="image" src="https://github.com/user-attachments/assets/8844eb4d-a981-4432-b18a-f63fdf1c1663" />
 
+Here are our environment models! 
+<img width="870" height="776" alt="image" src="https://github.com/user-attachments/assets/898d2d43-fbd9-42d6-8a20-14dced248587" />
+<img width="914" height="691" alt="image" src="https://github.com/user-attachments/assets/6656beea-b2ad-4c59-a162-088bb7d02b6c" />
+<img width="1283" height="1085" alt="image" src="https://github.com/user-attachments/assets/de803a5b-c0e6-43d7-80d9-17443e57dca5" />
+<img width="572" height="1234" alt="image" src="https://github.com/user-attachments/assets/119fbb35-171d-49fa-86a8-5501cca1fdf6" />
+<img width="901" height="885" alt="image" src="https://github.com/user-attachments/assets/855278ba-3dc7-4ad7-baa3-942271fbed12" />
+<img width="788" height="1203" alt="image" src="https://github.com/user-attachments/assets/737cb943-b591-4ef0-a237-8c5c0c42eae6" />
+<img width="714" height="995" alt="image" src="https://github.com/user-attachments/assets/6dfe69fe-b1c8-407c-9380-9ce47530cb98" />
