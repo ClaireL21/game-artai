@@ -5,7 +5,7 @@ Neha Thumu, Claire Lu
 <img width="1181" height="657" alt="image" src="https://github.com/user-attachments/assets/a5226779-6b5e-4b65-8a4e-e86c88e65acb" />
 
 ## Video Demo 
-//
+https://drive.google.com/file/d/1jD4S_-BByTJAMFXV8p0ElaqFf7hKkL1D/view?usp=sharing
 
 ## Game Overview
 In this game, you play as an employee of Arthur's Intelligence Agency, a company that creates artworks for various customers. You operate a special machine that absorbs existing art and spits out pieces for you to arrange into new art.
